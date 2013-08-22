@@ -1,0 +1,6 @@
+{
+  "appKey": "<KEY>",
+  "configPath": "/home/michael/.trello-cli/",
+  "authCache": "authentication.json",
+  "translationCache": "translations.json"
+}

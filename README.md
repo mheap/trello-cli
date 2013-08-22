@@ -1,0 +1,9 @@
+trello-cli is a CLI tool for Trello. Makes sense, right?
+
+# Using trello-cli
+
+* Copy `config.json.dist` to `config.json`
+* [Get an API key](https://trello.com/1/appKey/generate) and put it in `config.json`
+* Run `./bin/trello` + follow the instructions
+
+If you get stuck, you can always run `./bin/trello --help` or `./bin/trello command --help`

@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+
+// npm dependencies
+var program = require("commander"),
+    Trello  = require("node-trello"),
+    config   = require("nconf");
+
+// Load config
+config.file("./config.json");
+
+// ./lib depedencies
+var logger = require("../lib/logger"),
+    output = require("../lib/output");
+
+// Things we need to get up and running
+var Authentication = require("../src/authenticate")(logger, output, config);
+var translator = require("../src/translator")(logger, config);
+
+program.version("0.0.1");
+logger.debug("Starting trello-cli");
+
+// Hacky, but it'll do for now
+if (process.argv[2] == 'set-auth'){
+  Authentication.setToken(process.argv[3]);
+} else {
+  // Make sure we have an API key etc
+  Authentication.check();
+
+  // Set up Trello
+  var trello = new Trello(config.get("appKey"), Authentication.getToken());
+
+  // Then register our commands
+  require("../src/commands/refresh")(program, output, logger, config, trello, translator);
+  require("../src/commands/assigned-to-me")(program, output, logger, config, trello, translator);
+}
+
+program.parse(process.argv);
