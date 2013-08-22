@@ -3,7 +3,8 @@
 // npm dependencies
 var program = require("commander"),
     Trello  = require("node-trello"),
-    config   = require("nconf");
+    config  = require("nconf")
+    fs      = require("fs");
 
 // Load config
 config.file("./config.json");
@@ -18,6 +19,12 @@ var translator = require("../src/translator")(logger, config);
 
 program.version("0.0.1");
 logger.debug("Starting trello-cli");
+
+// Make sure config.json exists
+if (!fs.existsSync("./config.json")){
+  logger.emerg("config.json does not exist");
+  process.exit(1);
+}
 
 // Hacky, but it'll do for now
 if (process.argv[2] == 'set-auth'){
