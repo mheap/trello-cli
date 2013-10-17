@@ -25,16 +25,23 @@ var Translator = function(logger, config){
 Translator.prototype.getOrganisation = function(id){
   this.logger.debug("Looking up organisation: " + id);
   var item = this.cache.translations.orgs[id];
+  if (!item){
+    return undefined;
+  }
   return item || "Org: " + id;
 }
 
 Translator.prototype.getBoard = function(id){
   this.logger.debug("Looking up board: " + id);
   var item = this.cache.translations.boards[id];
+  var str = "";
   if (item){
-    item = this.getOrganisation(item[0]) + " > " + item[1];
+    if (item[0]){
+      str += this.getOrganisation(item[0]) + " > ";
+    }
+    str += item[1];
   }
-  return item || "Board: " + id;
+  return str || "Board: " + id;
 }
 
 Translator.prototype.getBoardIdByName = function(name){

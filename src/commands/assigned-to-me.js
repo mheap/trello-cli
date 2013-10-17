@@ -5,7 +5,7 @@ var __ = function(program, output, logger, config, trello, translator){
   program
   .command("assigned-to-me")
   .help("Show cards that are currently assigned to you")
-  .callback(function(type){
+  .callback(function(){
 
     logger.info("Showing assigned cards");
     trello.get("/1/members/me/cards", function(err, data) {
