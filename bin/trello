@@ -37,9 +37,10 @@ if (process.argv[2] == 'set-auth'){
   var trello = new Trello(config.get("appKey"), Authentication.getToken());
 
   // Then register our commands
-  require("../src/commands/refresh")(program, output, logger, config, trello, translator);
-  require("../src/commands/assigned-to-me")(program, output, logger, config, trello, translator);
-  require("../src/commands/add-card")(program, output, logger, config, trello, translator);
+  var commands = fs.readdirSync(__dirname + "/../src/commands");
+  commands.forEach(function(command){
+    require("../src/commands/" + command)(program, output, logger, config, trello, translator);
+  });
 }
 
 // Handle the case when there's no command

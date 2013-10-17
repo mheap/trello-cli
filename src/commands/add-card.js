@@ -1,5 +1,3 @@
-fs = require("fs");
-
 var __ = function(program, output, logger, config, trello, translator){
 
   program
@@ -31,13 +29,7 @@ var __ = function(program, output, logger, config, trello, translator){
     }
   })
   .callback(function(opts){
-    console.log(opts);
     logger.info("Adding card");
-
-    if (!opts.title){
-      logger.warning("Please provide a card title")
-      return;
-    }
 
     // Grab our boards etc
     var boardId = translator.getBoardIdByName(opts.board);
