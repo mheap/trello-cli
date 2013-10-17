@@ -42,4 +42,11 @@ if (process.argv[2] == 'set-auth'){
   require("../src/commands/add-card")(program, output, logger, config, trello, translator);
 }
 
+// Handle the case when there's no command
+program.nocommand().callback(function(){
+  output.emphasis("Trello CLI");
+  output.normal("Welcome to Trello CLI! To get started, run:");
+  output.normal("trello --help");
+});
+
 program.parse();
