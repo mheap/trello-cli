@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // npm dependencies
-var program = require("commander"),
+var program = require("nomnom"),
     Trello  = require("node-trello"),
     config  = require("nconf")
     fs      = require("fs");
@@ -17,7 +17,7 @@ var logger = require("../lib/logger"),
 var Authentication = require("../src/authenticate")(logger, output, config);
 var translator = require("../src/translator")(logger, config);
 
-program.version("0.0.1");
+program.script("trello");
 logger.debug("Starting trello-cli");
 
 // Make sure config.json exists
@@ -39,6 +39,7 @@ if (process.argv[2] == 'set-auth'){
   // Then register our commands
   require("../src/commands/refresh")(program, output, logger, config, trello, translator);
   require("../src/commands/assigned-to-me")(program, output, logger, config, trello, translator);
+  require("../src/commands/add-card")(program, output, logger, config, trello, translator);
 }
 
-program.parse(process.argv);
+program.parse();

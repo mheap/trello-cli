@@ -4,17 +4,28 @@ var __ = function(program, output, logger, config, trello, translator){
 
   program
   .command("add-card")
-  .description("Add a card")
-  .option('-b, --board', 'Board to add the card to')
-  .option('-l, --list', 'List to add the card to')
-  .action(function(board, list){
+  .help("Add a card to a board")
+  .options({
+    "title": {
+      position: 0,
+      help: "The card's title",
+      list: true
+    },
+    "board": {
+      abbr: 'b',
+      metavar: 'BOARD',
+      help: "The board name to add a card to"
+    },
+    "list": {
+      abbr: 'l',
+      metavar: 'LIST',
+      help: "The list name to add a card to"
+    }
+  })
+  .callback(function(board, list){
     logger.info("Adding card");
 
-    // I don't particularly like this, but it seems like the
-    // only way to do it for now
-    var cardTitle = program.args[0];
-
-    if (!cardTitle){
+    if (!program.title){
       logger.warning("Please provide a card title")
       return;
     }

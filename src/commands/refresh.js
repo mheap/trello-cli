@@ -6,8 +6,8 @@ var __ = function(program, output, logger, config, trello, translator){
 
   program
   .command("refresh")
-  .description("Refresh all your board/list names")
-  .action(function(type){
+  .help("Refresh all your board/list names")
+  .callback(function(type){
 
     // Defaults!
     if (typeof type != "string"){

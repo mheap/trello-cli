@@ -4,8 +4,8 @@ var __ = function(program, output, logger, config, trello, translator){
 
   program
   .command("assigned-to-me")
-  .description("Show cards that are currently assigned to you")
-  .action(function(type){
+  .help("Show cards that are currently assigned to you")
+  .callback(function(type){
 
     logger.info("Showing assigned cards");
     trello.get("/1/members/me/cards", function(err, data) {
