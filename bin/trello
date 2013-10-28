@@ -7,7 +7,7 @@ var program = require("nomnom"),
     fs      = require("fs");
 
 // Load config
-config.file("./config.json");
+config.file(__dirname + "/../config.json");
 
 // ./lib depedencies
 var logger = require("../lib/logger"),
@@ -18,10 +18,11 @@ var Authentication = require("../src/authenticate")(logger, output, config);
 var translator = require("../src/translator")(logger, config);
 
 program.script("trello");
+program.nocolors();
 logger.debug("Starting trello-cli");
 
 // Make sure config.json exists
-if (!fs.existsSync("./config.json")){
+if (!fs.existsSync(__dirname + "/../config.json")){
   logger.emerg("config.json does not exist");
   process.exit(1);
 }
@@ -48,6 +49,10 @@ program.nocommand().callback(function(){
   output.emphasis("Trello CLI");
   output.normal("Welcome to Trello CLI! To get started, run:");
   output.normal("trello --help");
+});
+program.printer(function(line){
+    logger.warning(line.trim());
+    process.exit(1);
 });
 
 program.parse();
