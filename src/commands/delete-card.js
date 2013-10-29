@@ -44,6 +44,11 @@ var __ = function(program, output, logger, config, trello, translator){
       for (var i in data){
         var card = data[i];
 
+        // We only want cards from the list we specified
+        if (card.idList != listId){
+          continue;
+        }
+
         if (card.name == opts.title || !opts.title){
           foundCards.push(card);
         }
@@ -58,6 +63,7 @@ var __ = function(program, output, logger, config, trello, translator){
           }
           list.add(card.id, content);
         });
+        list.add(null, "[Cancel]");
 
         list.on('keypress', function(key, item){
           switch (key.name) {
@@ -75,7 +81,7 @@ var __ = function(program, output, logger, config, trello, translator){
         } else {
           var list = new List({ marker: ('›'.red) + " ", markerLength: 1 });
           list.add(card.id, card.name);
-          list.add(null, "Cancel");
+          list.add(null, "[Cancel]");
           list.on('keypress', function(key, item){
             switch (key.name) {
               case 'return':
