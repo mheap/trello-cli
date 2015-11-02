@@ -4,10 +4,15 @@
 var program = require("nomnom"),
     Trello  = require("node-trello"),
     config  = require("nconf")
-    fs      = require("fs");
+    fs      = require("fs")
+    path    = require("path");
 
+var configGen = require("../lib/configGen")
+
+var configDir  = path.resolve(configGen.homePath(), ".trello-cli");
+var configPath = path.resolve(configDir, "config.json");
 // Load config
-config.file(__dirname + "/../config.json");
+config.file(configPath);
 
 // ./lib depedencies
 var logger = require("../lib/logger"),
@@ -22,8 +27,9 @@ program.nocolors();
 logger.debug("Starting trello-cli");
 
 // Make sure config.json exists
-if (!fs.existsSync(__dirname + "/../config.json")){
-  logger.emerg("config.json does not exist");
+if (!fs.existsSync(configPath)){
+  logger.emerg("config.json does not exist. trying to create new one.");
+  configGen.createEmptyConfig(configDir);
   process.exit(1);
 }
 
