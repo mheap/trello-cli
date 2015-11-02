@@ -7,7 +7,7 @@ var __ = function(program, output, logger, config, trello, translator){
     "title": {
       position: 1,
       help: "The card's title",
-      list: true,
+      list: false,
       required: true
     },
     "description": {
@@ -48,7 +48,11 @@ var __ = function(program, output, logger, config, trello, translator){
 
     trello.post("/1/cards", params, function(err, data){
       if (err){ throw err; }
-      logger.info("Card created");
+      if (data == "invalid value for name") {
+        logger.warning("Invalid value for card name");
+      } else {
+        logger.info("Card created");
+      }
     });
 
   });
