@@ -1,6 +1,6 @@
 {
   "name": "trello-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Trello CLI tool",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,9 @@
     "cli"
   ],
   "author": "Michael Heap <m@michaelheap.com>",
+  "contributors" : [
+    { "name" : "Marek Skrobacki", "email" : "skrobul@skrobul.com" }
+  ],
   "license": "BSD",
   "dependencies": {
     "winston": "https://github.com/mheap/winston/archive/fixed-syslog-levels.tar.gz",

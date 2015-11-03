@@ -15,7 +15,6 @@ var __ = function(program, output, logger, config, trello, translator){
       var cards = {};
       for (var i in data){
         var item = data[i];
-        console.log(item);
         cards[item.idBoard] = cards[item.idBoard] || [];
         cards[item.idBoard].push(item.name.replace(/\n/g, ""));
       }
