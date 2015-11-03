@@ -1,6 +1,6 @@
 {
   "name": "trello-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Trello CLI tool",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,8 @@
   ],
   "author": "Michael Heap <m@michaelheap.com>",
   "contributors" : [
-    { "name" : "Marek Skrobacki", "email" : "skrobul@skrobul.com" }
+    { "name" : "Marek Skrobacki", "email" : "skrobul@skrobul.com" },
+    { "name" : "Simon Kittle", "email" : "simon@kittle.co.uk" }
   ],
   "license": "BSD",
   "dependencies": {
