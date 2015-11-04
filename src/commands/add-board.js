@@ -1,6 +1,6 @@
 "use strict";
 
-var __ = function (program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator, trelloApiCommands) {
 
   program
   .command("add-board")
@@ -52,8 +52,10 @@ var __ = function (program, output, logger, config, trello, translator) {
       if (err) {
         throw err;
       }
-      console.log(data);
+
       logger.info("Board added, new URL: " + data.url);
+
+      trelloApiCommands["refresh"].makeTrelloApiCall(null);
     });
 
   });
