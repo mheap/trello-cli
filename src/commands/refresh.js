@@ -8,12 +8,9 @@ var ___ = function (program, output, logger, config, trello, translator) {
 
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options) {
-        // SJK: type is an object of options; it will never be a string
-        // Defaults!
-        // if (typeof type != "string"){
+    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+
         var type = "all";
-        // }
 
         var cachePath = config.get("configPath") + config.get("translationCache");
         var cacheFile = {};
@@ -50,7 +47,6 @@ var ___ = function (program, output, logger, config, trello, translator) {
                 // Write it back to the cache file
                 fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
 
-                // bug here: this isn't waiting for the above callback to return, and that means that it misses the results from any new boards just added.
                 if (type == 'lists' || type == 'all') {
                   async.each(Object.keys(cacheFile.translations.boards), function(board, callback){
                     trello.get("/1/boards/"+board+"/lists", function(err, data) {
@@ -67,10 +63,17 @@ var ___ = function (program, output, logger, config, trello, translator) {
                     fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
                   });
 
+                  translator.reloadTranslations();
+
                   output.normal("Organisation, board and list cache refreshed");
+
+                  if (typeof onComplete == 'function') {
+                      onComplete();
+                  }
                 }
             });
         }
+
     };
 
     trelloApiCommand.nomnomProgramCall = function () {

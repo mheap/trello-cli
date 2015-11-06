@@ -22,6 +22,24 @@ var Translator = function(logger, config){
   this.cache = cacheFile;
 }
 
+Translator.prototype.reloadTranslations = function () {
+    // Load the cache file
+    var cachePath = this.config.get("configPath") + this.config.get("translationCache");
+    var cacheFile = {};
+    try {
+      cacheFile = JSON.parse(fs.readFileSync(cachePath));
+    } catch (e){
+      // Nothing
+    }
+
+    cacheFile.translations = cacheFile.translations || {};
+    cacheFile.translations.orgs = cacheFile.translations.orgs || {};
+    cacheFile.translations.boards = cacheFile.translations.boards || {};
+    cacheFile.translations.lists = cacheFile.translations.lists || {};
+
+    this.cache = cacheFile;
+};
+
 Translator.prototype.getOrganisation = function(id){
   this.logger.debug("Looking up organisation: " + id);
   var item = this.cache.translations.orgs[id];
