@@ -26,6 +26,12 @@ var __ = function(program, output, logger, config, trello, translator){
       metavar: 'LIST',
       help: "The list name to add a card to",
       required: true
+  },
+    "position": {
+      abbr: 'p',
+      metavar: 'POS',
+      help: "The position of the new card: acceptable values are 'top' or 'bottom' (default: top)",
+      required: false
     }
   })
   .callback(function(opts){
@@ -38,7 +44,8 @@ var __ = function(program, output, logger, config, trello, translator){
     // Build up arguments to send
     var params = {
       "name": opts.title,
-      "idList": listId
+      "idList": listId,
+      "pos" : ['top', 'bottom'].indexOf(opts.position) > -1 ? opts.position : "top"
     };
 
     // Did we have any additional params?
