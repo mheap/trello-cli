@@ -8,7 +8,7 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
 
     trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
 
-        var boardsToDelete = translator.getBoardIdsByName(options.boardNameMatch, function(boardNameToTest, match) { return boardNameToTest.indexOf(match) != -1; });
+        var boardsToDelete = translator.getBoardsByName(options.boardNameMatch, function(boardNameToTest, match) { return boardNameToTest.indexOf(match) != -1; });
 
         output.normal("Boards which will be closed:");
         boardsToDelete.forEach(function (boardToDelete) {
