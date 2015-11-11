@@ -35,8 +35,13 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
         var params = {
             "name": options.listName,
             "idBoard": boardId,
-            "pos" : ['top', 'bottom'].indexOf(options.position) > -1 ? options.position : "top"
+            "pos" : ['top', 'bottom'].indexOf(options.listPosition) > -1 ? options.listPosition : "top"
         };
+
+        if (options.verbose) {
+            logger.info("Sending the following to Trello at /1/lists: ");
+            logger.info(params);
+        }
 
         trello.post("/1/lists", params, function (err, data) {
             if (err) {
@@ -44,12 +49,25 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
             }
 
             if (options.verbose) {
-                logger.warning(data);
+                logger.info("Result from Trello: ");
+                logger.info(data);
             }
 
-            logger.info("List added, new ID: " + data.id);
+            if (data == "invalid value for name") {
+                logger.error("Invalid value for list name");
+            } else if (data == "Rate limit reached") {
+                logger.error("Error: rate limited reached");
+            } else {
+                logger.info("List added, new ID: " + data.id);
+            }
 
-            trelloApiCommands["refresh"].makeTrelloApiCall(null);
+            if (options.refreshCache) {
+                trelloApiCommands["refresh"].makeTrelloApiCall(null, onComplete);
+            } else {
+                if (typeof onComplete == 'function') {
+                    onComplete();
+                }
+            }
         });
     };
 
@@ -72,15 +90,15 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
                       help: "The name of the new list",
                       required: true
                 },
-                "position": {
+                "listPosition": {
                       abbr: 'p',
-                      metavar: 'POS',
+                      metavar: 'LISTPOS',
                       help: "The position of the new list: acceptable values are 'top' or 'bottom' (default: top)",
                       required: false
                 },
                 "force": {
                       abbr: 'f',
-                      help: "Force - will creae the board if it doesn't already exist",
+                      help: "Force - will create the board if it doesn't already exist",
                       flag: true,
                       required: false
                 },
