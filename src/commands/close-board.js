@@ -10,40 +10,44 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
 
         var boardsToDelete = translator.getBoardsByName(options.boardNameMatch, function(boardNameToTest, match) { return boardNameToTest.indexOf(match) != -1; });
 
-        output.normal("Boards which will be closed:");
-        boardsToDelete.forEach(function (boardToDelete) {
-            output.normal("    " + boardToDelete.name);
-        });
+        if (boardsToDelete.length == 0) {
+            output.normal("No boards match search string; exitting.");
+        } else {
+            output.normal("Boards which will be closed:");
+            boardsToDelete.forEach(function (boardToDelete) {
+                output.normal("    " + boardToDelete.name);
+            });
 
-        // prompt for continue
-        output.normal("Do you want to continue with closing the boards? Type 'yes' to continue");
+            // prompt for continue
+            output.normal("Do you want to continue with closing the boards? Type 'yes' to continue");
 
-        process.stdin.once('data', function (userInput) {
-            if (userInput.toString().indexOf('yes') == 0) {
-                logger.info("Closing boards...");
+            process.stdin.once('data', function (userInput) {
+                if (userInput.toString().indexOf('yes') == 0) {
+                    logger.info("Closing boards...");
 
-                async.each(
-                    boardsToDelete,
-                    function (boardToDelete, callback) {
-                        trello.put("/1/boards/" + boardToDelete.id + "/closed", { value: true }, function (err, data) {
-                            if (err) {
-                                throw err;
-                            }
-                            callback();
-                        });
-                    },
-                    function (err) {
-                        logger.info("Boards closed");
-                        process.stdin.unref();
-                    }
-                );
+                    async.each(
+                        boardsToDelete,
+                        function (boardToDelete, callback) {
+                            trello.put("/1/boards/" + boardToDelete.id + "/closed", { value: true }, function (err, data) {
+                                if (err) {
+                                    throw err;
+                                }
+                                callback();
+                            });
+                        },
+                        function (err) {
+                            logger.info("Boards closed");
+                            process.stdin.unref();
+                        }
+                    );
 
-            } else {
-                logger.info("Exitting");
-                process.stdin.unref();
-            }
+                } else {
+                    logger.info("Exitting");
+                    process.stdin.unref();
+                }
 
-        });
+            });
+        }
 
     };
 
