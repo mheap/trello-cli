@@ -92,7 +92,7 @@ Translator.prototype.getBoardsByName = function(name, comparer) {
     this.logger.debug("Looking up boards by name: " + name);
     var boards = this.cache.translations.boards;
     for (var i in boards) {
-        if (comparer(boards[i][1].toLowerCase(), name)){
+        if (i != 'undefined' && comparer(boards[i][1].toLowerCase(), name)) {
             matchingBoardIds.push({ id: i, name : boards[i][1] });
         }
     }

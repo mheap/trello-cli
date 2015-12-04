@@ -44,7 +44,7 @@ if (process.argv[2] == 'set-auth'){
   Authentication.check();
 
   // Set up Trello
-  var trello = new Trello(config.get("appKey"), Authentication.getToken());
+  var trello = require("../src/node-trello-wrapper")(output, logger, config, Authentication);
 
   // Then register our commands
   var commands = fs.readdirSync(__dirname + "/../src/commands/");
