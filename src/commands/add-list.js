@@ -25,7 +25,7 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
                     process.exit(1);
                 }
             } else {
-                logger.error("Unknown error:");
+                log.error("Unknown error:");
                 throw err;
             }
         }
