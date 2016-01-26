@@ -54,12 +54,12 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
     trelloApiCommand.nomnomProgramCall = function () {
         program
             .command("close-board")
-            .help("Adds a new board with the specified name")
+            .help("Closes those board(s) where the specified text occurs in their name")
             .options({
                 "boardNameMatch": {
                     abbr: 'b',
                     metavar: 'BOARD',
-                    help: "The text to search for in the board name; all boards with the specified text in the name will be closed.",
+                    help: "The text to search for in the board name; all boards with the specified text in their name will be closed.",
                     required: true
                 },
                 "verbose": {
