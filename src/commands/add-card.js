@@ -20,11 +20,11 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                     trelloApiCommands["add-board"].makeTrelloApiCall(options, function () { trelloApiCommands["add-card"].makeTrelloApiCall(options, null); });
                     return;
                 } else {
-                    logger.error("Board '" + options.boardName + "' does not exist.  Exitting.");
+                    logger.error("Board '" + options.boardName + "' does not exist.  Exiting.");
                     process.exit(1);
                 }
             } else {
-                log.error("Unknown error:");
+                logger.error("Unknown error:");
                 throw err;
             }
         }
@@ -50,11 +50,11 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                     });
                     return;
                 } else {
-                    logger.error("List '" + options.listName + "' does not exist.  Exitting.");
+                    logger.error("List '" + options.listName + "' does not exist.  Exiting.");
                     process.exit(1);
                 }
             } else {
-                log.error("Unknown error:");
+                logger.error("Unknown error:");
                 throw err;
             }
         }
