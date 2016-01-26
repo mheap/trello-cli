@@ -16,15 +16,16 @@ Instead of running `./bin/trello` just run `trello`.
 # Supported API commands
 
 trello-cli currently supports the following commands:
-	
+
 	add-board          Adds a new board with the specified name
 	add-card           Add a card to a board
 	add-list           Adds a new list to the spcified board with the specified name
 	assigned-to-me     Show cards that are currently assigned to you
+    close-board        Closes those board(s) where the specified text occurs in their name
 	delete-card        Remove a card from a board
 	move-all-cards     Move all cards from one list to another
 	refresh            Refresh all your board/list names
-	show-list          Show cards on a list 
+	show-list          Show cards on a list
 
 # On Windows
 
@@ -34,13 +35,12 @@ Depending on how `node.js` is setup, you may not be able to run `trello` straigh
 
 Replacing `PATH_TO_NODE.EXE` and `PATH_TO_TRELLO_BIN` with the values from your system.
 
-You will then have the `trello` command available anywhere. 
+You will then have the `trello` command available anywhere.
 
 # Examples
 
     # Add card:
-    $ trello add-card -b "Inbox" -l "Inbox" "Quick card added from command line" -p bottom 
+    $ trello add-card -b "Inbox" -l "Inbox" "Quick card added from command line" -p bottom
 
     # Move all cards:
     $ trello move-all-cards -b "GTD" -l "Completed next actions" -c "GTD" -d "Completed next actions (Nov 2-8)"
-
