@@ -74,8 +74,8 @@ Translator.prototype.getBoardIdByName = function(name) {
   name = name.toLowerCase();
   this.logger.debug("Looking up board by name: " + name);
   var boards = this.cache.translations.boards;
-  for (var i in boards){
-    if (boards[i][1].toLowerCase() == name){
+  for (var i in boards) {
+    if (boards[i][1] != null && boards[i][1].toLowerCase() == name){
       return i;
     }
   }

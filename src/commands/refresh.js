@@ -41,8 +41,8 @@ var ___ = function (program, output, logger, config, trello, translator) {
         if (type == 'lists' || type == 'boards' || type == 'all') {
             trello.get("/1/members/me/boards", function(err, data) {
                 if (err) throw err;
-                _.each(data, function(item){
-                    cacheFile.translations.boards[item.id] = [item.idOrganization, item.name];
+                _.each(data, function(item) {
+                    cacheFile.translations.boards[item.id] = [item.idOrganization, item.name, item.closed];
                 });
 
                 // Write it back to the cache file

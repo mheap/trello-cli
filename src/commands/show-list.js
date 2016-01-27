@@ -1,49 +1,38 @@
-fs = require("fs");
+"use strict";
 
-var __ = function(program, output, logger, config, trello, translator){
+var __ = function(program, output, logger, config, trello, translator, trelloApiCommands) {
 
-  program
-  .command("show-list")
-  .options({
-   "board": {
-      abbr: 'b',
-      metavar: 'BOARD',
-      help: "The board name to add a card to",
-      required: true
-    },
-    "list": {
-      abbr: 'l',
-      metavar: 'LIST',
-      help: "The list name to add a card to",
-      required: true
+    var trelloApiCommand = {};
+
+    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+
+        trelloApiCommands["show-cards"].makeTrelloApiCall(options, onComplete);
+
     }
-  })
-  .help("Show cards on a list")
-  .callback(function(opts){
 
-    logger.info("Showing assigned cards");
-
-    // Grab our boards etc
-    var boardId = translator.getBoardIdByName(opts.board);
-    var listId = translator.getListIdByBoardNameAndListName(opts.board, opts.list);
-
-    trello.get("/1/lists/" + listId + "", {"cards": "open"}, function(err, data) {
-      if (err) throw err;
-
-      // Order the issues by board
-      var cards = {};
-      for (var i in data.cards){
-        var item = data.cards[i];
-        cards[item.idBoard] = cards[item.idBoard] || [];
-        cards[item.idBoard].push(item.name.replace(/\n/g, ""));
-      }
-
-      for (var j in cards){
-        output.normal(translator.getBoard(j).underline);
-        for (var k in cards[j]){
-          output.normal("* " + cards[j][k]);
+    trelloApiCommand.nomnomProgramCall = function () {
+        program
+            .command("show-list")
+            .help("DEPRECATED.  Show cards on a list (use 'show-cards' instead; command retained for backwards compatibility)")
+            .options({
+                "board": {
+                    abbr: 'b',
+                    metavar: 'BOARD',
+                    help: "The board name which contains the list to show",
+                    required: true
+                },
+                "list": {
+                    abbr: 'l',
+                    metavar: 'LIST',
+                    help: "The name of the list whose cards to show",
+                    required: true
+                }
+            })
+            .callback(function (options) {
+                trelloApiCommand.makeTrelloApiCall(options);
+            });
         }
-      }});
-  });
+
+    return trelloApiCommand;
 }
 module.exports = __;
