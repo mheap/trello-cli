@@ -19,7 +19,7 @@ var __ = function (output, logger, config, authentication) {
     trelloWrapper.get = function (url, arg2, arg3) {
         var params = arguments.length == 2 ? {} : arg2;
         var callback = arguments.length == 2 ? arg2 : arg3;
-        trelloObj.get(url, params, callback);
+        trelloObj.get(url, params, trelloWrapper.callbackWrapperFactory(callback));
     };
 
     trelloWrapper.del = function (url, callback) {
@@ -28,7 +28,7 @@ var __ = function (output, logger, config, authentication) {
 
     trelloWrapper.callbackWrapperFactory = function (callback) {
         return function (err, data) {
-            if (data == "expired token") {
+            if (data == "expired token" || data == "invalid token") {
                 logger.error("Authentication token has expired.");
                 output.normal("To get a new token, please re-visit:");
                 output.emphasis(authentication.authenticationUrl);
