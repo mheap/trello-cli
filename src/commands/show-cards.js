@@ -27,7 +27,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             if (err) throw err;
 
             if (data.cards.length > 0) {
-                output.normal(translator.getBoard(data.cards[0].idBoard).underline);
+                output.normal(translator.getList(data.cards[0].idList).underline);
             }
             for (var i in data.cards) {
                 var formattedCardName = data.cards[i].name.replace(/\n/g, "");
