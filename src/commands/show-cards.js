@@ -27,7 +27,11 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             if (err) throw err;
 
             if (data.cards.length > 0) {
-                output.normal(translator.getList(data.cards[0].idList).underline);
+                if (options.showListName) {
+                  output.normal(translator.getList(data.cards[0].idList).underline);
+                } else {
+                  output.normal(translator.getBoard(data.cards[0].idBoard).underline);
+                }
             }
             for (var i in data.cards) {
                 var formattedCardName = data.cards[i].name.replace(/\n/g, "");
@@ -52,6 +56,13 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                     metavar: 'LIST',
                     help: "The name of the list whose cards to show",
                     required: true
+                },
+                "showListName": {
+                      abbr: 'n',
+                      help: "Show list name in title, in addtion to board name",
+                      required: false,
+                      flag: true,
+                      default: false
                 }
             })
             .callback(function (options) {
