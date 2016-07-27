@@ -68,6 +68,19 @@ Translator.prototype.getBoard = function(id){
   return str || "Board: " + id;
 }
 
+Translator.prototype.getList = function(id){
+  this.logger.debug("Looking up list: " + id);
+  var item = this.cache.translations.lists[id];
+  var str = "";
+  if (item){
+    if (item[0]){
+      str += this.getBoard(item[0]) + " > ";
+    }
+    str += item[1];
+  }
+  return str || "List: " + id;
+}
+
 Translator.prototype.getBoardIdByName = function(name) {
   // console.log("-- getBoardIdByName() boards length: " + Object.keys(this.cache.translations.boards).length);
   // console.log("-- getBoardIdByName() lists length: " + Object.keys(this.cache.translations.lists).length);

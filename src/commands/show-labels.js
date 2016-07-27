@@ -7,7 +7,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
     var trelloApiCommand = {};
 
     trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
-        logger.info("Showing cards belonging to the specified list");
+        logger.info("Showing labels belonging to the specified board");
 
         // Grab our boards etc
         try {
@@ -21,45 +21,51 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 return;
             }
         }
-        var listId = translator.getListIdByBoardNameAndListName(options.board, options.list);
 
-        trello.get("/1/lists/" + listId + "", {"cards": "open"}, function(err, data) {
+        trello.get("/1/boards/" + boardId + "/labels", function(err, data) {
             if (err) throw err;
 
-            if (data.cards.length > 0) {
-                if (options.showListName) {
-                  output.normal(translator.getList(data.cards[0].idList).underline);
-                } else {
-                  output.normal(translator.getBoard(data.cards[0].idBoard).underline);
-                }
-            }
-            for (var i in data.cards) {
-                var formattedCardName = data.cards[i].name.replace(/\n/g, "");
-                output.normal("* " + formattedCardName);
+            for (var i in data) {
+              var formattedLabel = data[i].color;
+
+              if (data[i].name.length > 0) {
+                formattedLabel += ' (' + data[i].name + ')';
+              }
+
+              if (options.showUses) {
+                formattedLabel += ', ' + data[i].uses;
+              }
+
+              if (options.showIds) {
+                formattedLabel += ' (ID: ' + data[i].id + ')';
+              }
+
+              output.normal(formattedLabel);
             }
         });
     }
 
     trelloApiCommand.nomnomProgramCall = function () {
         program
-            .command("show-cards")
-            .help("Show the cards on a list")
+            .command("show-labels")
+            .help("Show labels defined on a board")
             .options({
                 "board": {
                     abbr: 'b',
                     metavar: 'BOARD',
-                    help: "The board name which contains the list of cards to show",
+                    help: "The board name which contains the labels to show",
                     required: true
                 },
-                "list": {
-                    abbr: 'l',
-                    metavar: 'LIST',
-                    help: "The name of the list whose cards to show",
-                    required: true
+                "showIds": {
+                      abbr: 'i',
+                      help: "Show label IDs in the output (default is to omit IDs)",
+                      required: false,
+                      flag: true,
+                      default: false
                 },
-                "showListName": {
-                      abbr: 'n',
-                      help: "Show list name in title, in addtion to board name",
+                "showUses": {
+                      abbr: 'u',
+                      help: "Show how many times a label has been used",
                       required: false,
                       flag: true,
                       default: false
