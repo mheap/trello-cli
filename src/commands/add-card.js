@@ -65,7 +65,8 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
           "name": options.title,
           "idList": listId,
           "desc" : options.description ? options.description : "",
-          "pos" : ['top', 'bottom'].indexOf(options.cardPosition) > -1 ? options.cardPosition : "bottom"
+          "pos" : ['top', 'bottom'].indexOf(options.cardPosition) > -1 ? options.cardPosition : "bottom",
+          "idLabels" : options.labels ? options.labels.replace(/\s+/g, '') : ""
         };
 
         trello.post("/1/cards", params, function(err, data) {
@@ -123,6 +124,12 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                         abbr: 'q',
                         metavar: 'POS',
                         help: "The position of the new card: acceptable values are 'top' or 'bottom' (default: bottom)",
+                        required: false
+                    },
+                    "labels": {
+                        abbr: 'g',
+                        metavar: 'LABELS',
+                        help: "Comma-separated list of labels to assign to the card (requires IDs, see show-labels command)",
                         required: false
                     },
                     "force": {
