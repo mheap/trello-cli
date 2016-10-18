@@ -6,7 +6,7 @@ var Auth = function(logger, output, config){
   this.output = output;
   this.config = config;
 
-  this.authenticationUrl = "https://trello.com/1/connect?key="+this.config.get("appKey")+"&name=trello-cli&response_type=token&scope=account,read,write";
+  this.authenticationUrl = "https://trello.com/1/connect?key="+this.config.get("appKey")+"&name=trello-cli&response_type=token&scope=account,read,write&expiration=never";
 };
 
 Auth.prototype.loadAuthCache = function(){
