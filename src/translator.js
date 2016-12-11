@@ -24,7 +24,7 @@ var Translator = function(logger, config) {
 }
 
 Translator.prototype.checkCompatibleCache = function() {
-    return cacheFile.formatVersion == 2;
+    return cacheFile.formatVersion == 1;
 }
 
 Translator.prototype.reloadTranslations = function() {

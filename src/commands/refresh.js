@@ -21,21 +21,65 @@ var ___ = function(program, output, logger, config, trello, translator) {
             // Nothing!
         }
 
-        cacheFile.formatVersion = 2;
+        cacheFile.formatVersion = 1;
+        cacheFile.me = cacheFile.me || {};
 
         cacheFile.translations = cacheFile.translations || {};
         cacheFile.translations.orgs = cacheFile.translations.orgs || {};
         cacheFile.translations.boards = cacheFile.translations.boards || {};
         cacheFile.translations.lists = cacheFile.translations.lists || {};
+        cacheFile.translations.users = cacheFile.translations.users || {};
 
-        if (type == 'orgs' || type == 'all') {
+        if (type == 'users' || type == 'all') {
+            trello.get("/1/members/me", function(err, user) {
+                if (err) throw err;
+                cacheFile.me = {
+                    "id": user.id,
+                    "name": user.fullName,
+                    "username": user.username,
+                    "initials": user.initials,
+                    "type": user.memberType
+                }
+
+                // Write it back to the cache file
+                fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+            });
+        }
+
+        function cacheUserInfoFromMemberships(memberships) {
+            if (type == 'users' || type == 'all') {
+                _.each(memberships, function(m) {
+                    trello.get("/1/members/" + m.idMember, function(err, user) {
+                        if (err) throw err;
+
+                        if (user.id && !(user.id in cacheFile.translations.users.hasOwnProperty)) {
+                            cacheFile.translations.users[user.id] = {
+                                "name": user.fullName,
+                                "username": user.username,
+                                "initials": user.initials,
+                                "type": user.memberType
+                            }
+
+                            // Write it back to the cache file
+                            fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+                        }
+                    });
+                })
+            }
+        }
+
+        if (type == 'orgs' || type == 'users' || type == 'all') {
             trello.get("/1/members/me/organizations", function(err, data) {
                 if (err) throw err;
                 _.each(data, function(item) {
-                    cacheFile.translations.orgs[item.id] = {
-                        "name": item.name,
-                        "displayName": item.displayName
-                    };
+                    if (type == 'orgs' || type == 'all') {
+                        cacheFile.translations.orgs[item.id] = {
+                            "name": item.name,
+                            "displayName": item.displayName
+                        };
+                    }
+
+                    cacheUserInfoFromMemberships(item.memberships);
                 });
 
                 // Write it back to the cache file
@@ -43,16 +87,20 @@ var ___ = function(program, output, logger, config, trello, translator) {
             });
         }
 
-        if (type == 'lists' || type == 'boards' || type == 'all') {
+        if (type == 'lists' || type == 'boards' || type == 'users' || type == 'all') {
             trello.get("/1/members/me/boards", function(err, data) {
                 if (err) throw err;
                 _.each(data, function(item) {
-                    cacheFile.translations.boards[item.id] = {
-                        "organization": item.idOrganization,
-                        "name": item.name,
-                        "closed": item.closed,
-                        "voting": item.powerUps.indexOf("voting") > -1
-                    };
+                    if (type == 'lists' || type == 'boards' || type == 'all') {
+                        cacheFile.translations.boards[item.id] = {
+                            "organization": item.idOrganization,
+                            "name": item.name,
+                            "closed": item.closed,
+                            "voting": item.powerUps.indexOf("voting") > -1
+                        };
+                    }
+
+                    cacheUserInfoFromMemberships(item.memberships);
                 });
 
                 // Write it back to the cache file
@@ -68,10 +116,12 @@ var ___ = function(program, output, logger, config, trello, translator) {
                                     throw err;
                                 }
                                 _.each(data, function(item) {
-                                    cacheFile.translations.lists[item.id] = {
-                                        "board": item.idBoard,
-                                        "name": item.name
-                                    };
+                                    if (item.id) {
+                                        cacheFile.translations.lists[item.id] = {
+                                            "board": item.idBoard,
+                                            "name": item.name
+                                        };
+                                    }
                                 });
                                 callback();
                             });
@@ -83,7 +133,7 @@ var ___ = function(program, output, logger, config, trello, translator) {
 
                             translator.reloadTranslations();
 
-                            output.normal("Organization, board and list cache refreshed");
+                            output.normal("Organization, board, list, and user cache refreshed");
 
                             if (typeof onComplete == 'function') {
                                 onComplete();
