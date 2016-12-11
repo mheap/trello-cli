@@ -7,7 +7,8 @@ var program = require("nomnom"),
     Trello = require("node-trello"),
     config = require("nconf"),
     fs = require("fs"),
-    path = require("path");
+    path = require("path"),
+    colors = require('colors');
 
 var configGen = require("../lib/configGen")
 

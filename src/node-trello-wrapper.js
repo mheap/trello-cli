@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var __ = function(output, logger, config, authentication) {
 

@@ -88,7 +88,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                     help: "Create the board if it doesn't exist",
                     required: false,
                     default: false
-                }
+                },
                 "verbose": {
                     abbr: 'v',
                     help: "Turn on increased error reporting",
