@@ -1,6 +1,6 @@
 "use strict";
 
-var _ = require("underscore");
+fs = require("fs");
 
 var __ = function(program, output, logger, config, trello, translator, trelloApiCommands) {
 
