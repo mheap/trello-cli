@@ -9,20 +9,25 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
 
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
         logger.info("Showing details about the specified card");
 
         var cardId = options.cardId.replace(/[https:\/\/|http:\/\/]*trello.com\/c\//gi, "");
 
-        trello.get("/1/cards/" + cardId + "", {"fields": "all", "member_fields": "all"}, function(err, data) {
+        trello.get("/1/cards/" + cardId + "", {
+            "fields": "all",
+            "member_fields": "all"
+        }, function(err, data) {
             if (err) throw err;
 
             output.bold(translator.getList(data.idList) + " > " + data.name);
+            output.italic(data.desc);
+
             output.normal(data);
         });
     }
 
-    trelloApiCommand.nomnomProgramCall = function () {
+    trelloApiCommand.nomnomProgramCall = function() {
         program
             .command("card-details")
             .help("Show details about a specified card")
@@ -33,10 +38,10 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                     required: true
                 }
             })
-            .callback(function (options) {
+            .callback(function(options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
-        }
+    }
 
     return trelloApiCommand;
 }

@@ -1,16 +1,17 @@
 #!/usr/bin/env node
+
 "use strict";
 
 // npm dependencies
 var program = require("nomnom"),
-    Trello  = require("node-trello"),
-    config  = require("nconf"),
-    fs      = require("fs"),
-    path    = require("path");
+    Trello = require("node-trello"),
+    config = require("nconf"),
+    fs = require("fs"),
+    path = require("path");
 
 var configGen = require("../lib/configGen")
 
-var configDir  = path.resolve(configGen.homePath(), ".trello-cli");
+var configDir = path.resolve(configGen.homePath(), ".trello-cli");
 var configPath = path.resolve(configDir, "config.json");
 // Load config
 config.file(configPath);
@@ -28,45 +29,50 @@ program.nocolors();
 logger.debug("Starting trello-cli");
 
 // Make sure config.json exists
-if (!fs.existsSync(configPath)){
-  logger.emerg("config.json does not exist. trying to create new one.");
-  configGen.createEmptyConfig(configDir);
-  process.exit(1);
+if (!fs.existsSync(configPath)) {
+    logger.emerg("config.json does not exist. trying to create new one.");
+    configGen.createEmptyConfig(configDir);
+    process.exit(1);
 }
 
 var trelloApiCommands = {};
 
 // Hacky, but it'll do for now
-if (process.argv[2] == 'set-auth'){
-  Authentication.setToken(process.argv[3]);
+if (process.argv[2] == 'set-auth') {
+    Authentication.setToken(process.argv[3]);
 } else {
-  // Make sure we have an API key etc
-  Authentication.check();
+    // Make sure we have an API key etc
+    Authentication.check();
 
-  // Set up Trello
-  var trello = require("../src/node-trello-wrapper")(output, logger, config, Authentication);
+    // Set up Trello
+    var trello = require("../src/node-trello-wrapper")(output, logger, config, Authentication);
 
-  // Then register our commands
-  var commands = fs.readdirSync(__dirname + "/../src/commands/");
-  commands.forEach(function (commandFilename) {
-    var command = commandFilename.slice(null, -3);
-    // a bit hacky, but it avoids having to redo all the old commands
-    var trelloApiCommand = require("../src/commands/" + commandFilename)(program, output, logger, config, trello, translator, trelloApiCommands);
+    // Then register our commands
+    var commands = fs.readdirSync(__dirname + "/../src/commands/");
+    commands.forEach(function(commandFilename) {
+        var command = commandFilename.slice(null, -3);
+        // a bit hacky, but it avoids having to redo all the old commands
+        var trelloApiCommand = require("../src/commands/" + commandFilename)(program, output, logger, config, trello, translator, trelloApiCommands);
 
-    if (trelloApiCommand != undefined) {
-        trelloApiCommand.nomnomProgramCall(program, output, logger, config, trello, translator, trelloApiCommands);
-        trelloApiCommands[command] = trelloApiCommand;
-    }
-  });
+        if (trelloApiCommand != undefined) {
+            trelloApiCommand.nomnomProgramCall(program, output, logger, config, trello, translator, trelloApiCommands);
+            trelloApiCommands[command] = trelloApiCommand;
+        }
+    });
+}
+
+if (!translator.checkCompatibleCache) {
+    logger.warning("Cache file is not compatible with this version. trying to create new one.");
+    trelloApiCommands["refresh"].makeTrelloApiCall(null, null);
 }
 
 // Handle the case when there's no command
-program.nocommand().callback(function(){
-  output.underline("Trello CLI");
-  output.normal("Welcome to Trello CLI! To get started, run:");
-  output.normal("trello --help");
+program.nocommand().callback(function() {
+    output.underline("Trello CLI");
+    output.normal("Welcome to Trello CLI! To get started, run:");
+    output.normal("trello --help");
 });
-program.printer(function(line){
+program.printer(function(line) {
     logger.warning(line.trim());
     process.exit(1);
 });

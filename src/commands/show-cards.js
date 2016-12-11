@@ -8,7 +8,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
 
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
         logger.info("Showing cards belonging to the specified list");
 
         // Grab our boards etc
@@ -19,7 +19,10 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 logger.warning("Unknown board.  Perhaps you have a typo?");
 
                 output.normal("\nYou have the following open boards:\n");
-                trelloApiCommands["show-boards"].makeTrelloApiCall({ includeClosed : false, hideIds : true}, null);
+                trelloApiCommands["show-boards"].makeTrelloApiCall({
+                    includeClosed: false,
+                    hideIds: true
+                }, null);
                 return;
             }
         }
@@ -29,8 +32,8 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
         if (options.list) {
             listIds.push(translator.getListIdByBoardNameAndListName(options.board, options.list));
         } else {
-            _.each(translator.cache.translations.lists, function (oneList, listId) {
-                if (listId != "undefined" && oneList.length == 2 && oneList[0] == boardId) {
+            _.each(translator.cache.translations.lists, function(oneList, listId) {
+                if (listId != "undefined" && oneList["board"] == boardId) {
                     // oneList: [ boardId, listName ]
                     listIds.push(listId);
                 }
@@ -38,14 +41,16 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
         }
 
         listIds.forEach(function(listId) {
-            trello.get("/1/lists/" + listId + "", {"cards": "open"}, function(err, data) {
+            trello.get("/1/lists/" + listId + "", {
+                "cards": "open"
+            }, function(err, data) {
                 if (err) throw err;
 
                 if (data.cards.length > 0) {
                     if (options.showListName || !options.list) {
-                      output.underline(translator.getList(data.cards[0].idList));
+                        output.underline(translator.getList(data.cards[0].idList));
                     } else {
-                      output.underline(translator.getBoard(data.cards[0].idBoard));
+                        output.underline(translator.getBoard(data.cards[0].idBoard));
                     }
                 }
                 for (var i in data.cards) {
@@ -58,7 +63,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
         });
     }
 
-    trelloApiCommand.nomnomProgramCall = function () {
+    trelloApiCommand.nomnomProgramCall = function() {
         program
             .command("show-cards")
             .help("Show the cards on a list")
@@ -76,24 +81,24 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                     required: false
                 },
                 "showListName": {
-                      abbr: 'n',
-                      help: "Show list name in title, in addtion to board name, if specific list specified",
-                      required: false,
-                      flag: true,
-                      default: true
+                    abbr: 'n',
+                    help: "Show list name in title, in addtion to board name, if specific list specified",
+                    required: false,
+                    flag: true,
+                    default: true
                 },
                 "hideIds": {
-                      abbr: 'i',
-                      help: "Do not include the card IDs in the output (default is to print IDs)",
-                      required: false,
-                      flag: true,
-                      default: false
+                    abbr: 'i',
+                    help: "Do not include the card IDs in the output (default is to print IDs)",
+                    required: false,
+                    flag: true,
+                    default: false
                 }
             })
-            .callback(function (options) {
+            .callback(function(options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
-        }
+    }
 
     return trelloApiCommand;
 }

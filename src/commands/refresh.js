@@ -4,11 +4,11 @@ var _ = require("underscore"),
     async = require("async"),
     fs = require("fs");
 
-var ___ = function (program, output, logger, config, trello, translator) {
+var ___ = function(program, output, logger, config, trello, translator) {
 
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
         // console.log("refresh API call entered...");
 
         var type = "all";
@@ -16,10 +16,12 @@ var ___ = function (program, output, logger, config, trello, translator) {
         var cachePath = config.get("configPath") + config.get("translationCache");
         var cacheFile = {};
         try {
-          cacheFile = JSON.parse(fs.readFileSync(cachePath));
-        } catch (e){
-          // Nothing!
+            cacheFile = JSON.parse(fs.readFileSync(cachePath));
+        } catch (e) {
+            // Nothing!
         }
+
+        cacheFile.formatVersion = 2;
 
         cacheFile.translations = cacheFile.translations || {};
         cacheFile.translations.orgs = cacheFile.translations.orgs || {};
@@ -27,22 +29,30 @@ var ___ = function (program, output, logger, config, trello, translator) {
         cacheFile.translations.lists = cacheFile.translations.lists || {};
 
         if (type == 'orgs' || type == 'all') {
-          trello.get("/1/members/me/organizations", function(err, data) {
-            if (err) throw err;
-            _.each(data, function(item){
-              cacheFile.translations.orgs[item.id] = item.name;
-            });
+            trello.get("/1/members/me/organizations", function(err, data) {
+                if (err) throw err;
+                _.each(data, function(item) {
+                    cacheFile.translations.orgs[item.id] = {
+                        "name": item.name,
+                        "displayName": item.displayName
+                    };
+                });
 
-            // Write it back to the cache file
-            fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
-          });
+                // Write it back to the cache file
+                fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+            });
         }
 
         if (type == 'lists' || type == 'boards' || type == 'all') {
             trello.get("/1/members/me/boards", function(err, data) {
                 if (err) throw err;
                 _.each(data, function(item) {
-                    cacheFile.translations.boards[item.id] = [item.idOrganization, item.name, item.closed];
+                    cacheFile.translations.boards[item.id] = {
+                        "organization": item.idOrganization,
+                        "name": item.name,
+                        "closed": item.closed,
+                        "voting": item.powerUps.indexOf("voting") > -1
+                    };
                 });
 
                 // Write it back to the cache file
@@ -54,9 +64,14 @@ var ___ = function (program, output, logger, config, trello, translator) {
                         function(board, callback) {
                             // console.log("trello.get(" + "/1/boards/" + board + "/lists)");
                             trello.get("/1/boards/" + board + "/lists", function(err, data) {
-                                if (err) { throw err; }
+                                if (err) {
+                                    throw err;
+                                }
                                 _.each(data, function(item) {
-                                    cacheFile.translations.lists[item.id] = [item.idBoard, item.name];
+                                    cacheFile.translations.lists[item.id] = {
+                                        "board": item.idBoard,
+                                        "name": item.name
+                                    };
                                 });
                                 callback();
                             });
@@ -68,7 +83,7 @@ var ___ = function (program, output, logger, config, trello, translator) {
 
                             translator.reloadTranslations();
 
-                            output.normal("Organisation, board and list cache refreshed");
+                            output.normal("Organization, board and list cache refreshed");
 
                             if (typeof onComplete == 'function') {
                                 onComplete();
@@ -82,12 +97,12 @@ var ___ = function (program, output, logger, config, trello, translator) {
 
     };
 
-    trelloApiCommand.nomnomProgramCall = function () {
+    trelloApiCommand.nomnomProgramCall = function() {
 
         program
             .command("refresh")
             .help("Refresh all your board/list names")
-            .callback(function (options) {
+            .callback(function(options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
     };
