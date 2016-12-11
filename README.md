@@ -44,3 +44,4 @@ You will then have the `trello` command available anywhere.
 
     # Move all cards:
     $ trello move-all-cards -b "GTD" -l "Completed next actions" -c "GTD" -d "Completed next actions (Nov 2-8)"
+#mg foo
