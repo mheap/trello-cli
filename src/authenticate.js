@@ -65,7 +65,7 @@ Auth.prototype.check = function(){
   if (!authCache.token){
     this.logger.debug("Token does not exist, asking the user to go via the web flow");
     this.output.normal("We couldn't find an authentication token! Please visit the following URL:");
-    this.output.emphasis(this.authenticationUrl);
+    this.output.underline(this.authenticationUrl);
     this.output.normal("Once you have a token, run the following command:");
     this.output.normal("trello set-auth <token>");
     process.exit(1);

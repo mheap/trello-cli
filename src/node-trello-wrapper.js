@@ -31,7 +31,7 @@ var __ = function (output, logger, config, authentication) {
             if (data == "expired token" || data == "invalid token") {
                 logger.error("Authentication token has expired or is otherwise invalid.");
                 output.normal("To get a new token, please re-visit:");
-                output.emphasis(authentication.authenticationUrl);
+                output.underline(authentication.authenticationUrl);
                 output.normal("Once you have a token, run the following command:");
                 output.normal("trello set-auth <token>");
                 process.exit(1);

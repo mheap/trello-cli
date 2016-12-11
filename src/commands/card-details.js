@@ -17,6 +17,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
         trello.get("/1/cards/" + cardId + "", {"fields": "all", "member_fields": "all"}, function(err, data) {
             if (err) throw err;
 
+            output.bold(translator.getList(data.idList) + " > " + data.name);
             output.normal(data);
         });
     }
@@ -27,8 +28,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             .help("Show details about a specified card")
             .options({
                 "cardId": {
-                    abbr: 'c',
-                    metavar: 'CARD',
+                    position: 1,
                     help: "The short URL or ID of the card to display information about",
                     required: true
                 }

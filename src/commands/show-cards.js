@@ -42,10 +42,10 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 if (err) throw err;
 
                 if (data.cards.length > 0) {
-                    if (options.showListName) {
-                      output.normal(translator.getList(data.cards[0].idList).underline);
+                    if (options.showListName || !options.list) {
+                      output.underline(translator.getList(data.cards[0].idList));
                     } else {
-                      output.normal(translator.getBoard(data.cards[0].idBoard).underline);
+                      output.underline(translator.getBoard(data.cards[0].idBoard));
                     }
                 }
                 for (var i in data.cards) {
@@ -77,7 +77,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 },
                 "showListName": {
                       abbr: 'n',
-                      help: "Show list name in title, in addtion to board name",
+                      help: "Show list name in title, in addtion to board name, if specific list specified",
                       required: false,
                       flag: true,
                       default: true
