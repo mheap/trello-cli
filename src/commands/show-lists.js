@@ -7,6 +7,7 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
     var trelloApiCommand = {};
 
     trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+        logger.info("Showing lists belonging to the specified board");
 
         // Grab our boards etc
         if (options.board) {
@@ -52,13 +53,6 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
                     help: "The board name which contains the list of lists to show",
                     required: false
                 },
-                // "includeClosed": {
-                //       abbr: 'c',
-                //       help: "Include closed lists in the list (default: no)",
-                //       required: false,
-                //       flag: true,
-                //       default: false
-                // },
                 "hideIds": {
                       abbr: 'i',
                       help: "Do not include the list IDs in the output (default is to print IDs)",
