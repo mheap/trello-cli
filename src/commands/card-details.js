@@ -20,10 +20,42 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
         }, function(err, data) {
             if (err) throw err;
 
-            output.bold(translator.getList(data.idList) + " > " + data.name);
-            output.italic(data.desc);
+            var name = translator.getList(data.idList) + " > " + data.name;
+            if (data.closed == true) {
+                output.bold(name.red);
+                output.bold("This card is archived.".red);
+            } else {
+                output.bold(name);
+            }
+            if (data.labels.length > 0) {
+                var x = [];
+                data.labels.forEach(function(e) {
+                    var c = "";
+                    switch (e.color) {
+                        case 'purple':
+                        case 'pink':
+                            c = 'magenta';
+                            break;
+                        case 'sky':
+                        case 'lime':
+                            c = 'cyan';
+                            break;
+                        case 'orange':
+                            c = 'yellow';
+                            break;
+                        default:
+                            c = e.color;
+                            break;
+                    }
+                    if (c && output.hasOwnProperty(c)) x.push(e.name[c])
+                    else x.push(e.name)
+                });
+                output.normal("Labels: " + x.join(", "));
+            }
+            if (data.due != null) output.normal("Due " + data.due);
+            output.italic("\n" + data.desc + "\n");
 
-            output.normal(data);
+            output.normal(data); // Temporary until command finished
         });
     }
 
