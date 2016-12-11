@@ -1,12 +1,9 @@
 "use strict";
 
 fs = require("fs");
-
 var _ = require("underscore");
 
 var __ = function(program, output, logger, config, trello, translator, trelloApiCommands) {
-    logger.info("Showing lists belonging to the specified board");
-
     var trelloApiCommand = {};
 
     trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
@@ -16,14 +13,16 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
 
         trello.get("/1/cards/" + cardId + "", {
             "fields": "all",
-            "member_fields": "all"
+            "member_fields": "all",
+            "attachments": "true",
+            "checklists": "all"
         }, function(err, data) {
             if (err) throw err;
 
             var name = translator.getList(data.idList) + " > " + data.name;
-            if (data.closed == true) {
+            if (data.closed == true) { // XXX If someone can recommend a better way to do this, I would love to hear it!
                 output.bold(name.red);
-                output.bold("This card is archived.".red);
+                output.bold("This card is archived (closed).".red);
             } else {
                 output.bold(name);
             }
@@ -31,12 +30,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 var x = [];
                 data.labels.forEach(function(e) {
                     var c = "";
-                    switch (e.color) {
-                        case 'purple':
-                        case 'pink':
-                            c = 'magenta';
-                            break;
-                        case 'sky':
+                    switch (e.color) { // XXX I don't know a better way to do this, either, I would love to hear recommendations!
                         case 'lime':
                             c = 'cyan';
                             break;
@@ -53,9 +47,29 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 output.normal("Labels: " + x.join(", "));
             }
             if (data.due != null) output.normal("Due " + data.due);
-            output.italic("\n" + data.desc + "\n");
+            if (translator.cache.translations.boards[data.idBoard] && translator.cache.translations.boards[data.idBoard]["voting"] && data.badges.votes > 0) {
+                var youVoted = "";
+                if (data.badges.viewingMemberVoted == true) youVoted = " (you voted)";
+                if (data.badges.votes == 1) output.normal("1 vote" + youVoted)
+                else output.normal(data.badges.votes + " votes" + youVoted)
+            }
+            if (data.badges.attachments > 0) {
+                if (data.badges.attachments == 1) output.normal("1 attachment:");
+                else output.normal(data.badges.attachments + " attachments:");
+                data.attachments.forEach(function(e) {
+                    output.normal("* " + e.name + " - " + e.url.underline);
+                });
+            }
+            data.checklists.forEach(function(e) {
+                if (e.name == "Checklist") output.bold("Checklist:");
+                else output.bold("Checklist - " + e.name + ":");
+                e.checkItems.forEach(function(el) {
+                    if (el.state == "complete") output.green("- " + el.name + " (Completed)");
+                    else output.yellow("* " + el.name);
+                });
+            });
 
-            output.normal(data); // Temporary until command finished
+            if (data.badges.description == true) output.italic("\n" + data.desc + "\n");
         });
     }
 
