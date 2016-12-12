@@ -5,6 +5,7 @@ var Translator = function(logger, config) {
     this.loadCount = 1;
     this.logger = logger;
     this.config = config;
+    this.formatVersionNeeded = 1;
 
     // Load the cache file
     var cachePath = config.get("configPath") + config.get("translationCache");
@@ -15,16 +16,20 @@ var Translator = function(logger, config) {
         // Nothing
     }
 
+    cacheFile.formatVersion = cacheFile.formatVersion || this.formatVersionNeeded;
+
     cacheFile.translations = cacheFile.translations || {};
     cacheFile.translations.orgs = cacheFile.translations.orgs || {};
     cacheFile.translations.boards = cacheFile.translations.boards || {};
     cacheFile.translations.lists = cacheFile.translations.lists || {};
+    cacheFile.translations.users = cacheFile.translations.users || {};
+    cacheFile.translations.me = cacheFile.translations.me || {};
 
     this.cache = cacheFile;
 }
 
 Translator.prototype.checkCompatibleCache = function() {
-    return cacheFile.formatVersion == 1;
+    return cacheFile.formatVersion == this.formatVersionNeeded;
 }
 
 Translator.prototype.reloadTranslations = function() {
@@ -37,10 +42,14 @@ Translator.prototype.reloadTranslations = function() {
         // Nothing
     }
 
+    cacheFile.formatVersion = cacheFile.formatVersion || this.formatVersionNeeded;
+
     cacheFile.translations = cacheFile.translations || {};
     cacheFile.translations.orgs = cacheFile.translations.orgs || {};
     cacheFile.translations.boards = cacheFile.translations.boards || {};
     cacheFile.translations.lists = cacheFile.translations.lists || {};
+    cacheFile.translations.users = cacheFile.translations.users || {};
+    cacheFile.translations.me = cacheFile.translations.me || {};
 
     this.cache = cacheFile;
 
@@ -85,6 +94,17 @@ Translator.prototype.getList = function(id) {
     return str || "List: " + id;
 }
 
+Translator.prototype.getUser = function(id) {
+    this.logger.debug("Looking up user: " + id);
+    if (this.cache.translations.me.id == id) return (this.cache.translations.me.name + " (you)");
+    var item = this.cache.translations.users[id];
+    var str = "";
+    if (item) {
+        str += item["name"];
+    }
+    return str || "User: " + id;
+}
+
 Translator.prototype.getBoardIdByName = function(name) {
     // console.log("-- getBoardIdByName() boards length: " + Object.keys(this.cache.translations.boards).length);
     // console.log("-- getBoardIdByName() lists length: " + Object.keys(this.cache.translations.lists).length);
@@ -101,9 +121,6 @@ Translator.prototype.getBoardIdByName = function(name) {
 }
 
 Translator.prototype.getBoardsByName = function(name, comparer) {
-    // console.log("-- getBoardIdByName() boards length: " + Object.keys(this.cache.translations.boards).length);
-    // console.log("-- getBoardIdByName() lists length: " + Object.keys(this.cache.translations.lists).length);
-
     var matchingBoardIds = [];
     name = name.toLowerCase();
     this.logger.debug("Looking up boards by name: " + name);
@@ -121,8 +138,6 @@ Translator.prototype.getBoardsByName = function(name, comparer) {
 }
 
 Translator.prototype.getListIdByBoardNameAndListName = function(board, list) {
-    // console.log("-- getListIdByBoardNameAndListName() boards length: " + Object.keys(this.cache.translations.boards).length);
-    // console.log("-- getListIdByBoardNameAndListName() lists length: " + Object.keys(this.cache.translations.lists).length);
     var boardId = this.getBoardIdByName(board);
 
     list = list.toLowerCase();
@@ -135,6 +150,32 @@ Translator.prototype.getListIdByBoardNameAndListName = function(board, list) {
     }
 
     throw new Error("Unknown List");
+}
+
+Translator.prototype.getUserIdByDisplayName = function(name) {
+    name = name.toLowerCase();
+    this.logger.debug("Looking up user by name: " + name);
+    var user = this.cache.translations.user;
+    for (var i in user) {
+        if (user[i]["name"] != null && user[i]["name"].toLowerCase() == name) {
+            return i;
+        }
+    }
+
+    throw new Error("Unknown User");
+}
+
+Translator.prototype.getUserIdByUsername = function(name) {
+    name = name.toLowerCase();
+    this.logger.debug("Looking up user by username: " + name);
+    var user = this.cache.translations.user;
+    for (var i in user) {
+        if (user[i]["username"] != null && user[i]["username"].toLowerCase() == name) {
+            return i;
+        }
+    }
+
+    throw new Error("Unknown User");
 }
 
 module.exports = function(logger, config) {

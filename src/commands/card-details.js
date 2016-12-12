@@ -26,6 +26,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             } else {
                 output.bold(name);
             }
+            if (data.badges.subscribed) output.normal("You are subscribed to this card.");
             if (data.labels.length > 0) {
                 var x = [];
                 data.labels.forEach(function(e) {
@@ -47,11 +48,21 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 output.normal("Labels: " + x.join(", "));
             }
             if (data.due != null) output.normal("Due " + data.due);
+            if (data.idMembers.length > 0) {
+                var members = [];
+                data.idMembers.forEach(function(e) {
+                    members.push(translator.getUser(e));
+                });
+                if (data.idMembers.length == 1) output.normal("1 member: " + members.join(", "))
+                else output.normal(data.idMembers.length + " members: " + members.join(", "))
+            }
             if (translator.cache.translations.boards[data.idBoard] && translator.cache.translations.boards[data.idBoard]["voting"] && data.badges.votes > 0) {
-                var youVoted = "";
-                if (data.badges.viewingMemberVoted == true) youVoted = " (you voted)";
-                if (data.badges.votes == 1) output.normal("1 vote" + youVoted)
-                else output.normal(data.badges.votes + " votes" + youVoted)
+                var voters = [];
+                data.idMembersVoted.forEach(function(e) {
+                    voters.push(translator.getUser(e));
+                });
+                if (data.badges.votes == 1) output.normal("1 vote: " + voters.join(", "))
+                else output.normal(data.badges.votes + " votes: " + voters.join(", "))
             }
             if (data.badges.attachments > 0) {
                 if (data.badges.attachments == 1) output.normal("1 attachment:");

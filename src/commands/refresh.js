@@ -21,19 +21,27 @@ var ___ = function(program, output, logger, config, trello, translator) {
             // Nothing!
         }
 
-        cacheFile.formatVersion = 1;
-        cacheFile.me = cacheFile.me || {};
+        if (cacheFile.formatVersion != translator.formatVersionNeeded) cacheFile.translations = {
+            "orgs": {},
+            "boards": {},
+            "lists": {},
+            "users": {},
+            "me": {}
+        };
+
+        cacheFile.formatVersion = translator.formatVersionNeeded;
 
         cacheFile.translations = cacheFile.translations || {};
         cacheFile.translations.orgs = cacheFile.translations.orgs || {};
         cacheFile.translations.boards = cacheFile.translations.boards || {};
         cacheFile.translations.lists = cacheFile.translations.lists || {};
         cacheFile.translations.users = cacheFile.translations.users || {};
+        cacheFile.translations.me = cacheFile.translations.me || {};
 
         if (type == 'users' || type == 'all') {
             trello.get("/1/members/me", function(err, user) {
                 if (err) throw err;
-                cacheFile.me = {
+                cacheFile.translations.me = {
                     "id": user.id,
                     "name": user.fullName,
                     "username": user.username,
