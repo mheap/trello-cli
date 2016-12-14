@@ -2,6 +2,8 @@
 
 fs = require("fs");
 
+var _ = require("underscore");
+
 var __ = function(program, output, logger, config, trello, translator, trelloApiCommands) {
 
     var trelloApiCommand = {};
