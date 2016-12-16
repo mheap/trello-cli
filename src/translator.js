@@ -1,10 +1,14 @@
-var fs = require("fs");
+var _ = require("underscore"),
+    async = require("async"),
+    fs = require("fs"),
+    output = require("../lib/output");
 
-var Translator = function(logger, config) {
+var Translator = function(logger, config, trello) {
 
     this.loadCount = 1;
     this.logger = logger;
     this.config = config;
+    this.trello = trello;
     this.formatVersionNeeded = 1;
 
     // Load the cache file
@@ -29,13 +33,13 @@ var Translator = function(logger, config) {
 }
 
 Translator.prototype.checkCompatibleCache = function() {
-    return cacheFile.formatVersion == this.formatVersionNeeded;
+    return this.cache.formatVersion == this.formatVersionNeeded;
 }
 
 Translator.prototype.reloadTranslations = function(type, onComplete) {
     if (type == undefined) type = "all";
 
-    var cachePath = config.get("configPath") + config.get("translationCache");
+    var cachePath = this.config.get("configPath") + this.config.get("translationCache");
     var cacheFile = {};
     try {
         cacheFile = JSON.parse(fs.readFileSync(cachePath));
@@ -59,6 +63,8 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
     cacheFile.translations.lists = cacheFile.translations.lists || {};
     cacheFile.translations.users = cacheFile.translations.users || {};
     cacheFile.translations.me = cacheFile.translations.me || {};
+
+    trello = this.trello;
 
     if (type == 'users' || type == 'all') {
         trello.get("/1/members/me", function(err, user) {
@@ -294,6 +300,6 @@ Translator.prototype.getUserIdByUsername = function(name) {
     throw new Error("Unknown User");
 }
 
-module.exports = function(logger, config) {
-    return new Translator(logger, config);
+module.exports = function(logger, config, trello) {
+    return new Translator(logger, config, trello);
 }
