@@ -32,17 +32,26 @@ Translator.prototype.checkCompatibleCache = function() {
     return cacheFile.formatVersion == this.formatVersionNeeded;
 }
 
-Translator.prototype.reloadTranslations = function() {
-    // Load the cache file
-    var cachePath = this.config.get("configPath") + this.config.get("translationCache");
+Translator.prototype.reloadTranslations = function(type, onComplete) {
+    if (type == undefined) type = "all";
+
+    var cachePath = config.get("configPath") + config.get("translationCache");
     var cacheFile = {};
     try {
         cacheFile = JSON.parse(fs.readFileSync(cachePath));
     } catch (e) {
-        // Nothing
+        // Nothing!
     }
 
-    cacheFile.formatVersion = cacheFile.formatVersion || this.formatVersionNeeded;
+    if (!this.checkCompatibleCache()) cacheFile.translations = {
+        "orgs": {},
+        "boards": {},
+        "lists": {},
+        "users": {},
+        "me": {}
+    };
+
+    cacheFile.formatVersion = this.formatVersionNeeded;
 
     cacheFile.translations = cacheFile.translations || {};
     cacheFile.translations.orgs = cacheFile.translations.orgs || {};
@@ -51,13 +60,120 @@ Translator.prototype.reloadTranslations = function() {
     cacheFile.translations.users = cacheFile.translations.users || {};
     cacheFile.translations.me = cacheFile.translations.me || {};
 
-    this.cache = cacheFile;
+    if (type == 'users' || type == 'all') {
+        trello.get("/1/members/me", function(err, user) {
+            if (err) throw err;
+            cacheFile.translations.me = {
+                "id": user.id,
+                "name": user.fullName,
+                "username": user.username,
+                "initials": user.initials,
+                "type": user.memberType
+            }
 
-    this.loadCount++;
+            // Write it back to the cache file
+            fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+        });
+    }
 
-    // console.log("-- reloadTranslations() boards length: " + Object.keys(this.cache.translations.boards).length);
-    // console.log("-- reloadTranslations() lists length: " + Object.keys(this.cache.translations.lists).length);
-};
+    function cacheUserInfoFromMemberships(memberships) {
+        if (type == 'users' || type == 'all') {
+            _.each(memberships, function(m) {
+                trello.get("/1/members/" + m.idMember, function(err, user) {
+                    if (err) throw err;
+
+                    if (user.id && !(user.id in cacheFile.translations.users.hasOwnProperty)) {
+                        cacheFile.translations.users[user.id] = {
+                            "name": user.fullName,
+                            "username": user.username,
+                            "initials": user.initials,
+                            "type": user.memberType
+                        }
+
+                        // Write it back to the cache file
+                        fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+                    }
+                });
+            })
+        }
+    }
+
+    if (type == 'orgs' || type == 'users' || type == 'all') {
+        trello.get("/1/members/me/organizations", function(err, data) {
+            if (err) throw err;
+            _.each(data, function(item) {
+                if (type == 'orgs' || type == 'all') {
+                    cacheFile.translations.orgs[item.id] = {
+                        "name": item.name,
+                        "displayName": item.displayName
+                    };
+                }
+
+                cacheUserInfoFromMemberships(item.memberships);
+            });
+
+            // Write it back to the cache file
+            fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+        });
+    }
+
+    if (type == 'lists' || type == 'boards' || type == 'users' || type == 'all') {
+        trello.get("/1/members/me/boards", function(err, data) {
+            if (err) throw err;
+            _.each(data, function(item) {
+                if (type == 'lists' || type == 'boards' || type == 'all') {
+                    cacheFile.translations.boards[item.id] = {
+                        "organization": item.idOrganization,
+                        "name": item.name,
+                        "closed": item.closed,
+                        "voting": item.powerUps.indexOf("voting") > -1
+                    };
+                }
+
+                cacheUserInfoFromMemberships(item.memberships);
+            });
+
+            // Write it back to the cache file
+            fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+
+            if (type == 'lists' || type == 'all') {
+                async.each(
+                    Object.keys(cacheFile.translations.boards),
+                    function(board, callback) {
+                        // console.log("trello.get(" + "/1/boards/" + board + "/lists)");
+                        trello.get("/1/boards/" + board + "/lists", function(err, data) {
+                            if (err) {
+                                throw err;
+                            }
+                            _.each(data, function(item) {
+                                if (item.id) {
+                                    cacheFile.translations.lists[item.id] = {
+                                        "board": item.idBoard,
+                                        "name": item.name
+                                    };
+                                }
+                            });
+                            callback();
+                        });
+                    }.bind(this),
+                    function(err) {
+                        // console.log("done with fetching list for all boards");
+                        // Write it back to the cache file
+                        fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+                        output.normal("Organization, board, list, and user cache refreshed");
+                        this.cache = cacheFile;
+                        this.loadCount++;
+
+                        if (typeof onComplete == 'function') {
+                            onComplete();
+                        }
+                    });
+
+                // console.log("end of if statement inside boards loop");
+            }
+        });
+    }
+}
 
 Translator.prototype.getOrganization = function(id) {
     this.logger.debug("Looking up organization: " + id);
