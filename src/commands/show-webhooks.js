@@ -12,7 +12,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             if (err) throw err;
             for (var i = 0; i < data.length; i++) {
                 var d = data[i];
-                if (d.webhooks.length > 0) {
+                if (d.webhooks && d.webhooks.length > 0) {
                     output.normal("* " + d.identifier.bold);
                     for (var j = 0; j < d.webhooks.length; j++) {
                         var w = d.webhooks[j];

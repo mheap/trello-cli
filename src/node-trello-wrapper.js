@@ -28,7 +28,7 @@ var __ = function(output, logger, config, authentication) {
 
     trelloWrapper.callbackWrapperFactory = function(callback) {
         return function(err, data) {
-            if (data == "expired token" || data == "invalid token") {
+            if (data == "expired token" || data == "invalid token" || data == "unauthorized member permission requested.") {
                 logger.error("Authentication token has expired or is otherwise invalid.");
                 output.normal("To get a new token, please re-visit:");
                 output.underline(authentication.authenticationUrl);

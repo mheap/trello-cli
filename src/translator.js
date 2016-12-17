@@ -20,7 +20,7 @@ var Translator = function(logger, config, trello) {
         // Nothing
     }
 
-    cacheFile.formatVersion = cacheFile.formatVersion || this.formatVersionNeeded;
+    cacheFile.formatVersion = cacheFile.formatVersion || -1;
 
     cacheFile.translations = cacheFile.translations || {};
     cacheFile.translations.orgs = cacheFile.translations.orgs || {};

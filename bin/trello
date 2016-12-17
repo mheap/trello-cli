@@ -23,6 +23,8 @@ var logger = require("../lib/logger"),
 
 // Things we need to get up and running
 var Authentication = require("../src/authenticate")(logger, output, config);
+var trello = require("../src/node-trello-wrapper")(output, logger, config, Authentication);
+var translator = require("../src/translator")(logger, config, trello, output);
 
 program.script("trello");
 program.nocolors();
@@ -44,10 +46,6 @@ if (process.argv[2] == 'set-auth') {
     // Make sure we have an API key etc
     Authentication.check();
 
-    // Set up Trello
-    var trello = require("../src/node-trello-wrapper")(output, logger, config, Authentication);
-    var translator = require("../src/translator")(logger, config, trello, output);
-
     // Then register our commands
     var commands = fs.readdirSync(__dirname + "/../src/commands/");
     commands.forEach(function(commandFilename) {
@@ -62,9 +60,9 @@ if (process.argv[2] == 'set-auth') {
     });
 }
 
-if (!translator.checkCompatibleCache) {
-    logger.warning("Cache file is not compatible with this version. trying to create new one.");
-    trelloApiCommands["refresh"].makeTrelloApiCall(null, null);
+if (process.argv[2] == 'set-auth' || !translator.checkCompatibleCache) {
+    logger.warning("Cache file is not compatible with this version, trying to create new one.");
+    translator.refreshTranslations("all");
 }
 
 // Handle the case when there's no command
