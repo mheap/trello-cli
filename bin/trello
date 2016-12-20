@@ -37,7 +37,24 @@ if (!fs.existsSync(configPath)) {
     process.exit(1);
 }
 
-var trelloApiCommands = {};
+function registerCommands() {
+    // Resigter commands into a dictionary indexed by command name
+    var commands = {};
+    var commandNames = fs.readdirSync(__dirname + "/../src/commands/");
+    commandNames.forEach(function(commandFilename) {
+        var name= commandFilename.slice(null, -3);
+        // a bit hacky, but it avoids having to redo all the old commands # mg: ???
+        var trelloApiCommand = require("../src/commands/" + commandFilename)(program, output, logger, config, trello, translator, commands);
+
+        if (trelloApiCommand != undefined) {
+            trelloApiCommand.nomnomProgramCall(program, output, logger, config, trello, translator, commands);
+            commands[name] = trelloApiCommand;
+        }
+
+    });
+    return commands;
+}
+
 
 // Hacky, but it'll do for now
 if (process.argv[2] == 'set-auth') {
@@ -45,20 +62,10 @@ if (process.argv[2] == 'set-auth') {
 } else {
     // Make sure we have an API key etc
     Authentication.check();
-
-    // Then register our commands
-    var commands = fs.readdirSync(__dirname + "/../src/commands/");
-    commands.forEach(function(commandFilename) {
-        var command = commandFilename.slice(null, -3);
-        // a bit hacky, but it avoids having to redo all the old commands
-        var trelloApiCommand = require("../src/commands/" + commandFilename)(program, output, logger, config, trello, translator, trelloApiCommands);
-
-        if (trelloApiCommand != undefined) {
-            trelloApiCommand.nomnomProgramCall(program, output, logger, config, trello, translator, trelloApiCommands);
-            trelloApiCommands[command] = trelloApiCommand;
-        }
-    });
 }
+
+var trelloApiCommands = registerCommands();
+
 
 if (process.argv[2] == 'set-auth' || !translator.checkCompatibleCache) {
     logger.warning("Cache file is not compatible with this version, trying to create new one.");
