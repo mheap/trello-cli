@@ -100,7 +100,7 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
             if ( running > baseline ) {
                 setTimeout(checkForDone, 100);   
             } else {
-                setTimeout(function () {rl.prompt()}, 200);
+                setTimeout(function () {program.script("trello"); rl.prompt()}, 200);
             }
         }
         var args = shell.parse(line);
