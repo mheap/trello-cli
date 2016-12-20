@@ -9,7 +9,8 @@ var readline = require('readline'),
     config = require("nconf"),
     path = require("path"),
     fs = require("fs"),
-    colors = require('colors');
+    colors = require('colors'),
+    shell = require('shell-quote');
 
 
 /* XXX mg: this has to happen first/before something else
@@ -92,8 +93,8 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
     rl.prompt();
 
     rl.on('line', (line) => {
-        var parts = line.split(" ");
-        program.parse(parts);
+        var args = shell.parse(line);
+        program.parse(args);
         rl.prompt();
     }).on('close', () => {
         console.log("\nBye");
