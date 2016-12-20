@@ -93,9 +93,19 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
     rl.prompt();
 
     rl.on('line', (line) => {
+        var baseline = process._getActiveRequests().length;
+        var checkForDone = function () {
+            var running = process._getActiveRequests().length;
+            //console.log("b:", baseline, "r:", running);
+            if ( running > baseline ) {
+                setTimeout(checkForDone, 100);   
+            } else {
+                setTimeout(function () {rl.prompt()}, 200);
+            }
+        }
         var args = shell.parse(line);
         program.parse(args);
-        rl.prompt();
+        setTimeout(checkForDone, 100);
     }).on('close', () => {
         console.log("\nBye");
         process.exit(0);
