@@ -108,6 +108,7 @@ else {
         output.underline("Trello CLI");
         output.normal("Welcome to Trello CLI! To get started, run:");
         output.normal("trello --help");
+        process.exit(1);
     });
     program.printer(function(line) {
         logger.warning(line.trim());
