@@ -3,12 +3,23 @@
 "use strict";
 
 // npm dependencies
-var program = require("nomnom"),
+var readline = require('readline'),
+    program = require("nomnom"),
     Trello = require("node-trello"),
     config = require("nconf"),
-    fs = require("fs"),
     path = require("path"),
+    fs = require("fs"),
     colors = require('colors');
+
+
+/* XXX mg: this has to happen first/before something else
+   or input is read/echoed twice?  */
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: "trello> "
+});
+
 
 var configGen = require("../lib/configGen")
 
@@ -66,21 +77,43 @@ if (process.argv[2] == 'set-auth') {
 
 var trelloApiCommands = registerCommands();
 
-
 if (process.argv[2] == 'set-auth' || !translator.checkCompatibleCache) {
     logger.warning("Cache file is not compatible with this version, trying to create new one.");
     translator.refreshTranslations("all");
 }
 
-// Handle the case when there's no command
-program.nocommand().callback(function() {
-    output.underline("Trello CLI");
-    output.normal("Welcome to Trello CLI! To get started, run:");
-    output.normal("trello --help");
-});
-program.printer(function(line) {
-    logger.warning(line.trim());
-    process.exit(1);
-});
 
-program.parse();
+if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
+    program.printer(function(line) {
+        console.log(line);
+    });
+
+    console.log("This is shello.  Ctrl-C to exit.");
+    rl.prompt();
+
+    rl.on('line', (line) => {
+        var parts = line.split(" ");
+        program.parse(parts);
+        rl.prompt();
+    }).on('close', () => {
+        console.log("\nBye");
+        process.exit(0);
+    });
+
+}
+
+else {
+    // Handle the case when there's no command
+    program.nocommand().callback(function() {
+        output.underline("Trello CLI");
+        output.normal("Welcome to Trello CLI! To get started, run:");
+        output.normal("trello --help");
+    });
+    program.printer(function(line) {
+        logger.warning(line.trim());
+        process.exit(1);
+    });
+
+    program.parse();
+}
+
