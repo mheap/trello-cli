@@ -84,6 +84,7 @@ if (process.argv[2] == 'set-auth' || !translator.checkCompatibleCache) {
 
 
 if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
+    var p = require('shell-quote').parse;
     program.printer(function(line) {
         console.log(line);
     });
@@ -92,8 +93,7 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
     rl.prompt();
 
     rl.on('line', (line) => {
-        var parts = line.split(" ");
-        program.parse(parts);
+        program.parse(p(line));
         rl.prompt();
     }).on('close', () => {
         console.log("\nBye");

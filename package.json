@@ -30,7 +30,8 @@
     "async": "~0.2.9",
     "underscore": "~1.5.1",
     "colors": "~0.6.2",
-    "term-list": "~0.2.0"
+    "term-list": "~0.2.0",
+    "shell-quote": "*"
   },
   "bin": {
     "trello": "./bin/trello"
