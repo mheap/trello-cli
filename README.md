@@ -21,11 +21,15 @@ trello-cli currently supports the following commands:
 	add-card           Add a card to a board
 	add-list           Adds a new list to the spcified board with the specified name
 	assigned-to-me     Show cards that are currently assigned to you
-    close-board        Closes those board(s) where the specified text occurs in their name
+	close-board        Closes those board(s) where the specified text occurs in their name
 	delete-card        Remove a card from a board
 	move-all-cards     Move all cards from one list to another
 	refresh            Refresh all your board/list names
-	show-list          Show cards on a list
+	show-boards        Show the list of cached boards
+	show-cards         Show the cards on a list
+	show-labels        Show labels defined on a board
+	show-list          DEPRECATED.  Show cards on a list (use 'show-cards' instead; command retained for backwards compatibility)
+	show-lists         Show the list of cached lists
 
 # On Windows
 
@@ -44,3 +48,4 @@ You will then have the `trello` command available anywhere.
 
     # Move all cards:
     $ trello move-all-cards -b "GTD" -l "Completed next actions" -c "GTD" -d "Completed next actions (Nov 2-8)"
+

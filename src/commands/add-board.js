@@ -1,23 +1,23 @@
 "use strict";
 
-var __ = function (program, output, logger, config, trello, translator, trelloApiCommands) {
+var __ = function(program, output, logger, config, trello, translator, trelloApiCommands) {
 
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
         logger.info("Adding new board...");
 
         // Build up arguments to send
         var params = {
             "name": options.boardName,
             "desc": options.description ? options.description : "",
-            "prefs_cardCovers" : options.cardCoverImages ? "false" : "true",
-            "prefs_cardAging" : options.cardAging ? "pirate" : "regular"
+            "prefs_cardCovers": options.cardCoverImages ? "false" : "true",
+            "prefs_cardAging": options.cardAging ? "pirate" : "regular"
         };
 
         // console.log(params);
 
-        trello.post("/1/boards", params, function (err, data) {
+        trello.post("/1/boards", params, function(err, data) {
             if (err) {
                 throw err;
             }
@@ -28,7 +28,7 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
         });
     };
 
-    trelloApiCommand.nomnomProgramCall = function () {
+    trelloApiCommand.nomnomProgramCall = function() {
         program
             .command("add-board")
             .help("Adds a new board with the specified name")
@@ -63,8 +63,8 @@ var __ = function (program, output, logger, config, trello, translator, trelloAp
                     required: false,
                     flag: true
                 }
-                })
-            .callback(function (options) {
+            })
+            .callback(function(options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
 

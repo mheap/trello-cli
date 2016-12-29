@@ -4,20 +4,20 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
 
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
         logger.info("Adding webhook...");
-
-        var boardId, listId;
 
         // get or create the board
         try {
-            boardId = translator.getBoardIdByName(options.boardName);
+            var boardId = translator.getBoardIdByName(options.boardName);
         } catch (err) {
             if (err.message == "Unknown Board") {
                 if (options.force && !options.triedToCreateBoard) {
                     logger.info("Board doesn't exist, creating...");
                     options.triedToCreateBoard = true;
-                    trelloApiCommands["add-board"].makeTrelloApiCall(options, function () { trelloApiCommands["add-webhook"].makeTrelloApiCall(options, null); });
+                    trelloApiCommands["add-board"].makeTrelloApiCall(options, function() {
+                        trelloApiCommands["add-webhook"].makeTrelloApiCall(options, null);
+                    });
                     return;
                 } else {
                     logger.error("Board '" + options.boardName + "' does not exist.  Exiting.");
@@ -28,13 +28,12 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 throw err;
             }
         }
-        boardId = translator.getBoardIdByName(options.boardName);
 
         // Build up arguments to send
         var params = {
-					"idModel" : boardId,
-          "description" : options.description,
-					"callbackURL" : options.callbackURL,
+            "idModel": boardId,
+            "description": options.description,
+            "callbackURL": options.callbackURL,
         };
 
         trello.post("/1/webhooks", params, function(err, data) {
@@ -43,8 +42,8 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             }
 
             if (options.verbose) {
-                 logger.info("Result from Trello: ");
-                 logger.info(data);
+                logger.info("Result from Trello: ");
+                logger.info(data);
             }
 
             if (data == "invalid value for desc") {
@@ -57,40 +56,49 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
         });
     }; // end of trelloApiCommand.makeTrelloApiCall
 
-    trelloApiCommand.nomnomProgramCall = function () {
+    trelloApiCommand.nomnomProgramCall = function() {
 
-            program
-                .command("add-webhook")
-                .help("Add a webhook to a board")
-                .options({
-                    "description": {
-												abbr: 'd',
-                        metavar: 'DESCRIPTION',
-                        help: "The webhook's description",
-                        list: false
-                    },
-                    "boardName": {
-                        abbr: 'b',
-                        metavar: 'BOARD',
-                        help: "The board name to add a webhook to",
-                        required: true
-                    },
-                    "callbackURL": {
-                        abbr: 'c',
-                        metavar: 'CALLBACK_URL',
-                        help: "The URL to connect to",
-                        required: true
-                    },
-                    "verbose": {
-                          abbr: 'v',
-                          help: "Turn on increased error reporting",
-                          required: false,
-                          flag: true
-                    }
-                })
-                .callback(function (options) {
-                    trelloApiCommand.makeTrelloApiCall(options);
-                });
+        program
+            .command("add-webhook")
+            .help("Add a webhook to a board")
+            .options({
+                "description": {
+                    abbr: 'd',
+                    metavar: 'DESCRIPTION',
+                    help: "The webhook's description",
+                    required: false,
+                    default: "",
+                    list: false
+                },
+                "boardName": {
+                    abbr: 'b',
+                    metavar: 'BOARD',
+                    help: "The board name to add a webhook to",
+                    required: true
+                },
+                "callbackURL": {
+                    abbr: 'c',
+                    metavar: 'CALLBACK_URL',
+                    help: "The URL to connect to",
+                    required: true
+                },
+                "force": {
+                    abbr: 'f',
+                    metavar: "FORCE",
+                    help: "Create the board if it doesn't exist",
+                    required: false,
+                    default: false
+                },
+                "verbose": {
+                    abbr: 'v',
+                    help: "Turn on increased error reporting",
+                    required: false,
+                    flag: true
+                }
+            })
+            .callback(function(options) {
+                trelloApiCommand.makeTrelloApiCall(options);
+            });
     };
 
     return trelloApiCommand;

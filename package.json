@@ -1,6 +1,6 @@
 {
   "name": "trello-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Trello CLI tool",
   "main": "index.js",
   "scripts": {
@@ -16,8 +16,10 @@
   ],
   "author": "Michael Heap <m@michaelheap.com>",
   "contributors" : [
-    { "name" : "Marek Skrobacki", "email" : "skrobul@skrobul.com" },
-    { "name" : "Simon Kittle", "email" : "simon@kittle.co.uk" }
+    "Vinyl Darkscratch-Kazotetsu <vinyldarkscratch@gmail.com> (http://www.vinyldarkscratch.info)",
+    "Marek Skrobacki <skrobul@skrobul.com>",
+    "Simon Kittle <simon@kittle.co.uk>",
+    "Sylvain Just (http://github.com/syjust)"
   ],
   "license": "BSD",
   "dependencies": {
@@ -28,7 +30,9 @@
     "async": "~0.2.9",
     "underscore": "~1.5.1",
     "colors": "~0.6.2",
-    "term-list": "~0.2.0"
+    "term-list": "~0.2.0",
+    "shell-quote": "*",
+    "readline": "~1.3.0"
   },
   "bin": {
     "trello": "./bin/trello"

@@ -6,7 +6,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
 
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
         logger.info("Showing labels belonging to the specified board");
 
         // Grab our boards etc
@@ -17,7 +17,10 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 logger.warning("Unknown board.  Perhaps you have a typo?");
 
                 output.normal("\nYou have the following open boards:\n");
-                trelloApiCommands["show-boards"].makeTrelloApiCall({ includeClosed : false, hideIds : true}, null);
+                trelloApiCommands["show-boards"].makeTrelloApiCall({
+                    includeClosed: false,
+                    hideIds: true
+                }, null);
                 return;
             }
         }
@@ -26,26 +29,26 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             if (err) throw err;
 
             for (var i in data) {
-              var formattedLabel = data[i].color;
+                var formattedLabel = data[i].color;
 
-              if (data[i].name.length > 0) {
-                formattedLabel += ' (' + data[i].name + ')';
-              }
+                if (data[i].name.length > 0) {
+                    formattedLabel += ' (' + data[i].name + ')';
+                }
 
-              if (options.showUses) {
-                formattedLabel += ', ' + data[i].uses;
-              }
+                if (options.showUses) {
+                    formattedLabel += ', ' + data[i].uses;
+                }
 
-              if (options.showIds) {
-                formattedLabel += ' (ID: ' + data[i].id + ')';
-              }
+                if (options.showIds) {
+                    formattedLabel += ' (ID: ' + data[i].id + ')';
+                }
 
-              output.normal(formattedLabel);
+                output.normal(formattedLabel);
             }
         });
     }
 
-    trelloApiCommand.nomnomProgramCall = function () {
+    trelloApiCommand.nomnomProgramCall = function() {
         program
             .command("show-labels")
             .help("Show labels defined on a board")
@@ -57,24 +60,24 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                     required: true
                 },
                 "showIds": {
-                      abbr: 'i',
-                      help: "Show label IDs in the output (default is to omit IDs)",
-                      required: false,
-                      flag: true,
-                      default: false
+                    abbr: 'i',
+                    help: "Show label IDs in the output (default is to omit IDs)",
+                    required: false,
+                    flag: true,
+                    default: false
                 },
                 "showUses": {
-                      abbr: 'u',
-                      help: "Show how many times a label has been used",
-                      required: false,
-                      flag: true,
-                      default: false
+                    abbr: 'u',
+                    help: "Show how many times a label has been used",
+                    required: false,
+                    flag: true,
+                    default: false
                 }
             })
-            .callback(function (options) {
+            .callback(function(options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
-        }
+    }
 
     return trelloApiCommand;
 }
