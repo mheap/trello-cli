@@ -1,6 +1,6 @@
 {
   "name": "trello-cli",
-  "version": "0.1.0",
+  "version": "0.0.5",
   "description": "Trello CLI tool",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "cli"
   ],
   "author": "Michael Heap <m@michaelheap.com>",
-  "contributors" : [
+  "contributors": [
     "Vinyl Darkscratch-Kazotetsu <vinyldarkscratch@gmail.com> (http://www.vinyldarkscratch.info)",
     "Marek Skrobacki <skrobul@skrobul.com>",
     "Simon Kittle <simon@kittle.co.uk>",
