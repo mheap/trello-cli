@@ -4,7 +4,7 @@
   "description": "Trello CLI tool",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
     "cli"
   ],
   "author": "Michael Heap <m@michaelheap.com>",
-  "contributors" : [
+  "contributors": [
     "Vinyl Darkscratch-Kazotetsu <vinyldarkscratch@gmail.com> (http://www.vinyldarkscratch.info)",
     "Marek Skrobacki <skrobul@skrobul.com>",
     "Simon Kittle <simon@kittle.co.uk>",
@@ -23,16 +23,19 @@
   ],
   "license": "BSD",
   "dependencies": {
-    "winston": "~2.1.1",
+    "async": "~0.2.9",
+    "chai": "^3.5.0",
+    "colors": "~0.6.2",
+    "mocha": "^3.2.0",
+    "nconf": "~0.6.7",
     "node-trello": "~0.1.4",
     "nomnom": "*",
-    "nconf": "~0.6.7",
-    "async": "~0.2.9",
-    "underscore": "~1.5.1",
-    "colors": "~0.6.2",
-    "term-list": "~0.2.0",
+    "readline": "~1.3.0",
     "shell-quote": "*",
-    "readline": "~1.3.0"
+    "sinon": "^1.17.7",
+    "term-list": "~0.2.0",
+    "underscore": "~1.5.1",
+    "winston": "~2.1.1"
   },
   "bin": {
     "trello": "./bin/trello"
