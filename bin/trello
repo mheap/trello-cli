@@ -80,7 +80,7 @@ var trelloApiCommands = registerCommands();
 
 if (process.argv[2] == 'set-auth' || !translator.checkCompatibleCache) {
     logger.warning("Cache file is not compatible with this version, trying to create new one.");
-    translator.refreshTranslations("all");
+    translator.reloadTranslations("all");
 }
 
 
