@@ -33,6 +33,13 @@ config.file(configPath);
 var logger = require("../lib/logger"),
     output = require("../lib/output");
 
+// Make sure config.json exists
+if (!fs.existsSync(configPath)) {
+    logger.emerg("config.json does not exist. trying to create new one.");
+    configGen.createEmptyConfig(configDir);
+    process.exit(1);
+}
+
 // Things we need to get up and running
 var Authentication = require("../src/authenticate")(logger, output, config);
 var trello = require("../src/node-trello-wrapper")(output, logger, config, Authentication);
@@ -41,13 +48,6 @@ var translator = require("../src/translator")(logger, config, trello, output);
 program.script("trello");
 program.nocolors();
 logger.debug("Starting trello-cli");
-
-// Make sure config.json exists
-if (!fs.existsSync(configPath)) {
-    logger.emerg("config.json does not exist. trying to create new one.");
-    configGen.createEmptyConfig(configDir);
-    process.exit(1);
-}
 
 function registerCommands() {
     // Resigter commands into a dictionary indexed by command name
