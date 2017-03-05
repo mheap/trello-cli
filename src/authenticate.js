@@ -6,6 +6,7 @@ var Auth = function(logger, output, config) {
     this.logger = logger;
     this.output = output;
     this.config = config;
+    this.fs = fs;
 
     this.authenticationUrl = "https://trello.com/1/connect?key=" + this.config.get("appKey") + "&name=trello-cli&response_type=token&scope=account,read,write&expiration=never";
 }
@@ -14,7 +15,7 @@ Auth.prototype.loadAuthCache = function() {
     var authFile = {};
     // Load auth cache file
     try {
-        authFile = JSON.parse(fs.readFileSync(this.config.get("configPath") + this.config.get("authCache")));
+        authFile = JSON.parse(this.fs.readFileSync(this.config.get("configPath") + this.config.get("authCache")));
     } catch (e) {
         this.logger.debug("No auth file found: " + this.config.get("configPath") + this.config.get("authCache"));
         // Create the file
@@ -45,7 +46,7 @@ Auth.prototype.getToken = function() {
 Auth.prototype.writeAuthFile = function(content, callback) {
     // Make sure the path exists
     try {
-        fs.mkdirSync(this.config.get("configPath"));
+        this.fs.mkdirSync(this.config.get("configPath"));
     } catch (e) {
         // If it's not an issue where it already exists, rethrow
         if (e.code != 'EEXIST') {
@@ -55,7 +56,7 @@ Auth.prototype.writeAuthFile = function(content, callback) {
 
     // Make sure the file exists
     var path = this.config.get("configPath") + this.config.get("authCache");
-    fs.writeFileSync(path, content);
+    this.fs.writeFileSync(path, content);
     callback();
 }
 
@@ -71,10 +72,6 @@ Auth.prototype.check = function() {
         process.exit(1);
     }
 
-    this.logger.debug("Authenticating user");
-}
-
-Auth.prototype.run = function() {
     this.logger.debug("Authenticating user");
 }
 
