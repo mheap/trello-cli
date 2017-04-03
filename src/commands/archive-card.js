@@ -8,10 +8,6 @@ var __ = function(program, output, logger, config, trello, translator) {
     var trelloApiCommand = {};
 
     trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
-        if (!options.match) {
-            options.match = 'exact';
-            logger.warning('--match parameter not specified, defaulting to exact title match');
-        }
         logger.info("Archiving card");
 
         // Grab our boards etc
@@ -40,85 +36,83 @@ var __ = function(program, output, logger, config, trello, translator) {
 
                 //if no title provided, then add every card OR
                 //if (title provided and) options=exact and card name = title value
-                if (!options.title || (options.match == 'exact' && card.name == options.title)) {
-                            foundCards.push(card);
+                if (!options.title) {
+                    foundCards.push(card);
+                } else if ((!options.match || options.match == 'exact') && card.name == options.title) {
+                    foundCards.push(card);
                 } else if (options.match == 'contains' && card.name.includes(options.title)) {
-                            foundCards.push(card);
+                    foundCards.push(card);
                 }
             }
 
-            if (foundCards.length > 1 && options.match == 'exact') {
+            if (foundCards.length > 1 && (!options.match || options.match == 'exact')) {
                 promptListSelection(foundCards);
-//                var list = new List({
-//                    marker: ('›'.red) + " ",
-//                    markerLength: 1
-//                });
-//                foundCards.forEach(function(card) {
-//                    var content = card.name;
-//                    if (card.desc) {
-//                        content += " [" + card.desc + "]";
-//                    }
-//                    list.add(card, content);
-//                });
-//                list.add(null, "[Cancel]");
-//
-//                list.on('keypress', function(key, item) {
-//                    switch (key.name) {
-//                        case 'return':
-//                            list.stop();
-//                            archiveCard(item);
-//                            break;
-//                    }
-//                });
-//
-//                list.start();
             } else if (foundCards.length > 1 && options.match == 'contains'){
-                console.log("Matching cards:");
-                foundCards.forEach(function(card){
-                    console.log('- "' + card.name + '"');
-                });
 
-                prompt.start();
-                var property = {
-                    name: 'yesno',
-                    message: 'Continue (y/n)?',
-                    validator: /y[es]*|n[o]?/,
-                    warning: 'Must respond y or n',
-                    default: 'n'
-                };
-
-                prompt.get(property, function (err, result) {
-                    logger.debug('Command-line input received:' + result.yesno);
-                    if (result.yesno == 'n') {
-                        console.log('Abort');
-                    } else if (result.yesno == 'y') {
-                        logger.debug('y');
-                        foundCards.forEach(function(card) {
-                            archiveCard(card);
-                        });
-                    }
-                });
-
+                if (options.force) {
+                    foundCards.forEach(card => archiveCard(card));
+                    return;
+                } else {
+                    console.log("Matching cards:");
+                    foundCards.forEach(function(card){
+                        console.log(' "' + card.name + '"');
+                    });
+                    promptConfirmation().then(function() {
+                        foundCards.forEach(card => archiveCard(card));
+                    }).catch(function(err) {
+                        logger.warning(err);
+                    });
+                }
             } else if (foundCards.length == 1) {
                 var card = foundCards[0];
-                if (options.title) {
+                if (options.title || options.force) {
                     archiveCard(foundCards[0]);
                 } else {
-                  //when would this else happen?
-                  // ? only one card found, but no title was given: this means the list specified has only one card
-                  // why would we even prompt the user?
+                    //when would this else happen?
+                    //no title was provided, and the list has only one card
+                    // why would we even prompt the user if it's just one card? (same happens in other functions, eg delete-card)
                     promptListSelection(foundCards);
                 }
             } else {
                 logger.warning("That card does not exist");
             }
 
+            function promptConfirmation() {
+                return new Promise((resolve,reject) => {
+                    prompt.start();
+                    var property = {
+                        name: 'yesno',
+                        message: 'Continue (y/n)?',
+                        validator: /y[es]*|n[o]?/,
+                        warning: 'Must respond y or n',
+                        default: 'n'
+                    };
+
+                    prompt.get(property, function (err, result) {
+                        logger.debug('Command-line input received:' + result.yesno);
+                        if (result.yesno == 'n') {
+                            reject('Abort');
+                        } else if (result.yesno == 'y') {
+                            logger.debug('y');
+                            resolve();
+                        }
+                    });
+                });
+            }
+
             function promptListSelection(cardList) {
+                if (options.force) {
+                    cardList.forEach(function(card) {
+                        archiveCard(card);
+                    });
+                    return;
+                }
+
                 var list = new List({
                     marker: ('›'.red) + " ",
                     markerLength: 1
                 });
-                foundCards.forEach(function(card) {
+                cardList.forEach(function(card) {
                     var content = card.name;
                     if (card.desc) {
                         content += " [" + card.desc + "]";
@@ -131,7 +125,7 @@ var __ = function(program, output, logger, config, trello, translator) {
                     switch (key.name) {
                         case 'return':
                             list.stop();
-                            //if 'Cancel' item=null
+                            //if user selects 'Cancel' , item=null
                             if (item) archiveCard(item);
                             break;
                     }
@@ -183,7 +177,7 @@ var __ = function(program, output, logger, config, trello, translator) {
                 },
                 "force": {
                     abbr: 'f',
-                    metavar: 'FORCE',
+                    flag: true,
                     help: "Do not prompt user"
                 }
             })
