@@ -12,7 +12,7 @@ var __ = function(program, output, logger, config, trello, translator) {
             options.match = 'exact';
             logger.warning('--match parameter not specified, defaulting to exact title match');
         }
-        logger.info("Adding card");
+        logger.info("Archiving card");
 
         // Grab our boards etc
         var boardId = translator.getBoardIdByName(options.board);
@@ -38,40 +38,40 @@ var __ = function(program, output, logger, config, trello, translator) {
                     continue;
                 }
 
-                if (options.match == 'exact') {
-                    if (card.name == options.title || !options.title){
+                //if no title provided, then add every card OR
+                //if (title provided and) options=exact and card name = title value
+                if (!options.title || (options.match == 'exact' && card.name == options.title)) {
                             foundCards.push(card);
-                    }
-                } else if (options.match == 'contains') {
-                    if (card.name.includes(options.title)) {
+                } else if (options.match == 'contains' && card.name.includes(options.title)) {
                             foundCards.push(card);
-                    }
                 }
             }
 
             if (foundCards.length > 1 && options.match == 'exact') {
-                var list = new List({
-                    marker: ('›'.red) + " ",
-                    markerLength: 1
-                });
-                foundCards.forEach(function(card) {
-                    var content = card.name;
-                    if (card.desc) {
-                        content += " [" + card.desc + "]";
-                    }
-                    list.add(card, content);
-                });
-                list.add(null, "[Cancel]");
-
-                list.on('keypress', function(key, item) {
-                    switch (key.name) {
-                        case 'return':
-                            list.stop();
-                            archiveCard(item);
-                    }
-                });
-
-                list.start();
+                promptListSelection(foundCards);
+//                var list = new List({
+//                    marker: ('›'.red) + " ",
+//                    markerLength: 1
+//                });
+//                foundCards.forEach(function(card) {
+//                    var content = card.name;
+//                    if (card.desc) {
+//                        content += " [" + card.desc + "]";
+//                    }
+//                    list.add(card, content);
+//                });
+//                list.add(null, "[Cancel]");
+//
+//                list.on('keypress', function(key, item) {
+//                    switch (key.name) {
+//                        case 'return':
+//                            list.stop();
+//                            archiveCard(item);
+//                            break;
+//                    }
+//                });
+//
+//                list.start();
             } else if (foundCards.length > 1 && options.match == 'contains'){
                 console.log("Matching cards:");
                 foundCards.forEach(function(card){
@@ -102,27 +102,43 @@ var __ = function(program, output, logger, config, trello, translator) {
             } else if (foundCards.length == 1) {
                 var card = foundCards[0];
                 if (options.title) {
-                    archiveCard(card);
+                    archiveCard(foundCards[0]);
                 } else {
-                    var list = new List({
-                        marker: ('›'.red) + " ",
-                        markerLength: 1
-                    });
-                    list.add(card, card.name);
-                    list.add(null, "[Cancel]");
-                    list.on('keypress', function(key, item) {
-                        switch (key.name) {
-                            case 'return':
-                                list.stop();
-                                archiveCard(item);
-                        }
-                    });
-                    list.start();
+                  //when would this else happen?
+                  // ? only one card found, but no title was given: this means the list specified has only one card
+                  // why would we even prompt the user?
+                    promptListSelection(foundCards);
                 }
             } else {
                 logger.warning("That card does not exist");
             }
 
+            function promptListSelection(cardList) {
+                var list = new List({
+                    marker: ('›'.red) + " ",
+                    markerLength: 1
+                });
+                foundCards.forEach(function(card) {
+                    var content = card.name;
+                    if (card.desc) {
+                        content += " [" + card.desc + "]";
+                    }
+                    list.add(card, content);
+                });
+                list.add(null, "[Cancel]");
+
+                list.on('keypress', function(key, item) {
+                    switch (key.name) {
+                        case 'return':
+                            list.stop();
+                            //if 'Cancel' item=null
+                            if (item) archiveCard(item);
+                            break;
+                    }
+                });
+
+                list.start();
+            }
         });
 
         function archiveCard(card){
@@ -144,7 +160,7 @@ var __ = function(program, output, logger, config, trello, translator) {
             .options({
                 "title": {
                     position: 1,
-                    help: "The card's title",
+                    help: "The card's title. If omitted, implies all cards found",
                     list: true
                 },
                 "board": {
@@ -164,6 +180,11 @@ var __ = function(program, output, logger, config, trello, translator) {
                     metavar: 'MATCH',
                     help: "[exact | contains] : how to match the title given",
                     required: false
+                },
+                "force": {
+                    abbr: 'f',
+                    metavar: 'FORCE',
+                    help: "Do not prompt user"
                 }
             })
             .callback(function(options) {
