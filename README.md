@@ -2,6 +2,8 @@ trello-cli is a CLI tool for [Trello](http://www.trello.com). Makes sense, right
 
 [![Build Status](https://api.travis-ci.org/mheap/trello-cli.svg?branch=master)](https://travis-ci.org/mheap/trello-cli)
 
+`trello-cli` requires a minimum NodeJS version of 6.9.4
+
 # Using trello-cli
 
 * Run `npm install` in the same directory as `package.json` to install dependencies
