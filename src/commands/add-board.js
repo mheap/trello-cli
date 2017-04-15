@@ -24,7 +24,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
             // console.log(data);
             logger.info("Board added, new URL: " + data.url);
 
-            trelloApiCommands["refresh"].makeTrelloApiCall(null, onComplete);
+            trelloApiCommands["refresh"].makeTrelloApiCall({"type":"lists"}, onComplete);
         });
     };
 

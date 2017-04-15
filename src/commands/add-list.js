@@ -63,13 +63,7 @@ var __ = function(program, output, logger, config, trello, translator, trelloApi
                 logger.info("List added, new ID: " + data.id);
             }
 
-            if (options.refreshCache) {
-                trelloApiCommands["refresh"].makeTrelloApiCall(null, onComplete);
-            } else {
-                if (typeof onComplete == 'function') {
-                    onComplete();
-                }
-            }
+            trelloApiCommands["refresh"].makeTrelloApiCall({"type":"lists"}, onComplete);
         });
     };
 

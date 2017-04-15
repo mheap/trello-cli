@@ -37,7 +37,7 @@ Translator.prototype.checkCompatibleCache = function() {
 }
 
 Translator.prototype.reloadTranslations = function(type, onComplete) {
-    if (type == undefined) type = "all";
+    if (type == undefined) { type = "all"; }
 
     var cachePath = this.config.get("configPath") + this.config.get("translationCache");
     var cacheFile = {};
@@ -47,13 +47,15 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
         // Nothing!
     }
 
-    if (!this.checkCompatibleCache()) cacheFile.translations = {
-        "orgs": {},
-        "boards": {},
-        "lists": {},
-        "users": {},
-        "me": {}
-    };
+    if (!this.checkCompatibleCache()) {
+        cacheFile.translations = {
+            "orgs": {},
+            "boards": {},
+            "lists": {},
+            "users": {},
+            "me": {}
+        };
+    }
 
     cacheFile.formatVersion = this.formatVersionNeeded;
 
