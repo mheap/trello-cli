@@ -23,7 +23,10 @@ var __ = function(
     };
 
     // console.log(params);
+    return this.run(params, onComplete);
+  };
 
+  trelloApiCommand.run = function(params, onComplete) {
     trello.post("/1/boards", params, function(err, data) {
       if (err) {
         throw err;

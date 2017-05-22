@@ -2,8 +2,7 @@ var _ = require("underscore"),
   async = require("async"),
   fs = require("fs"),
   output = require("../lib/output"),
-  RateLimiter = require('limiter').RateLimiter;
-
+  RateLimiter = require("limiter").RateLimiter;
 
 var Translator = function(logger, config, trello) {
   this.loadCount = 1;
@@ -91,20 +90,24 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
     });
   }
 
-    function getMemberships(idMember, callback) {
-        trello.get("/1/members/" + idMember, callback);
-    }
-    var limiter = new RateLimiter(50, 10000); // at most 1 request every 100 ms
-    var getMembershipsThrottled = function() {
-        var requestArgs = arguments;
-        limiter.removeTokens(1, function() {
-            getMemberships.apply(this, requestArgs);
-        });
-    };
+  function getMemberships(idMember, callback) {
+    trello.get("/1/members/" + idMember, callback);
+  }
+  var limiter = new RateLimiter(50, 10000); // at most 1 request every 100 ms
+  var getMembershipsThrottled = function() {
+    var requestArgs = arguments;
+    limiter.removeTokens(1, function() {
+      getMemberships.apply(this, requestArgs);
+    });
+  };
 
-    function cacheUserInfoFromMemberships(memberships, logger) {
+  function cacheUserInfoFromMemberships(memberships, logger) {
     if (type == "users" || type == "all") {
-      logger.debug("Syncing memberships ["+memberships.length+"] (this may take a while)");
+      logger.debug(
+        "Syncing memberships [" +
+          memberships.length +
+          "] (this may take a while)"
+      );
       _.each(memberships, function(m) {
         getMembershipsThrottled(m.idMember, function(err, user) {
           if (err) {
@@ -131,89 +134,101 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
 
   if (type == "orgs" || type == "users" || type == "all") {
     this.logger.debug("Syncing organizations");
-    trello.get("/1/members/me/organizations", function(err, data) {
-      if (err) {
-        throw err;
-      }
-      _.each(data, function(item) {
-        if (type == "orgs" || type == "all") {
-          cacheFile.translations.orgs[item.id] = {
-            name: item.name,
-            displayName: item.displayName
-          };
+    trello.get(
+      "/1/members/me/organizations",
+      function(err, data) {
+        if (err) {
+          throw err;
         }
+        _.each(
+          data,
+          function(item) {
+            if (type == "orgs" || type == "all") {
+              cacheFile.translations.orgs[item.id] = {
+                name: item.name,
+                displayName: item.displayName
+              };
+            }
 
-        cacheUserInfoFromMemberships(item.memberships, this.logger);
-      }.bind(this));
+            cacheUserInfoFromMemberships(item.memberships, this.logger);
+          }.bind(this)
+        );
 
-      // Write it back to the cache file
-      fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
-    }.bind(this));
+        // Write it back to the cache file
+        fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+      }.bind(this)
+    );
   }
 
   if (type == "lists" || type == "boards" || type == "users" || type == "all") {
     this.logger.debug("Syncing boards");
-    trello.get("/1/members/me/boards", function(err, data) {
-      if (err) {
-        throw err;
-      }
-      _.each(data, function(item) {
-        if (type == "lists" || type == "boards" || type == "all") {
-          var powerups = item.powerUps || [];
-          cacheFile.translations.boards[item.id] = {
-            organization: item.idOrganization,
-            name: item.name,
-            closed: item.closed,
-            voting: powerups.indexOf("voting") > -1
-          };
+    trello.get(
+      "/1/members/me/boards",
+      function(err, data) {
+        if (err) {
+          throw err;
         }
-
-        cacheUserInfoFromMemberships(item.memberships, this.logger);
-      }.bind(this));
-
-      // Write it back to the cache file
-      fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
-
-      if (type == "lists" || type == "all") {
-      this.logger.debug("Syncing lists");
-        async.each(
-          Object.keys(cacheFile.translations.boards),
-          function(board, callback) {
-            // console.log("trello.get(" + "/1/boards/" + board + "/lists)");
-            trello.get("/1/boards/" + board + "/lists", function(err, data) {
-              if (err) {
-                throw err;
-              }
-              _.each(data, function(item) {
-                if (item.id) {
-                  cacheFile.translations.lists[item.id] = {
-                    board: item.idBoard,
-                    name: item.name
-                  };
-                }
-              });
-              callback();
-            });
-          }.bind(this),
-          function(err) {
-            // console.log("done with fetching list for all boards");
-            // Write it back to the cache file
-            fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
-            output.normal(
-              "Organization, board, list, and user cache refreshed"
-            );
-            this.cache = cacheFile;
-            this.loadCount++;
-
-            if (typeof onComplete == "function") {
-              onComplete();
+        _.each(
+          data,
+          function(item) {
+            if (type == "lists" || type == "boards" || type == "all") {
+              var powerups = item.powerUps || [];
+              cacheFile.translations.boards[item.id] = {
+                organization: item.idOrganization,
+                name: item.name,
+                closed: item.closed,
+                voting: powerups.indexOf("voting") > -1
+              };
             }
-          }
+
+            cacheUserInfoFromMemberships(item.memberships, this.logger);
+          }.bind(this)
         );
 
-        // console.log("end of if statement inside boards loop");
-      }
-    }.bind(this));
+        // Write it back to the cache file
+        fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+
+        if (type == "lists" || type == "all") {
+          this.logger.debug("Syncing lists");
+          async.each(
+            Object.keys(cacheFile.translations.boards),
+            function(board, callback) {
+              // console.log("trello.get(" + "/1/boards/" + board + "/lists)");
+              trello.get("/1/boards/" + board + "/lists", function(err, data) {
+                if (err) {
+                  throw err;
+                }
+                _.each(data, function(item) {
+                  if (item.id) {
+                    cacheFile.translations.lists[item.id] = {
+                      board: item.idBoard,
+                      name: item.name
+                    };
+                  }
+                });
+                callback();
+              });
+            }.bind(this),
+            function(err) {
+              // console.log("done with fetching list for all boards");
+              // Write it back to the cache file
+              fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
+              output.normal(
+                "Organization, board, list, and user cache refreshed"
+              );
+              this.cache = cacheFile;
+              this.loadCount++;
+
+              if (typeof onComplete == "function") {
+                onComplete();
+              }
+            }
+          );
+
+          // console.log("end of if statement inside boards loop");
+        }
+      }.bind(this)
+    );
   }
 };
 
