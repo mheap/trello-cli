@@ -35,7 +35,7 @@ var logger = require("../lib/logger"),
 
 // Make sure config.json exists
 if (!fs.existsSync(configPath)) {
-    logger.emerg("config.json does not exist. trying to create new one.");
+    logger.debug("config.json does not exist. trying to create new one.");
     configGen.createEmptyConfig(configDir);
     process.exit(1);
 }

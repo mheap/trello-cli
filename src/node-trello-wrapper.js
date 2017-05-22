@@ -27,6 +27,18 @@ var __ = function(output, logger, config, authentication) {
 
   trelloWrapper.callbackWrapperFactory = function(callback) {
     return function(err, data) {
+      if (data == "invalid key") {
+        logger.error(
+          "The 'appKey' in ~/.trello-cli/config.json is invalid"
+        );
+        process.exit(1);
+      }
+      if (data == "Rate limit exceeded") {
+        logger.error(
+          "Rate limit exceeded. Please try again later"
+        );
+        process.exit(1);
+      }
       if (
         data == "expired token" ||
         data == "invalid token" ||
