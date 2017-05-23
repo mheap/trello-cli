@@ -45,14 +45,16 @@ var __ = function(program, output, logger, config, trello, translator) {
         ) {
           foundCards.push(card);
         } else if (
-          options.match == "contains" && card.name.includes(options.title)
+          options.match == "contains" &&
+          card.name.includes(options.title)
         ) {
           foundCards.push(card);
         }
       }
 
       if (
-        foundCards.length > 1 && (!options.match || options.match == "exact")
+        foundCards.length > 1 &&
+        (!options.match || options.match == "exact")
       ) {
         promptListSelection(foundCards);
       } else if (foundCards.length > 1 && options.match == "contains") {

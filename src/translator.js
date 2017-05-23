@@ -115,7 +115,8 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
           }
 
           if (
-            user.id && !(user.id in cacheFile.translations.users.hasOwnProperty)
+            user.id &&
+            !(user.id in cacheFile.translations.users.hasOwnProperty)
           ) {
             cacheFile.translations.users[user.id] = {
               name: user.fullName,
@@ -320,7 +321,8 @@ Translator.prototype.getListIdByBoardNameAndListName = function(board, list) {
   var lists = this.cache.translations.lists;
   for (var i in lists) {
     if (
-      lists[i]["board"] == boardId && lists[i]["name"].toLowerCase() == list
+      lists[i]["board"] == boardId &&
+      lists[i]["name"].toLowerCase() == list
     ) {
       return i;
     }
@@ -348,7 +350,8 @@ Translator.prototype.getUserIdByUsername = function(name) {
   var user = this.cache.translations.user;
   for (var i in user) {
     if (
-      user[i]["username"] != null && user[i]["username"].toLowerCase() == name
+      user[i]["username"] != null &&
+      user[i]["username"].toLowerCase() == name
     ) {
       return i;
     }
