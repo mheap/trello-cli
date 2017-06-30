@@ -3,11 +3,12 @@ fs = require("fs");
 var __ = function (program, output, logger, config, trello, translator) {
   program
     .command("assigned-to-me")
-    .help("Show cards that are currently assigned to any member specified")
+    .help("Show cards that are currently assigned to yourself, or any member specified")
     .options({
       id: {
         position: 1,
-        help: "Specifies user to show assigned cards for. (id/username/\"me\")"
+        help: "Specifies user to show assigned cards for. (id/username)",
+        required: false,
       }
     })
     .callback(function (options) {
