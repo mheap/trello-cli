@@ -15,7 +15,11 @@ var __ = function (program, output, logger, config, trello, translator) {
       logger.info(`Showing assigned cards to ${id}`);
       trello.get(`/1/members/${id}/cards`, function (err, data) {
         if (err) {
-          console.error(err);
+          if (err.statusMessage) {
+            logger.error(`Error while retrieving assigned cards for ${id}:`, err.statusMessage);
+          } else {
+            logger.error(`Error while retrieving assigned cards for ${id}:`, data);
+          }
           return
         }
 
