@@ -7,17 +7,16 @@ var __ = function(program, output, logger, config, trello, translator) {
     .options({
         id: {
           position: 1,
-          help: "Specifies user to show assigned cards for. (id/username/\"me\")",
-          list: false,
-          required: true
+          help: "Specifies user to show assigned cards for. (id/username/\"me\")"
         }
       })
     .callback(function(options) {
-      if (!options.id) return
-      logger.info(`Showing assigned cards to ${options.id}`);
-      trello.get(`/1/members/${options.id}/cards`, function(err, data) {
+      id = options.id || "me"
+      logger.info(`Showing assigned cards to ${id}`);
+      trello.get(`/1/members/${id}/cards`, function(err, data) {
         if (err) {
-          throw err;
+          console.error(err);
+          return
         }
 
         // Order the issues by board
