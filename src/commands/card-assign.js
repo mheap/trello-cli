@@ -114,17 +114,3 @@ var __ = function (
     return trelloApiCommand;
 };
 module.exports = __;
-
-/*
-t = new (require("node-trello"))('3cd7455f8b88607731a90f97dc930711', 'cd4a22ce26cbc4823bbc3464ab33aed7dd884550126130a95f8035490a676c7b')
-
-t.get(
-  `/1/members/${member}`,
-  function (err, data) {
-    if (err) {
-      throw err;
-    }
-    console.log(data)
-  }
-)
-*/
