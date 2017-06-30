@@ -15,15 +15,22 @@ var __ = function (
   var trelloApiCommand = {};
 
   trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i
+    // checks the first ID-like string it can find, if a trello url is the first, parse the ID following up to it:
+    //((http://)(www.)trello.com/c/)<ID>/30-add-automated-travisci-builds
+    //this will ignore any url, get the ID, and ignore everything after a slash
+
     logger.info("Showing details about the specified card");
 
-    var cardId = options.cardId.replace(
-      /[https:\/\/|http:\/\/]*trello.com\/c\//gi,
-      ""
-    );
+    var cardId = card_re.test(options.cardId) ? card_re.exec(options.cardId)[1] : null
+
+    if (!cardId) {
+      console.error("Could not parse card ID, example: https://trello.com/c/<ID> or <ID>")
+      return
+    }
 
     trello.get(
-      "/1/cards/" + cardId + "",
+      "/1/cards/" + cardId,
       {
         fields: "all",
         member_fields: "all",
@@ -144,6 +151,7 @@ var __ = function (
         }
       })
       .callback(function (options) {
+        if (!options.cardId) return // nomnom will already have described us the required arguments, why it doesnt cancel the callback is beyond me
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };
