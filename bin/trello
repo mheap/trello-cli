@@ -53,8 +53,8 @@ function registerCommands() {
     // Resigter commands into a dictionary indexed by command name
     var commands = {};
     var commandNames = fs.readdirSync(__dirname + "/../src/commands/");
-    commandNames.forEach(function(commandFilename) {
-        var name= commandFilename.slice(null, -3);
+    commandNames.forEach(function (commandFilename) {
+        var name = commandFilename.slice(null, -3);
         // a bit hacky, but it avoids having to redo all the old commands # mg: ???
         var trelloApiCommand = require("../src/commands/" + commandFilename)(program, output, logger, config, trello, translator, commands);
 
@@ -67,7 +67,7 @@ function registerCommands() {
     return commands;
 }
 
- 
+
 // Hacky, but it'll do for now
 if (process.argv[2] == 'set-auth') {
     Authentication.setToken(process.argv[3]);
@@ -85,7 +85,7 @@ if (process.argv[2] == 'set-auth' || !translator.checkCompatibleCache) {
 
 
 if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
-    program.printer(function(line) {
+    program.printer(function (line) {
         console.log(line);
     });
     var savedBoard = null;
@@ -98,10 +98,10 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
         var baseline = process._getActiveRequests().length;
         var checkForDone = function () {
             var running = process._getActiveRequests().length;
-            if ( running > baseline ) {
-                setTimeout(checkForDone, 100);   
+            if (running > baseline) {
+                setTimeout(checkForDone, 100);
             } else {
-                setTimeout(function () {program.script("trello"); rl.prompt()}, 200);
+                setTimeout(function () { program.script("trello"); rl.prompt() }, 200);
             }
         }
         var args = shell.parse(line);
@@ -122,17 +122,15 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
         process.exit(0);
     });
 
-}
-
-else if (process.argv[2] != 'set-auth') {
+} else if (process.argv[2] != 'set-auth') {
     // Handle the case when there's no command
-    program.nocommand().callback(function() {
+    program.nocommand().callback(function () {
         output.underline("Trello CLI");
         output.normal("Welcome to Trello CLI! To get started, run:");
         output.normal("trello --help");
         process.exit(1);
     });
-    program.printer(function(line) {
+    program.printer(function (line) {
         logger.warning(line.trim());
         process.exit(1);
     });
