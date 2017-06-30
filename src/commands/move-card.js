@@ -19,7 +19,7 @@ var __ = function (
         var boardId = options.board && board_re.test(options.board) ? board_re.exec(options.board)[1] : null;
 
         var pos = options.pos || (
-            /^\d+$/.test(options.board) ? (function() {boardId = null; return options.board})() : null
+            /^\d+$/.test(options.board) ? (function () { boardId = null; return options.board })() : null
         );
 
         var posFunc = pos ? position => {
@@ -105,26 +105,3 @@ var __ = function (
     return trelloApiCommand;
 };
 module.exports = __;
-
-/*
-t = new (require("node-trello"))('3cd7455f8b88607731a90f97dc930711', 'cd4a22ce26cbc4823bbc3464ab33aed7dd884550126130a95f8035490a676c7b')
-
-cardID = "O65rVwqU"
-listID = "586f08eab972b268b954866f"
-
-orginal = "584cb8faba4fd097d57d7c6d"
-"5848c8a36d1498b43b66df6d"
-
-t.put(
-  `/1/cards/${cardID}/idList`,
-  {
-    value: listID
-  },
-  function (err, data) {
-    if (err) {
-      throw err;
-    }
-    console.log(data)
-  }
-)
- */
