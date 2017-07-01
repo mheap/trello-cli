@@ -66,7 +66,8 @@ var __ = function(
         },
         cardCoverImages: {
           abbr: "c",
-          help: "Turns off the showing of images on the front of cards (default is on)",
+          help:
+            "Turns off the showing of images on the front of cards (default is on)",
           required: false,
           flag: true
         },
