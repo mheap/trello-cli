@@ -1,14 +1,27 @@
 fs = require("fs");
 
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
   program
     .command("assigned-to-me")
-    .help("Show cards that are currently assigned to you")
-    .callback(function() {
-      logger.info("Showing assigned cards");
-      trello.get("/1/members/me/cards", function(err, data) {
+    .help("Show cards that are currently assigned to yourself, or any member specified")
+    .options({
+      id: {
+        position: 1,
+        help: "Specifies user to show assigned cards for. (id/username)",
+        required: false,
+      }
+    })
+    .callback(function (options) {
+      id = options.id || "me"
+      logger.info(`Showing assigned cards to ${id}`);
+      trello.get(`/1/members/${id}/cards`, function (err, data) {
         if (err) {
-          throw err;
+          if (err.statusMessage) {
+            logger.error(`Error while retrieving assigned cards for ${id}:`, err.statusMessage);
+          } else {
+            logger.error(`Error while retrieving assigned cards for ${id}:`, data);
+          }
+          return
         }
 
         // Order the issues by board

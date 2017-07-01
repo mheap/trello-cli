@@ -4,7 +4,7 @@ fs = require("fs");
 
 var _ = require("underscore");
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -15,26 +15,32 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Showing cards belonging to the specified list");
 
-    // Grab our boards etc
-    try {
-      var boardId = translator.getBoardIdByName(options.board);
-    } catch (err) {
-      if (err.message == "Unknown Board") {
-        logger.warning("Unknown board.  Perhaps you have a typo?");
+    var boardId
 
-        output.normal("\nYou have the following open boards:\n");
-        trelloApiCommands["show-boards"].makeTrelloApiCall(
-          {
-            includeClosed: false,
-            hideIds: true
-          },
-          null
-        );
-        return;
+    if (translator.getBoard(options.board).includes("Board: " + options.board)) {
+      // Grab our boards etc
+      try {
+        boardId = translator.getBoardIdByName(options.board);
+      } catch (err) {
+        if (err.message == "Unknown Board") {
+          logger.warning("Unknown board.  Perhaps you have a typo?");
+
+          output.normal("\nYou have the following open boards:\n");
+          trelloApiCommands["show-boards"].makeTrelloApiCall(
+            {
+              includeClosed: false,
+              hideIds: true
+            },
+            null
+          );
+          return;
+        }
       }
+    } else {
+      boardId = options.board
     }
 
     var listIds = [];
@@ -44,7 +50,7 @@ var __ = function(
         translator.getListIdByBoardNameAndListName(options.board, options.list)
       );
     } else {
-      _.each(translator.cache.translations.lists, function(oneList, listId) {
+      _.each(translator.cache.translations.lists, function (oneList, listId) {
         if (listId != "undefined" && oneList["board"] == boardId) {
           // oneList: [ boardId, listName ]
           listIds.push(listId);
@@ -52,13 +58,13 @@ var __ = function(
       });
     }
 
-    listIds.forEach(function(listId) {
+    listIds.forEach(function (listId) {
       trello.get(
         "/1/lists/" + listId + "",
         {
           cards: "open"
         },
-        function(err, data) {
+        function (err, data) {
           if (err) {
             throw err;
           }
@@ -84,7 +90,7 @@ var __ = function(
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("show-cards")
       .help("Show the cards on a list")
@@ -116,7 +122,7 @@ var __ = function(
           default: false
         }
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };
