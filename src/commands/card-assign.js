@@ -32,9 +32,9 @@ var __ = function (
                 var member = userdata.id
                 var args = [ // THEN process the new ID into the arguments for a assign, or unassign request
                     `/1/cards/${cardId}/idMembers` + (
-                        options.unAssign ? `/${member}` : ""
+                        options.remove ? `/${member}` : ""
                     ),
-                    options.unAssign ? { idMember: member } : { value: member },
+                    options.remove ? { idMember: member } : { value: member },
                     function (err, data) {
                         if (err) {
                             if (data == 'member is not on the card' || data == 'member is already on the card') {
@@ -43,12 +43,12 @@ var __ = function (
                                 console.error(err, data)
                             }
                         } else {
-                            console.log(`Member ${userdata.username + " " + (options.unAssign ? "un" : "")}assigned`)
+                            console.log(`Member ${userdata.username + " " + (options.remove ? "un" : "")}assigned`)
                         }
                     }
                 ]
 
-                if (!options.unAssign) {
+                if (!options.remove) {
                     trello.post(...args)
                 } else {
                     trello.del(...args)
@@ -75,7 +75,7 @@ var __ = function (
                     help: "The user's name or ID to assign to the card",
                     required: true
                 },
-                unAssign: {
+                remove: {
                     abbr: "r",
                     flag: true,
                     help: "If the member should be added or removed from the card, default: add",
@@ -97,7 +97,7 @@ var __ = function (
                     help: "The card's name/id/url",
                     required: true
                 },
-                unAssign: {
+                remove: {
                     abbr: "r",
                     flag: true,
                     help: "If you should be added or removed from the card, default: add",
