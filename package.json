@@ -35,7 +35,7 @@
     "sinon-chai": "^2.9.0"
   },
   "dependencies": {
-    "async": "~0.2.9",
+    "async": "^0.2.10",
     "colors": "~0.6.2",
     "limiter": "^1.1.0",
     "nconf": "~0.6.7",
