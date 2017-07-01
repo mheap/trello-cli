@@ -18,7 +18,9 @@
   ],
   "author": "Michael Heap <m@michaelheap.com>",
   "contributors": [
-    "Vinyl Darkscratch-Kazotetsu <vinyldarkscratch@gmail.com> (http://www.vinyldarkscratch.info)",
+    "Vinyl Darkscratch-Kazotetsu <vinyldarkscratch@gmail.com> (https://www.queengoob.org)",
+    "mglover (https://github.com/mglover)",
+    "ShadowJonathan (https://github.com/ShadowJonathan)",
     "Marek Skrobacki <skrobul@skrobul.com>",
     "Simon Kittle <simon@kittle.co.uk>",
     "Sylvain Just (http://github.com/syjust)"
@@ -35,7 +37,7 @@
     "sinon-chai": "^2.9.0"
   },
   "dependencies": {
-    "async": "~0.2.9",
+    "async": "^0.2.10",
     "colors": "~0.6.2",
     "limiter": "^1.1.0",
     "nconf": "~0.6.7",

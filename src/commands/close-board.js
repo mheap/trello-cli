@@ -2,15 +2,7 @@
 
 var async = require("async");
 
-var __ = function(
-  program,
-  output,
-  logger,
-  config,
-  trello,
-  translator,
-  trelloApiCommands
-) {
+var __ = function(program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
   trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
