@@ -1,9 +1,9 @@
 "use strict";
 
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
         const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i
 
         var cardId = card_re.test(options.card) ? card_re.exec(options.card)[1] : null
@@ -14,7 +14,7 @@ var __ = function(program, output, logger, config, trello, translator) {
         }
         trello.get(
             "/1/members/" + options.user ? options.user : "me",
-            function(err, userdata) {
+            function (err, userdata) {
                 if (err) {
                     console.error("Error in getting data for user " + options.user)
                     console.error(err)
@@ -23,11 +23,11 @@ var __ = function(program, output, logger, config, trello, translator) {
 
                 var member = userdata.id
                 var args = [ // THEN process the new ID into the arguments for a assign, or unassign request
-                    "/1/cards/${cardId}/idMembers" + (
-                        options.remove ? "/${member}" : ""
+                    "/1/cards/" + cardId + "/" + idMembers + (
+                        options.remove ? "/" + member : ""
                     ),
                     options.remove ? { idMember: member } : { value: member },
-                    function(err, data) {
+                    function (err, data) {
                         if (err) {
                             if (data == 'member is not on the card' || data == 'member is already on the card') {
                                 console.warn(data)
@@ -35,7 +35,7 @@ var __ = function(program, output, logger, config, trello, translator) {
                                 console.error(err, data)
                             }
                         } else {
-                            console.log("Member " + userdata.username + " " + (options.remove ? "un" : "")+"assigned")
+                            console.log("Member " + userdata.username + " " + (options.remove ? "un" : "") + "assigned")
                         }
                     }
                 ]
@@ -50,7 +50,7 @@ var __ = function(program, output, logger, config, trello, translator) {
         )
     };
 
-    trelloApiCommand.nomnomProgramCall = function() {
+    trelloApiCommand.nomnomProgramCall = function () {
         program
             .command("card-assign")
             .help("Add or remove a member to a card")
@@ -74,7 +74,7 @@ var __ = function(program, output, logger, config, trello, translator) {
                 },
 
             })
-            .callback(function(options) {
+            .callback(function (options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
     };
