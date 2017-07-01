@@ -20,7 +20,7 @@ var __ = function(program, output, logger, config, trello, translator) {
         }
 
         for (var j in cards) {
-          output.normal(translator.getBoard(j).underline);
+          output.underline(translator.getBoard(j));
           for (var k in cards[j]) {
             output.normal("* " + cards[j][k]);
           }
