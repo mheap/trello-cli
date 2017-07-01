@@ -45,9 +45,10 @@ var __ = function(
     var params = {
       name: options.listName,
       idBoard: boardId,
-      pos: ["top", "bottom"].indexOf(options.listPosition) > -1
-        ? options.listPosition
-        : "top"
+      pos:
+        ["top", "bottom"].indexOf(options.listPosition) > -1
+          ? options.listPosition
+          : "top"
     };
 
     if (options.verbose) {
@@ -100,7 +101,8 @@ var __ = function(
         listPosition: {
           abbr: "p",
           metavar: "LISTPOS",
-          help: "The position of the new list: acceptable values are 'top' or 'bottom' (default: top)",
+          help:
+            "The position of the new list: acceptable values are 'top' or 'bottom' (default: top)",
           required: false
         },
         force: {
