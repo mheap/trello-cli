@@ -1,17 +1,9 @@
 "use strict";
 
-var __ = function (
-    program,
-    output,
-    logger,
-    config,
-    trello,
-    translator,
-    trelloApiCommands
-) {
+var __ = function(program, output, logger, config, trello, translator) {
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
         const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i
         const board_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/b\/)?([a-z0-9]+)\/?.*/i
 
@@ -19,14 +11,14 @@ var __ = function (
         var boardId = options.board && board_re.test(options.board) ? board_re.exec(options.board)[1] : null;
 
         var pos = options.pos || (
-            /^\d+$/.test(options.board) ? (function () { boardId = null; return options.board })() : null
+            /^\d+$/.test(options.board) ? (function() { boardId = null; return options.board })() : null
         );
 
         var posFunc = pos ? position => {
             trello.put(
-                `/1/cards/${cardId}/pos`,
+                "/1/cards/${cardId}/pos",
                 { value: position },
-                function (err, data) {
+                function(err, data) {
                     if (err) {
                         console.error(err, data)
                     } else {
@@ -42,12 +34,12 @@ var __ = function (
         }
 
         trello.put(
-            `/1/cards/${cardId}/` + (
-                boardId == null ? `idList` : `idBoard`
+            "/1/cards/${cardId}/" + (
+                boardId == null ? "idList" : "idBoard"
             ),
             boardId == null ?
                 { value: options.list } : { value: boardId, idList: options.list },
-            function (err, data) {
+            function(err, data) {
                 if (err) {
                     console.error(err, data)
                 } else {
@@ -61,7 +53,7 @@ var __ = function (
         )
     };
 
-    trelloApiCommand.nomnomProgramCall = function () {
+    trelloApiCommand.nomnomProgramCall = function() {
         program
             .command("move-card")
             .help("Move a card on a board")
@@ -84,7 +76,7 @@ var __ = function (
                     position: 3,
                     abbr: "b",
                     metavar: "<board>",
-                    help: "The board name/id/url to move the card to (only needed if the list is in another board)",
+                    help: "The board name/id/url to move the card to (if the list is in another board)",
                     required: false
                 },
                 pos: {
@@ -96,8 +88,7 @@ var __ = function (
                 },
 
             })
-            .callback(function (options) {
-                if (!options.list || !options.card) return
+            .callback(function(options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
     };
