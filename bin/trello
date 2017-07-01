@@ -88,6 +88,8 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
     program.printer(function(line) {
         console.log(line);
     });
+    var savedBoard = null;
+    var savedList = null;
 
     console.log("This is shello.  Ctrl-C to exit.");
     rl.prompt();
@@ -96,7 +98,6 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
         var baseline = process._getActiveRequests().length;
         var checkForDone = function () {
             var running = process._getActiveRequests().length;
-            //console.log("b:", baseline, "r:", running);
             if ( running > baseline ) {
                 setTimeout(checkForDone, 100);   
             } else {
@@ -104,6 +105,13 @@ if (process.argv[2] == 'shello' || process.argv[2] == 'shell') {
             }
         }
         var args = shell.parse(line);
+        /* process our shell-only commands */
+        if ( args[0] == 'set-board' ) {
+            savedBoard = args[1];
+        } else if (args[0] = 'set-list' ) {
+            savedList = args[1];
+        } 
+        /* XXX does the action use build or list?  were they supplied? */
         program.parse(args);
         setTimeout(checkForDone, 100);
     }).on('close', () => {

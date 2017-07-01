@@ -103,14 +103,16 @@ var __ = function(
         },
         showListName: {
           abbr: "n",
-          help: "Show list name in title, in addtion to board name, if specific list specified",
+          help:
+            "Show list name in title, in addtion to board name, if specific list specified",
           required: false,
           flag: true,
           default: true
         },
         hideIds: {
           abbr: "i",
-          help: "Do not include the card IDs in the output (default is to print IDs)",
+          help:
+            "Do not include the card IDs in the output (default is to print IDs)",
           required: false,
           flag: true,
           default: false
