@@ -1,9 +1,9 @@
 "use strict";
 
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
     var trelloApiCommand = {};
 
-    trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+    trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
         const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i
         const board_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/b\/)?([a-z0-9]+)\/?.*/i
 
@@ -11,14 +11,14 @@ var __ = function(program, output, logger, config, trello, translator) {
         var boardId = options.board && board_re.test(options.board) ? board_re.exec(options.board)[1] : null;
 
         var pos = options.pos || (
-            /^\d+$/.test(options.board) ? (function() { boardId = null; return options.board })() : null
+            /^\d+$/.test(options.board) ? (function () { boardId = null; return options.board })() : null
         );
 
         var posFunc = pos ? position => {
             trello.put(
-                "/1/cards/${cardId}/pos",
+                "/1/cards/" + cardId + "/pos",
                 { value: position },
-                function(err, data) {
+                function (err, data) {
                     if (err) {
                         console.error(err, data)
                     } else {
@@ -34,12 +34,12 @@ var __ = function(program, output, logger, config, trello, translator) {
         }
 
         trello.put(
-            "/1/cards/${cardId}/" + (
+            "/1/cards/" + cardId + "/" + (
                 boardId == null ? "idList" : "idBoard"
             ),
             boardId == null ?
                 { value: options.list } : { value: boardId, idList: options.list },
-            function(err, data) {
+            function (err, data) {
                 if (err) {
                     console.error(err, data)
                 } else {
@@ -53,7 +53,7 @@ var __ = function(program, output, logger, config, trello, translator) {
         )
     };
 
-    trelloApiCommand.nomnomProgramCall = function() {
+    trelloApiCommand.nomnomProgramCall = function () {
         program
             .command("move-card")
             .help("Move a card on a board")
@@ -88,7 +88,7 @@ var __ = function(program, output, logger, config, trello, translator) {
                 },
 
             })
-            .callback(function(options) {
+            .callback(function (options) {
                 trelloApiCommand.makeTrelloApiCall(options);
             });
     };
