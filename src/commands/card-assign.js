@@ -76,9 +76,9 @@ var __ = function (
                     required: true
                 },
                 unAssign: {
-                    abbr: "u",
+                    abbr: "r",
                     flag: true,
-                    help: "If the member should be assigned or unassigned to the card, default: assign",
+                    help: "If the member should be added or removed from the card, default: add",
                 },
 
             })
@@ -98,9 +98,9 @@ var __ = function (
                     required: true
                 },
                 unAssign: {
-                    abbr: "u",
+                    abbr: "r",
                     flag: true,
-                    help: "If you should join or leave the card, default: join",
+                    help: "If you should be added or removed from the card, default: add",
                 },
 
             })

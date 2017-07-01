@@ -87,6 +87,7 @@ var __ = function(
         }
       })
       .callback(function(options) {
+        if (!options.board) return
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };
