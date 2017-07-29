@@ -18,6 +18,8 @@ var __ = function(
     var params = {
       name: options.boardName,
       desc: options.description ? options.description : "",
+      defaultLists: options.defaultLists ? options.defaultLists : "",
+      idOrganization: options.idOrganization ? options.idOrganization : "",
       prefs_cardCovers: options.cardCoverImages ? "false" : "true",
       prefs_cardAging: options.cardAging ? "pirate" : "regular"
     };
@@ -68,6 +70,20 @@ var __ = function(
           abbr: "c",
           help:
             "Turns off the showing of images on the front of cards (default is on)",
+          required: false,
+          flag: true
+        },
+        defaultLists: {
+          abbr: "l",
+          help:
+            "Turns off default lists for the new board (default is on)",
+          required: false,
+          flag: true
+        },
+        idOrganization: {
+          abbr: "i",
+          help:
+            "Sets the organization for the new board",
           required: false,
           flag: true
         },
