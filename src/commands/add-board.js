@@ -25,7 +25,7 @@ var __ = function(
       idOrganization: options.idOrganization ? options.idOrganization : "",
       prefs_cardCovers: options.cardCoverImages ? "false" : "true",
       prefs_cardAging: options.cardAging ? "pirate" : "regular",
-      prefs_permissionLevel: options.permissionLevel ? options.permissionLevel : "",
+      prefs_permissionLevel: options.permissionLevel ? options.permissionLevel : "private",
       prefs_selfJoin: options.selfJoin ? "false" : "true"
     };
 
