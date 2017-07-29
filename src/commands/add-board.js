@@ -21,7 +21,9 @@ var __ = function(
       defaultLists: options.defaultLists ? options.defaultLists : "",
       idOrganization: options.idOrganization ? options.idOrganization : "",
       prefs_cardCovers: options.cardCoverImages ? "false" : "true",
-      prefs_cardAging: options.cardAging ? "pirate" : "regular"
+      prefs_cardAging: options.cardAging ? "pirate" : "regular",
+      prefs_permissionLevel: options.permissionLevel ? options.permissionLevel : "",
+      prefs_selfJoin: options.selfJoin ? options.selfJoin ? options.selfJoin : ""
     };
 
     // console.log(params);
@@ -84,6 +86,20 @@ var __ = function(
           abbr: "i",
           help:
             "Sets the organization for the new board",
+          required: false,
+          flag: true
+        },
+        permissionLevel: {
+          abbr: "p",
+          help:
+            "Sets the permission level for the new board",
+          required: false,
+          flag: true
+        },
+        selfJoin: {
+          abbr: "s",
+          help:
+            "Determines whether users can join the boards themselves or whether they have to be invited.",
           required: false,
           flag: true
         },
