@@ -13,17 +13,20 @@ var __ = function(
 
   trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
     logger.info("Adding new board...");
+    if (options.idOrganization && options.permissionLevel == 'org') {
+      throw "You must set an organization ID in order to set the permission level to org"
+    }
 
     // Build up arguments to send
     var params = {
       name: options.boardName,
       desc: options.description ? options.description : "",
-      defaultLists: options.defaultLists ? options.defaultLists : "",
+      defaultLists: options.defaultLists ? "false" : "true",
       idOrganization: options.idOrganization ? options.idOrganization : "",
       prefs_cardCovers: options.cardCoverImages ? "false" : "true",
       prefs_cardAging: options.cardAging ? "pirate" : "regular",
       prefs_permissionLevel: options.permissionLevel ? options.permissionLevel : "",
-      prefs_selfJoin: options.selfJoin ? options.selfJoin ? options.selfJoin : ""
+      prefs_selfJoin: options.selfJoin ? "false" : "true"
     };
 
     // console.log(params);
@@ -86,15 +89,13 @@ var __ = function(
           abbr: "i",
           help:
             "Sets the organization for the new board",
-          required: false,
-          flag: true
+          required: false
         },
         permissionLevel: {
           abbr: "p",
           help:
             "Sets the permission level for the new board",
-          required: false,
-          flag: true
+          required: false
         },
         selfJoin: {
           abbr: "s",
