@@ -13,7 +13,7 @@ var __ = function(
 
   trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
     logger.info("Adding new board...");
-    if (options.idOrganization && options.permissionLevel == 'org') {
+    if (!options.idOrganization && options.permissionLevel == 'org') {
       throw "You must set an organization ID in order to set the permission level to org"
     }
 
