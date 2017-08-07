@@ -78,7 +78,7 @@ var __ = function(
         },
         cardCoverImages: {
           abbr: "c",
-          help: 
+          help:
             "Turns off the showing of images on the front of cards (default is on)",
           required: false,
           flag: true
@@ -101,7 +101,7 @@ var __ = function(
         },
         selfJoin: {
           abbr: "s",
-          help: 
+          help:
             "Determines whether users can join the boards themselves or whether they have to be invited.",
           required: false,
           flag: true
