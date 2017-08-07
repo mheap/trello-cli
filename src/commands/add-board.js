@@ -18,7 +18,7 @@ var __ = function(
     }
 
     var permissionLevel = "";
-    if options.permissionLevel {
+    if (options.permissionLevel) {
       permissionLevel = options.permissionLevel;
     }
 
