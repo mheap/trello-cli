@@ -17,7 +17,10 @@ var __ = function(
       throw "You must set an organization ID in order to set the permission level to org";
     }
 
-    var permissionLevel = options.permissionLevel ? options.permissionLevel : "private";
+    var permissionLevel = "";
+    if options.permissionLevel {
+      permissionLevel = options.permissionLevel;
+    }
 
     // Build up arguments to send
     var params = {
@@ -75,7 +78,8 @@ var __ = function(
         },
         cardCoverImages: {
           abbr: "c",
-          help: "Turns off the showing of images on the front of cards (default is on)",
+          help: 
+            "Turns off the showing of images on the front of cards (default is on)",
           required: false,
           flag: true
         },
@@ -97,7 +101,8 @@ var __ = function(
         },
         selfJoin: {
           abbr: "s",
-          help: "Determines whether users can join the boards themselves or whether they have to be invited.",
+          help: 
+            "Determines whether users can join the boards themselves or whether they have to be invited.",
           required: false,
           flag: true
         },
