@@ -109,7 +109,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
           "] (this may take a while)"
       );
       _.each(memberships, function(m) {
-        getMembershipsThrottled(m.idMember, function(err, user) {
+        getMemberships(m.idMember, function(err, user) {
           if (err) {
             throw err;
           }
