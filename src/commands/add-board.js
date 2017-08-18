@@ -13,13 +13,25 @@ var __ = function(
 
   trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
     logger.info("Adding new board...");
+    if (!options.idOrganization && options.permissionLevel == "org") {
+      throw "You must set an organization ID in order to set the permission level to org";
+    }
+
+    var permissionLevel = "";
+    if (options.permissionLevel) {
+      permissionLevel = options.permissionLevel;
+    }
 
     // Build up arguments to send
     var params = {
       name: options.boardName,
       desc: options.description ? options.description : "",
+      defaultLists: options.defaultLists ? "false" : "true",
+      idOrganization: options.idOrganization ? options.idOrganization : "",
       prefs_cardCovers: options.cardCoverImages ? "false" : "true",
-      prefs_cardAging: options.cardAging ? "pirate" : "regular"
+      prefs_cardAging: options.cardAging ? "pirate" : "regular",
+      prefs_permissionLevel: permissionLevel,
+      prefs_selfJoin: options.selfJoin ? "false" : "true"
     };
 
     // console.log(params);
@@ -68,6 +80,29 @@ var __ = function(
           abbr: "c",
           help:
             "Turns off the showing of images on the front of cards (default is on)",
+          required: false,
+          flag: true
+        },
+        defaultLists: {
+          abbr: "l",
+          help: "Turns off default lists for the new board (default is on)",
+          required: false,
+          flag: true
+        },
+        idOrganization: {
+          abbr: "i",
+          help: "Sets the organization for the new board",
+          required: false
+        },
+        permissionLevel: {
+          abbr: "p",
+          help: "Sets the permission level for the new board",
+          required: false
+        },
+        selfJoin: {
+          abbr: "s",
+          help:
+            "Determines whether users can join the boards themselves or whether they have to be invited.",
           required: false,
           flag: true
         },
