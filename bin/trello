@@ -71,6 +71,8 @@ function registerCommands() {
 // Hacky, but it'll do for now
 if (process.argv[2] == 'set-auth') {
     Authentication.setToken(process.argv[3]);
+    console.log("Token set");
+    process.exit(0);
 } else {
     // Make sure we have an API key etc
     Authentication.check();
