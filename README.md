@@ -8,7 +8,7 @@ trello-cli is a CLI tool for [Trello](http://www.trello.com). Makes sense, right
 
 * Run `npm install` in the same directory as `package.json` to install dependencies
 * Run `./bin/trello` to generate basic config in your home directory.
-* [Get an API key](https://trello.com/1/appKey/generate) and put it in `~/.trello-cli/config.json`
+* [Get an API key](https://trello.com/app-key) and put it in `~/.trello-cli/config.json`
 * Run `./bin/trello refresh` to refresh the list of Trello boards and lists.
 * Run `./bin/trello` + follow the instructions
 

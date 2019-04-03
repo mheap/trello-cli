@@ -1,7 +1,14 @@
 language: node_js
+
 node_js:
-  - "7.6"
-  - "6.9.4" # LTS
+  - 6  # Latest 6.x series LTS
+  - 8  # Latest 8.x series LTS
+  - 10 # Latest 10.x series LTS
+  - node # Latest released to date
+
+before_install:
+  - npm i -g npm --upgrade
+
 script:
   - npm test
   - npm run lint
