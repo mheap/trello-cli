@@ -23,7 +23,7 @@
     "Simon Kittle <simon@kittle.co.uk>",
     "Sylvain Just (http://github.com/syjust)"
   ],
-  "license": "BSD",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^3.19.0",
