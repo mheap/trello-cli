@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "async": "~0.2.9",
+    "bottleneck": "^2.18.1",
     "colors": "~0.6.2",
     "limiter": "^1.1.0",
     "nconf": "~0.6.7",
