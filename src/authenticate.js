@@ -16,6 +16,13 @@ var Auth = function(logger, output, config) {
 
 Auth.prototype.loadAuthCache = function() {
   var authFile = {};
+  // look for token in process environment first:
+  const tokenFromConfig = this.config.get("token");
+  if (tokenFromConfig !== undefined) {
+    return {
+      token: tokenFromConfig
+    };
+  }
   // Load auth cache file
   try {
     authFile = JSON.parse(

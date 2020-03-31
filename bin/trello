@@ -11,6 +11,8 @@ var readline = require('readline'),
     fs = require("fs"),
     colors = require('colors'),
     shell = require('shell-quote');
+    
+const ENV_VAR_PREFIX = "trello_cli_";
 
 
 /* XXX mg: this has to happen first/before something else
@@ -26,8 +28,14 @@ var configGen = require("../lib/configGen")
 
 var configDir = path.resolve(configGen.homePath(), ".trello-cli");
 var configPath = path.resolve(configDir, "config.json");
-// Load config
-config.file(configPath);
+// Load config:
+// 1. prio: environment, 2. prio: values from config file:
+config.env({
+    // only accept env vars prefixed correctly (returning false drops the config entry).
+    // also remove prefix before loading key/value:
+    transform: ({key, value}) =>
+    key.startsWith(ENV_VAR_PREFIX) ? {key: key.substr(ENV_VAR_PREFIX.length), value} : false 
+}).file(configPath);
 
 // ./lib depedencies
 var logger = require("../lib/logger"),
