@@ -21,19 +21,25 @@ Instead of running `./bin/trello` just run `trello`.
 
 trello-cli currently supports the following commands:
 
-	add-board          Adds a new board with the specified name
-	add-card           Add a card to a board
-	add-list           Adds a new list to the spcified board with the specified name
-	assigned-to-me     Show cards that are currently assigned to you
-	close-board        Closes those board(s) where the specified text occurs in their name
-	delete-card        Remove a card from a board
-	move-all-cards     Move all cards from one list to another
-	refresh            Refresh all your board/list names
-	show-boards        Show the list of cached boards
-	show-cards         Show the cards on a list
-	show-labels        Show labels defined on a board
-	show-list          DEPRECATED.  Show cards on a list (use 'show-cards' instead; command retained for backwards compatibility)
-	show-lists         Show the list of cached lists
+    add-board          Adds a new board with the specified name
+    add-card           Add a card to a board
+    add-list           Adds a new list to the spcified board with the specified name
+    add-webhook        Add a webhook to a board
+    archive-card       Archive a card from a board
+    assigned-to-me     Show cards that are currently assigned to yourself, or any member specified
+    card-assign        Add or remove a member to a card
+    card-details       Show details about a specified card
+    close-board        Closes those board(s) where the specified text occurs in their name
+    delete-card        Remove a card from a board
+    delete-webhook     Remove a webhook by ID
+    move-all-cards     Move all cards from one list to another
+    move-card          Move a card on a board
+    refresh            Refresh all your board/list names
+    show-boards        Show the list of cached boards
+    show-cards         Show the cards on a list
+    show-labels        Show labels defined on a board
+    show-lists         Show the list of cached lists
+    show-webhooks      display webhooks for current user applications
 
 # On Windows
 
