@@ -39,7 +39,7 @@
     "bottleneck": "^2.18.1",
     "colors": "~0.6.2",
     "limiter": "^1.1.0",
-    "nconf": "~0.6.7",
+    "nconf": "^0.10.0",
     "node-trello": "~1.1",
     "nomnom": "*",
     "prompt": "1.0.0",
