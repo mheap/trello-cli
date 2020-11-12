@@ -1,6 +1,6 @@
 {
   "name": "trello-cli",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Trello CLI tool",
   "main": "index.js",
   "scripts": {
