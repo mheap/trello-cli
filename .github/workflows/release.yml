@@ -27,3 +27,9 @@ jobs:
     - run: git push
       env:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: git tag -f ${{ github.event.release.tag_name }} ${{ github.event.release.target_commitish }}
+      env:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: git push origin ${{ github.event.release.tag_name }} --force
+      env:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
