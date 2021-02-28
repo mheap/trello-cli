@@ -63,7 +63,7 @@ var __ = function(
             throw err;
           }
 
-          if (data.cards.length > 0) {
+          if (data.cards.length > 0 && !options.disableHeader) {
             if (options.showListName || !options.list) {
               output.underline(translator.getList(data.cards[0].idList));
             } else {
@@ -108,6 +108,13 @@ var __ = function(
           required: false,
           flag: true,
           default: true
+        },
+        disableHeader: {
+          abbr: "g",
+          help: "Disable the header",
+          required: false,
+          flag: true,
+          default: false,
         },
         hideIds: {
           abbr: "i",
