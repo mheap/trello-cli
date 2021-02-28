@@ -84,7 +84,7 @@ var __ = function(
   trelloApiCommand.nomnomProgramCall = function() {
     program
       .command("add-list")
-      .help("Adds a new list to the spcified board with the specified name")
+      .help("Adds a new list to the specified board with the specified name")
       .options({
         boardName: {
           abbr: "b",
