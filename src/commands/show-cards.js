@@ -114,7 +114,7 @@ var __ = function(
           help: "Disable the header",
           required: false,
           flag: true,
-          default: false,
+          default: false
         },
         hideIds: {
           abbr: "i",
