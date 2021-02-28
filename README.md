@@ -4,6 +4,12 @@ trello-cli is a CLI tool for [Trello](http://www.trello.com). Makes sense, right
 
 `trello-cli` requires a minimum NodeJS version of 6.9.4
 
+# Installation
+
+You can install this tool by running `npm install -g trello-cli`.
+
+If you're an Arch user, it's also available in the [Arch User Repository](https://aur.archlinux.org/packages/trello-cli/)
+
 # Using trello-cli
 
 * Run `npm install` in the same directory as `package.json` to install dependencies
