@@ -203,6 +203,14 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
           async.each(
             Object.keys(cacheFile.translations.boards),
             function(board, callback) {
+              var boardInfo = cacheFile.translations.boards[board];
+              this.logger.debug(
+                "Syncing lists (boards :: " +
+                  board +
+                  " :: " +
+                  boardInfo.name +
+                  ")"
+              );
               getThrottled("/1/boards/" + board + "/lists", function(
                 err,
                 data
