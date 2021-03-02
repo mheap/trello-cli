@@ -166,6 +166,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
 
   if (type == "lists" || type == "boards" || type == "users" || type == "all") {
     this.logger.debug("Syncing boards");
+    cacheFile.translations.boards = {};
     getThrottled(
       "/1/members/me/boards",
       function(err, data) {
@@ -199,6 +200,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
         fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
 
         if (type == "lists" || type == "all") {
+          cacheFile.translations.lists = {};
           this.logger.debug("Syncing lists");
           async.each(
             Object.keys(cacheFile.translations.boards),
@@ -216,6 +218,14 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
                 data
               ) {
                 if (err) {
+                  // If the board no longer exists that's ok. It'll get
+                  // removed from the cache on the next run
+                  if (err.statusCode === 404){
+                    this.logger.warning(
+                      "Board no longer exists: " + boardInfo.name
+                    );
+                    return callback();
+                  }
                   throw err;
                 }
                 _.each(data, function(item) {
@@ -227,7 +237,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
                   }
                 });
                 callback();
-              });
+              }.bind(this));
             }.bind(this),
             function(err) {
               // console.log("done with fetching list for all boards");
