@@ -65,3 +65,7 @@ You will then have the `trello` command available anywhere.
     # Move all cards:
     $ trello move-all-cards -b "GTD" -l "Completed next actions" -c "GTD" -d "Completed next actions (Nov 2-8)"
 
+# FAQ
+
+**Archived lists aren't included when I run `trello refresh`**
+By default archived lists are not returned by the API. Set the `TRELLO_CLI_LIST_FILTER` environment variable to `all` to include archived lists.

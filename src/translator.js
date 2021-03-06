@@ -213,31 +213,38 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
                   boardInfo.name +
                   ")"
               );
-              getThrottled("/1/boards/" + board + "/lists", function(
-                err,
-                data
-              ) {
-                if (err) {
-                  // If the board no longer exists that's ok. It'll get
-                  // removed from the cache on the next run
-                  if (err.statusCode === 404){
-                    this.logger.warning(
-                      "Board no longer exists: " + boardInfo.name
-                    );
-                    return callback();
+
+              let additionalListParams = "";
+              if (process.env.TRELLO_CLI_LIST_FILTER) {
+                additionalListParams =
+                  "?filter=" + process.env.TRELLO_CLI_LIST_FILTER;
+              }
+
+              getThrottled(
+                "/1/boards/" + board + "/lists" + additionalListParams,
+                function(err, data) {
+                  if (err) {
+                    // If the board no longer exists that's ok. It'll get
+                    // removed from the cache on the next run
+                    if (err.statusCode === 404) {
+                      this.logger.warning(
+                        "Board no longer exists: " + boardInfo.name
+                      );
+                      return callback();
+                    }
+                    throw err;
                   }
-                  throw err;
-                }
-                _.each(data, function(item) {
-                  if (item.id) {
-                    cacheFile.translations.lists[item.id] = {
-                      board: item.idBoard,
-                      name: item.name
-                    };
-                  }
-                });
-                callback();
-              }.bind(this));
+                  _.each(data, function(item) {
+                    if (item.id) {
+                      cacheFile.translations.lists[item.id] = {
+                        board: item.idBoard,
+                        name: item.name
+                      };
+                    }
+                  });
+                  callback();
+                }.bind(this)
+              );
             }.bind(this),
             function(err) {
               // console.log("done with fetching list for all boards");
