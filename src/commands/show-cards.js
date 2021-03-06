@@ -4,7 +4,7 @@ fs = require("fs");
 
 var _ = require("underscore");
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -15,7 +15,7 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Showing cards belonging to the specified list");
 
     // Grab our boards etc
@@ -29,7 +29,7 @@ var __ = function(
         trelloApiCommands["show-boards"].makeTrelloApiCall(
           {
             includeClosed: false,
-            hideIds: true
+            hideIds: true,
           },
           null
         );
@@ -44,7 +44,7 @@ var __ = function(
         translator.getListIdByBoardNameAndListName(options.board, options.list)
       );
     } else {
-      _.each(translator.cache.translations.lists, function(oneList, listId) {
+      _.each(translator.cache.translations.lists, function (oneList, listId) {
         if (listId != "undefined" && oneList["board"] == boardId) {
           // oneList: [ boardId, listName ]
           listIds.push(listId);
@@ -52,13 +52,13 @@ var __ = function(
       });
     }
 
-    listIds.forEach(function(listId) {
+    listIds.forEach(function (listId) {
       trello.get(
         "/1/lists/" + listId + "",
         {
-          cards: "open"
+          cards: "open",
         },
-        function(err, data) {
+        function (err, data) {
           if (err) {
             throw err;
           }
@@ -84,7 +84,7 @@ var __ = function(
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("show-cards")
       .help("Show the cards on a list")
@@ -93,13 +93,13 @@ var __ = function(
           abbr: "b",
           metavar: "BOARD",
           help: "The board name which contains the list of cards to show",
-          required: true
+          required: true,
         },
         list: {
           abbr: "l",
           metavar: "LIST",
           help: "The name of the list whose cards to show",
-          required: false
+          required: false,
         },
         showListName: {
           abbr: "n",
@@ -107,14 +107,14 @@ var __ = function(
             "Show list name in title, in addtion to board name, if specific list specified",
           required: false,
           flag: true,
-          default: true
+          default: true,
         },
         disableHeader: {
           abbr: "g",
           help: "Disable the header",
           required: false,
           flag: true,
-          default: false
+          default: false,
         },
         hideIds: {
           abbr: "i",
@@ -122,10 +122,10 @@ var __ = function(
             "Do not include the card IDs in the output (default is to print IDs)",
           required: false,
           flag: true,
-          default: false
-        }
+          default: false,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

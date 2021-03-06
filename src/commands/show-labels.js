@@ -2,7 +2,7 @@
 
 fs = require("fs");
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -13,7 +13,7 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Showing labels belonging to the specified board");
 
     // Grab our boards etc
@@ -27,7 +27,7 @@ var __ = function(
         trelloApiCommands["show-boards"].makeTrelloApiCall(
           {
             includeClosed: false,
-            hideIds: true
+            hideIds: true,
           },
           null
         );
@@ -35,7 +35,7 @@ var __ = function(
       }
     }
 
-    trello.get("/1/boards/" + boardId + "/labels", function(err, data) {
+    trello.get("/1/boards/" + boardId + "/labels", function (err, data) {
       if (err) {
         throw err;
       }
@@ -60,7 +60,7 @@ var __ = function(
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("show-labels")
       .help("Show labels defined on a board")
@@ -69,24 +69,24 @@ var __ = function(
           abbr: "b",
           metavar: "BOARD",
           help: "The board name which contains the labels to show",
-          required: true
+          required: true,
         },
         showIds: {
           abbr: "i",
           help: "Show label IDs in the output (default is to omit IDs)",
           required: false,
           flag: true,
-          default: false
+          default: false,
         },
         showUses: {
           abbr: "u",
           help: "Show how many times a label has been used",
           required: false,
           flag: true,
-          default: false
-        }
+          default: false,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

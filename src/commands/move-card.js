@@ -1,9 +1,9 @@
 "use strict";
 
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i;
     const board_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/b\/)?([a-z0-9]+)\/?.*/i;
 
@@ -18,18 +18,18 @@ var __ = function(program, output, logger, config, trello, translator) {
     var pos =
       options.pos ||
       (/^\d+$/.test(options.board)
-        ? (function() {
+        ? (function () {
             boardId = null;
             return options.board;
           })()
         : null);
 
     var posFunc = pos
-      ? position => {
+      ? (position) => {
           trello.put(
             "/1/cards/" + cardId + "/pos",
             { value: position },
-            function(err, data) {
+            function (err, data) {
               if (err) {
                 console.error(err, data);
               } else {
@@ -52,7 +52,7 @@ var __ = function(program, output, logger, config, trello, translator) {
       boardId == null
         ? { value: options.list }
         : { value: boardId, idList: options.list },
-      function(err, data) {
+      function (err, data) {
         if (err) {
           console.error(err, data);
         } else {
@@ -66,7 +66,7 @@ var __ = function(program, output, logger, config, trello, translator) {
     );
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("move-card")
       .help("Move a card on a board")
@@ -76,14 +76,14 @@ var __ = function(program, output, logger, config, trello, translator) {
           abbr: "c",
           metavar: "<card>",
           help: "The card's name/id/url to move",
-          required: true
+          required: true,
         },
         list: {
           position: 2,
           abbr: "l",
           metavar: "<list>",
           help: "The list name/id to move the card to",
-          required: true
+          required: true,
         },
         board: {
           position: 3,
@@ -91,17 +91,17 @@ var __ = function(program, output, logger, config, trello, translator) {
           metavar: "<board>",
           help:
             "The board name/id/url to move the card to (if the list is in another board)",
-          required: false
+          required: false,
         },
         pos: {
           position: 4,
           abbr: "p",
           metavar: "<pos>",
           help: "Position of the new card",
-          required: false
-        }
+          required: false,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

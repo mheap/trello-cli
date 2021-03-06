@@ -2,7 +2,7 @@
 
 var _ = require("underscore");
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -13,10 +13,10 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     var listOfBoards = [];
 
-    _.each(translator.cache.translations.boards, function(oneBoard, boardId) {
+    _.each(translator.cache.translations.boards, function (oneBoard, boardId) {
       if (
         boardId != "undefined" && options.includeClosed
           ? true
@@ -29,7 +29,7 @@ var __ = function(
             {
               id: boardId,
               name: oneBoard["name"],
-              closed: oneBoard["closed"]
+              closed: oneBoard["closed"],
             },
             "name"
           ),
@@ -37,7 +37,7 @@ var __ = function(
           {
             id: boardId,
             name: oneBoard["name"],
-            closed: oneBoard["closed"]
+            closed: oneBoard["closed"],
           }
         );
       }
@@ -50,7 +50,7 @@ var __ = function(
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("show-boards")
       .help("Show the list of cached boards")
@@ -60,7 +60,7 @@ var __ = function(
           help: "Include closed boards in the list (default: no)",
           required: false,
           flag: true,
-          default: false
+          default: false,
         },
         hideIds: {
           abbr: "i",
@@ -68,10 +68,10 @@ var __ = function(
             "Do not include the board IDs in the output (default is to print IDs)",
           required: false,
           flag: true,
-          default: false
-        }
+          default: false,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

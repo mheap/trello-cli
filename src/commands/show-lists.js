@@ -4,7 +4,7 @@ fs = require("fs");
 
 var _ = require("underscore");
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -15,7 +15,7 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Showing lists belonging to the specified board");
 
     var boardIds = [];
@@ -32,7 +32,7 @@ var __ = function(
           trelloApiCommands["show-boards"].makeTrelloApiCall(
             {
               includeClosed: false,
-              hideIds: true
+              hideIds: true,
             },
             null
           );
@@ -40,16 +40,19 @@ var __ = function(
         }
       }
     } else {
-      _.each(translator.cache.translations.boards, function(oneBoard, boardId) {
-        if (boardId != "undefined") {
-          boardIds.push(boardId);
+      _.each(
+        translator.cache.translations.boards,
+        function (oneBoard, boardId) {
+          if (boardId != "undefined") {
+            boardIds.push(boardId);
+          }
         }
-      });
+      );
     }
 
-    boardIds.forEach(function(boardId) {
+    boardIds.forEach(function (boardId) {
       var listOfLists = [];
-      _.each(translator.cache.translations.lists, function(oneList, listId) {
+      _.each(translator.cache.translations.lists, function (oneList, listId) {
         if (listId != "undefined" && oneList["board"] == boardId) {
           // oneList: [ boardId, listName ]
           listOfLists.splice(
@@ -57,14 +60,14 @@ var __ = function(
               listOfLists,
               {
                 id: listId,
-                name: oneList["name"]
+                name: oneList["name"],
               },
               "name"
             ),
             0,
             {
               id: listId,
-              name: oneList["name"]
+              name: oneList["name"],
             }
           );
         }
@@ -84,7 +87,7 @@ var __ = function(
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("show-lists")
       .help("Show the list of cached lists")
@@ -93,14 +96,14 @@ var __ = function(
           abbr: "b",
           metavar: "BOARD",
           help: "The board name which contains the list of lists to show",
-          required: false
+          required: false,
         },
         showBoardName: {
           abbr: "n",
           help: "Show board name in title if specific board specified",
           required: false,
           flag: true,
-          default: true
+          default: true,
         },
         hideIds: {
           abbr: "i",
@@ -108,10 +111,10 @@ var __ = function(
             "Do not include the list IDs in the output (default is to print IDs)",
           required: false,
           flag: true,
-          default: false
-        }
+          default: false,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

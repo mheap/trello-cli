@@ -1,6 +1,6 @@
 "use strict";
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -11,7 +11,7 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Adding new list...");
 
     // find board ID
@@ -24,9 +24,12 @@ var __ = function(
         if (options.force && !options.triedCreate) {
           logger.info("Board doesn't exist, creating...");
           options.triedCreate = true;
-          trelloApiCommands["add-board"].makeTrelloApiCall(options, function() {
-            trelloApiCommands["add-list"].makeTrelloApiCall(options, null);
-          });
+          trelloApiCommands["add-board"].makeTrelloApiCall(
+            options,
+            function () {
+              trelloApiCommands["add-list"].makeTrelloApiCall(options, null);
+            }
+          );
           return;
         } else {
           logger.error(
@@ -48,7 +51,7 @@ var __ = function(
       pos:
         ["top", "bottom"].indexOf(options.listPosition) > -1
           ? options.listPosition
-          : "top"
+          : "top",
     };
 
     if (options.verbose) {
@@ -56,7 +59,7 @@ var __ = function(
       logger.info(params);
     }
 
-    trello.post("/1/lists", params, function(err, data) {
+    trello.post("/1/lists", params, function (err, data) {
       if (err) {
         throw err;
       }
@@ -81,7 +84,7 @@ var __ = function(
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("add-list")
       .help("Adds a new list to the specified board with the specified name")
@@ -90,35 +93,35 @@ var __ = function(
           abbr: "b",
           metavar: "BOARD",
           help: "The name of the board to add the list to",
-          required: true
+          required: true,
         },
         listName: {
           abbr: "l",
           metavar: "LIST",
           help: "The name of the new list",
-          required: true
+          required: true,
         },
         listPosition: {
           abbr: "p",
           metavar: "LISTPOS",
           help:
             "The position of the new list: acceptable values are 'top' or 'bottom' (default: top)",
-          required: false
+          required: false,
         },
         force: {
           abbr: "f",
           help: "Force - will create the board if it doesn't already exist",
           flag: true,
-          required: false
+          required: false,
         },
         verbose: {
           abbr: "v",
           help: "Turn on increased error reporting",
           required: false,
-          flag: true
-        }
+          flag: true,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

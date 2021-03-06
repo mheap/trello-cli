@@ -1,6 +1,6 @@
 "use strict";
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -11,7 +11,7 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Adding webhook...");
 
     // get or create the board
@@ -22,9 +22,12 @@ var __ = function(
         if (options.force && !options.triedToCreateBoard) {
           logger.info("Board doesn't exist, creating...");
           options.triedToCreateBoard = true;
-          trelloApiCommands["add-board"].makeTrelloApiCall(options, function() {
-            trelloApiCommands["add-webhook"].makeTrelloApiCall(options, null);
-          });
+          trelloApiCommands["add-board"].makeTrelloApiCall(
+            options,
+            function () {
+              trelloApiCommands["add-webhook"].makeTrelloApiCall(options, null);
+            }
+          );
           return;
         } else {
           logger.error(
@@ -42,10 +45,10 @@ var __ = function(
     var params = {
       idModel: boardId,
       description: options.description,
-      callbackURL: options.callbackURL
+      callbackURL: options.callbackURL,
     };
 
-    trello.post("/1/webhooks", params, function(err, data) {
+    trello.post("/1/webhooks", params, function (err, data) {
       if (err) {
         throw err;
       }
@@ -65,7 +68,7 @@ var __ = function(
     });
   }; // end of trelloApiCommand.makeTrelloApiCall
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("add-webhook")
       .help("Add a webhook to a board")
@@ -76,35 +79,35 @@ var __ = function(
           help: "The webhook's description",
           required: false,
           default: "",
-          list: false
+          list: false,
         },
         boardName: {
           abbr: "b",
           metavar: "BOARD",
           help: "The board name to add a webhook to",
-          required: true
+          required: true,
         },
         callbackURL: {
           abbr: "c",
           metavar: "CALLBACK_URL",
           help: "The URL to connect to",
-          required: true
+          required: true,
         },
         force: {
           abbr: "f",
           metavar: "FORCE",
           help: "Create the board if it doesn't exist",
           required: false,
-          default: false
+          default: false,
         },
         verbose: {
           abbr: "v",
           help: "Turn on increased error reporting",
           required: false,
-          flag: true
-        }
+          flag: true,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

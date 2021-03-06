@@ -3,7 +3,7 @@
 fs = require("fs");
 var _ = require("underscore");
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -14,7 +14,7 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Showing details about the specified card");
 
     var cardId = options.cardId.replace(
@@ -28,9 +28,9 @@ var __ = function(
         fields: "all",
         member_fields: "all",
         attachments: "true",
-        checklists: "all"
+        checklists: "all",
       },
-      function(err, data) {
+      function (err, data) {
         if (err) {
           throw err;
         }
@@ -48,9 +48,11 @@ var __ = function(
         }
         if (data.labels.length > 0) {
           var x = [];
-          data.labels.forEach(function(e) {
+          data.labels.forEach(function (e) {
             var c = "";
-            switch (e.color) { // XXX I don't know a better way to do this, either, I would love to hear recommendations!
+            switch (
+              e.color // XXX I don't know a better way to do this, either, I would love to hear recommendations!
+            ) {
               case "lime":
                 c = "cyan";
                 break;
@@ -74,7 +76,7 @@ var __ = function(
         }
         if (data.idMembers.length > 0) {
           var members = [];
-          data.idMembers.forEach(function(e) {
+          data.idMembers.forEach(function (e) {
             members.push(translator.getUser(e));
           });
           if (data.idMembers.length == 1) {
@@ -91,7 +93,7 @@ var __ = function(
           data.badges.votes > 0
         ) {
           var voters = [];
-          data.idMembersVoted.forEach(function(e) {
+          data.idMembersVoted.forEach(function (e) {
             voters.push(translator.getUser(e));
           });
           if (data.badges.votes == 1) {
@@ -106,17 +108,17 @@ var __ = function(
           } else {
             output.normal(data.badges.attachments + " attachments:");
           }
-          data.attachments.forEach(function(e) {
+          data.attachments.forEach(function (e) {
             output.normal("* " + e.name + " - " + e.url.underline);
           });
         }
-        data.checklists.forEach(function(e) {
+        data.checklists.forEach(function (e) {
           if (e.name == "Checklist") {
             output.bold("Checklist:");
           } else {
             output.bold("Checklist - " + e.name + ":");
           }
-          e.checkItems.forEach(function(el) {
+          e.checkItems.forEach(function (el) {
             if (el.state == "complete") {
               output.green("- " + el.name + " (Completed)");
             } else {
@@ -132,7 +134,7 @@ var __ = function(
     );
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("card-details")
       .help("Show details about a specified card")
@@ -140,10 +142,10 @@ var __ = function(
         cardId: {
           position: 1,
           help: "The short URL or ID of the card to display information about",
-          required: true
-        }
+          required: true,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

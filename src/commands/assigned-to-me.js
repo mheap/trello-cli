@@ -1,12 +1,12 @@
 fs = require("fs");
 
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     user = options.user || "me";
     logger.info("Showing assigned cards to " + user);
-    trello.get("/1/members/" + user + "/cards", function(err, data) {
+    trello.get("/1/members/" + user + "/cards", function (err, data) {
       if (err) {
         logger.error(
           "Error while retrieving assigned cards for " + user + ":",
@@ -32,7 +32,7 @@ var __ = function(program, output, logger, config, trello, translator) {
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("assigned-to-me")
       .help(
@@ -42,10 +42,10 @@ var __ = function(program, output, logger, config, trello, translator) {
         user: {
           position: 1,
           help: "Specifies user to show assigned cards for. (id/username)",
-          required: false
-        }
+          required: false,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

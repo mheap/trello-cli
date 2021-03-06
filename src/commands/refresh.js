@@ -4,16 +4,16 @@ var _ = require("underscore"),
   async = require("async"),
   fs = require("fs");
 
-var ___ = function(program, output, logger, config, trello, translator) {
+var ___ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     var type = options.type || "all";
     // console.log("refresh API call entered...");
     translator.reloadTranslations(type, onComplete);
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("refresh")
       .help("Refresh all your board/list names")
@@ -23,10 +23,10 @@ var ___ = function(program, output, logger, config, trello, translator) {
           help:
             "Dataset to refresh (all, users, orgs, boards, lists - default 'all')",
           list: false,
-          required: false
-        }
+          required: false,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         options = options || {};
         trelloApiCommand.makeTrelloApiCall(options);
       });
