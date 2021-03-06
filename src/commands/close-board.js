@@ -2,7 +2,7 @@
 
 var async = require("async");
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -13,10 +13,10 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     var boardsToDelete = translator.getBoardsByName(
       options.boardNameMatch,
-      function(boardNameToTest, match) {
+      function (boardNameToTest, match) {
         return boardNameToTest.indexOf(match) != -1;
       }
     );
@@ -25,7 +25,7 @@ var __ = function(
       output.normal("No boards match search string; exitting.");
     } else {
       output.normal("Boards which will be closed:");
-      boardsToDelete.forEach(function(boardToDelete) {
+      boardsToDelete.forEach(function (boardToDelete) {
         output.normal("    " + boardToDelete.name);
       });
 
@@ -34,19 +34,19 @@ var __ = function(
         "Do you want to continue with closing the boards? Type 'yes' to continue"
       );
 
-      process.stdin.once("data", function(userInput) {
+      process.stdin.once("data", function (userInput) {
         if (userInput.toString().indexOf("yes") == 0) {
           logger.info("Closing boards...");
 
           async.each(
             boardsToDelete,
-            function(boardToDelete, callback) {
+            function (boardToDelete, callback) {
               trello.put(
                 "/1/boards/" + boardToDelete.id + "/closed",
                 {
-                  value: true
+                  value: true,
                 },
-                function(err, data) {
+                function (err, data) {
                   if (err) {
                     throw err;
                   }
@@ -54,7 +54,7 @@ var __ = function(
                 }
               );
             },
-            function(err) {
+            function (err) {
               logger.info("Boards closed");
               process.stdin.unref();
             }
@@ -67,7 +67,7 @@ var __ = function(
     }
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("close-board")
       .help(
@@ -79,16 +79,16 @@ var __ = function(
           metavar: "BOARD",
           help:
             "The text to search for in the board name; all boards with the specified text in their name will be closed.",
-          required: true
+          required: true,
         },
         verbose: {
           abbr: "v",
           help: "Turn on increased error reporting",
           required: false,
-          flag: true
-        }
+          flag: true,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

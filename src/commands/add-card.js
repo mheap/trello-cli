@@ -1,6 +1,6 @@
 "use strict";
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -11,7 +11,7 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Adding card...");
 
     var boardId, listId;
@@ -24,9 +24,12 @@ var __ = function(
         if (options.force && !options.triedToCreateBoard) {
           logger.info("Board doesn't exist, creating...");
           options.triedToCreateBoard = true;
-          trelloApiCommands["add-board"].makeTrelloApiCall(options, function() {
-            trelloApiCommands["add-card"].makeTrelloApiCall(options, null);
-          });
+          trelloApiCommands["add-board"].makeTrelloApiCall(
+            options,
+            function () {
+              trelloApiCommands["add-card"].makeTrelloApiCall(options, null);
+            }
+          );
           return;
         } else {
           logger.error(
@@ -53,15 +56,19 @@ var __ = function(
           logger.info("List doesn't exist, creating...");
           options.triedToCreateList = true;
           //options.refreshCache =
-          trelloApiCommands["add-list"].makeTrelloApiCall(options, function() {
+          trelloApiCommands["add-list"].makeTrelloApiCall(options, function () {
             // This is hacky; but sometimes the request to refresh seems to happen too quick for Trello's servers, and they don't
             // return the newly created list.  This mitigates that problem.
-            setTimeout(function() {
-              trelloApiCommands[
-                "refresh"
-              ].makeTrelloApiCall(options, function() {
-                trelloApiCommands["add-card"].makeTrelloApiCall(options, null);
-              });
+            setTimeout(function () {
+              trelloApiCommands["refresh"].makeTrelloApiCall(
+                options,
+                function () {
+                  trelloApiCommands["add-card"].makeTrelloApiCall(
+                    options,
+                    null
+                  );
+                }
+              );
             }, 1500);
           });
           return;
@@ -87,10 +94,10 @@ var __ = function(
         ["top", "bottom"].indexOf(options.cardPosition) > -1
           ? options.cardPosition
           : "bottom",
-      idLabels: options.labels ? options.labels.replace(/\s+/g, "") : ""
+      idLabels: options.labels ? options.labels.replace(/\s+/g, "") : "",
     };
 
-    trello.post("/1/cards", params, function(err, data) {
+    trello.post("/1/cards", params, function (err, data) {
       if (err) {
         throw err;
       }
@@ -112,7 +119,7 @@ var __ = function(
     });
   }; // end of trelloApiCommand.makeTrelloApiCall
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("add-card")
       .help("Add a card to a board")
@@ -121,54 +128,54 @@ var __ = function(
           position: 1,
           help: "The card's title",
           list: false,
-          required: true
+          required: true,
         },
         description: {
           position: 2,
           help: "The card's description",
-          list: false
+          list: false,
         },
         boardName: {
           abbr: "b",
           metavar: "BOARD",
           help: "The board name to add a card to",
-          required: true
+          required: true,
         },
         listName: {
           abbr: "l",
           metavar: "LIST",
           help: "The list name to add a card to",
-          required: true
+          required: true,
         },
         cardPosition: {
           abbr: "q",
           metavar: "POS",
           help:
             "The position of the new card: acceptable values are 'top' or 'bottom' (default: bottom)",
-          required: false
+          required: false,
         },
         labels: {
           abbr: "g",
           metavar: "LABELS",
           help:
             "Comma-separated list of labels to assign to the card (requires IDs, see show-labels command)",
-          required: false
+          required: false,
         },
         force: {
           abbr: "f",
           help:
             "Force - will create the board and/or list if they don't already exist",
           flag: true,
-          required: false
+          required: false,
         },
         verbose: {
           abbr: "v",
           help: "Turn on increased error reporting",
           required: false,
-          flag: true
-        }
+          flag: true,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

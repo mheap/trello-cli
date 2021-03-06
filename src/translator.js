@@ -4,7 +4,7 @@ var _ = require("underscore"),
   output = require("../lib/output"),
   Bottleneck = require("bottleneck");
 
-var Translator = function(logger, config, trello) {
+var Translator = function (logger, config, trello) {
   this.loadCount = 1;
   this.logger = logger;
   this.config = config;
@@ -32,11 +32,11 @@ var Translator = function(logger, config, trello) {
   this.cache = cacheFile;
 };
 
-Translator.prototype.checkCompatibleCache = function() {
+Translator.prototype.checkCompatibleCache = function () {
   return this.cache.formatVersion == this.formatVersionNeeded;
 };
 
-Translator.prototype.reloadTranslations = function(type, onComplete) {
+Translator.prototype.reloadTranslations = function (type, onComplete) {
   if (type == undefined) {
     type = "all";
   }
@@ -56,7 +56,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
       boards: {},
       lists: {},
       users: {},
-      me: {}
+      me: {},
     };
   }
 
@@ -73,7 +73,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
 
   if (type == "users" || type == "all") {
     this.logger.debug("Syncing members");
-    getThrottled("/1/members/me", function(err, user) {
+    getThrottled("/1/members/me", function (err, user) {
       if (err) {
         throw err;
       }
@@ -82,7 +82,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
         name: user.fullName,
         username: user.username,
         initials: user.initials,
-        type: user.memberType
+        type: user.memberType,
       };
 
       // Write it back to the cache file
@@ -114,13 +114,13 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
         "/" +
         id +
         "/members?fields=fullName,username,initials,memberType",
-      function(err, users) {
-        users.forEach(function(user) {
+      function (err, users) {
+        users.forEach(function (user) {
           cacheFile.translations.users[user.id] = {
             name: user.fullName,
             username: user.username,
             initials: user.initials,
-            type: user.memberType
+            type: user.memberType,
           };
         });
 
@@ -134,17 +134,17 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
     this.logger.debug("Syncing organizations");
     getThrottled(
       "/1/members/me/organizations",
-      function(err, data) {
+      function (err, data) {
         if (err) {
           throw err;
         }
         _.each(
           data,
-          function(item) {
+          function (item) {
             if (type == "orgs" || type == "all") {
               cacheFile.translations.orgs[item.id] = {
                 name: item.name,
-                displayName: item.displayName
+                displayName: item.displayName,
               };
             }
 
@@ -169,20 +169,20 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
     cacheFile.translations.boards = {};
     getThrottled(
       "/1/members/me/boards",
-      function(err, data) {
+      function (err, data) {
         if (err) {
           throw err;
         }
         _.each(
           data,
-          function(item) {
+          function (item) {
             if (type == "lists" || type == "boards" || type == "all") {
               var powerups = item.powerUps || [];
               cacheFile.translations.boards[item.id] = {
                 organization: item.idOrganization,
                 name: item.name,
                 closed: item.closed,
-                voting: powerups.indexOf("voting") > -1
+                voting: powerups.indexOf("voting") > -1,
               };
             }
 
@@ -204,7 +204,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
           this.logger.debug("Syncing lists");
           async.each(
             Object.keys(cacheFile.translations.boards),
-            function(board, callback) {
+            function (board, callback) {
               var boardInfo = cacheFile.translations.boards[board];
               this.logger.debug(
                 "Syncing lists (boards :: " +
@@ -222,7 +222,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
 
               getThrottled(
                 "/1/boards/" + board + "/lists" + additionalListParams,
-                function(err, data) {
+                function (err, data) {
                   if (err) {
                     // If the board no longer exists that's ok. It'll get
                     // removed from the cache on the next run
@@ -234,11 +234,11 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
                     }
                     throw err;
                   }
-                  _.each(data, function(item) {
+                  _.each(data, function (item) {
                     if (item.id) {
                       cacheFile.translations.lists[item.id] = {
                         board: item.idBoard,
-                        name: item.name
+                        name: item.name,
                       };
                     }
                   });
@@ -246,7 +246,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
                 }.bind(this)
               );
             }.bind(this),
-            function(err) {
+            function (err) {
               // console.log("done with fetching list for all boards");
               // Write it back to the cache file
               fs.writeFileSync(cachePath, JSON.stringify(cacheFile));
@@ -269,7 +269,7 @@ Translator.prototype.reloadTranslations = function(type, onComplete) {
   }
 };
 
-Translator.prototype.getOrganization = function(id) {
+Translator.prototype.getOrganization = function (id) {
   this.logger.debug("Looking up organization: " + id);
   var item = this.cache.translations.orgs[id];
   if (!item) {
@@ -278,7 +278,7 @@ Translator.prototype.getOrganization = function(id) {
   return item["displayName"] || "Org: " + id;
 };
 
-Translator.prototype.getBoard = function(id) {
+Translator.prototype.getBoard = function (id) {
   this.logger.debug("Looking up board: " + id);
   var item = this.cache.translations.boards[id];
   var str = "";
@@ -291,7 +291,7 @@ Translator.prototype.getBoard = function(id) {
   return str || "Board: " + id;
 };
 
-Translator.prototype.getList = function(id) {
+Translator.prototype.getList = function (id) {
   this.logger.debug("Looking up list: " + id);
   var item = this.cache.translations.lists[id];
   var str = "";
@@ -304,7 +304,7 @@ Translator.prototype.getList = function(id) {
   return str || "List: " + id;
 };
 
-Translator.prototype.getUser = function(id) {
+Translator.prototype.getUser = function (id) {
   this.logger.debug("Looking up user: " + id);
   if (this.cache.translations.me.id == id) {
     return this.cache.translations.me.name + " (you)";
@@ -317,7 +317,7 @@ Translator.prototype.getUser = function(id) {
   return str || "User: " + id;
 };
 
-Translator.prototype.getBoardIdByName = function(name) {
+Translator.prototype.getBoardIdByName = function (name) {
   // console.log("-- getBoardIdByName() boards length: " + Object.keys(this.cache.translations.boards).length);
   // console.log("-- getBoardIdByName() lists length: " + Object.keys(this.cache.translations.lists).length);
   name = name.toLowerCase();
@@ -332,7 +332,7 @@ Translator.prototype.getBoardIdByName = function(name) {
   throw new Error("Unknown Board");
 };
 
-Translator.prototype.getBoardsByName = function(name, comparer) {
+Translator.prototype.getBoardsByName = function (name, comparer) {
   var matchingBoardIds = [];
   name = name.toLowerCase();
   this.logger.debug("Looking up boards by name: " + name);
@@ -341,7 +341,7 @@ Translator.prototype.getBoardsByName = function(name, comparer) {
     if (i != "undefined" && comparer(boards[i]["name"].toLowerCase(), name)) {
       matchingBoardIds.push({
         id: i,
-        name: boards[i]["name"]
+        name: boards[i]["name"],
       });
     }
   }
@@ -349,7 +349,7 @@ Translator.prototype.getBoardsByName = function(name, comparer) {
   return matchingBoardIds;
 };
 
-Translator.prototype.getListIdByBoardNameAndListName = function(board, list) {
+Translator.prototype.getListIdByBoardNameAndListName = function (board, list) {
   var boardId = this.getBoardIdByName(board);
 
   list = list.toLowerCase();
@@ -367,7 +367,7 @@ Translator.prototype.getListIdByBoardNameAndListName = function(board, list) {
   throw new Error("Unknown List");
 };
 
-Translator.prototype.getUserIdByDisplayName = function(name) {
+Translator.prototype.getUserIdByDisplayName = function (name) {
   name = name.toLowerCase();
   this.logger.debug("Looking up user by name: " + name);
   var user = this.cache.translations.user;
@@ -380,7 +380,7 @@ Translator.prototype.getUserIdByDisplayName = function(name) {
   throw new Error("Unknown User");
 };
 
-Translator.prototype.getUserIdByUsername = function(name) {
+Translator.prototype.getUserIdByUsername = function (name) {
   name = name.toLowerCase();
   this.logger.debug("Looking up user by username: " + name);
   var user = this.cache.translations.user;
@@ -398,17 +398,17 @@ Translator.prototype.getUserIdByUsername = function(name) {
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 100
+  minTime: 100,
 });
 
 function getThrottled(url, callback, opts) {
   opts = opts || {};
   limiter.schedule(opts, () => {
-    return new Promise(resolve => {
-      trello.get(url, function(err, data) {
+    return new Promise((resolve) => {
+      trello.get(url, function (err, data) {
         if (err && data.error == "RATE_LIMIT_EXCEEDED") {
           console.log("[10s wait] Rate Limit for " + url);
-          return setTimeout(function() {
+          return setTimeout(function () {
             getThrottled(url, callback, { priority: 0 });
             resolve();
           }, 10000);
@@ -422,6 +422,6 @@ function getThrottled(url, callback, opts) {
   });
 }
 
-module.exports = function(logger, config, trello) {
+module.exports = function (logger, config, trello) {
   return new Translator(logger, config, trello);
 };

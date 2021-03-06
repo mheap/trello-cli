@@ -2,7 +2,7 @@
 
 var fs = require("fs");
 
-var Auth = function(logger, output, config) {
+var Auth = function (logger, output, config) {
   this.logger = logger;
   this.output = output;
   this.config = config;
@@ -14,7 +14,7 @@ var Auth = function(logger, output, config) {
     "&name=trello-cli&response_type=token&scope=account,read,write&expiration=never";
 };
 
-Auth.prototype.loadAuthCache = function() {
+Auth.prototype.loadAuthCache = function () {
   var authFile = {};
   // Load auth cache file
   try {
@@ -32,7 +32,7 @@ Auth.prototype.loadAuthCache = function() {
     // Create the file
     this.writeAuthFile(
       "{}",
-      function() {
+      function () {
         this.logger.debug("Auth file created");
       }.bind(this)
     );
@@ -41,18 +41,18 @@ Auth.prototype.loadAuthCache = function() {
   return authFile;
 };
 
-Auth.prototype.setToken = function(token) {
+Auth.prototype.setToken = function (token) {
   var authCache = this.loadAuthCache();
   authCache.token = token;
   this.writeAuthFile(
     JSON.stringify(authCache),
-    function() {
+    function () {
       this.logger.debug("Auth file written");
     }.bind(this)
   );
 };
 
-Auth.prototype.getToken = function() {
+Auth.prototype.getToken = function () {
   if (!this.cachedToken) {
     this.cachedToken = this.loadAuthCache().token;
   }
@@ -60,7 +60,7 @@ Auth.prototype.getToken = function() {
   return this.cachedToken;
 };
 
-Auth.prototype.writeAuthFile = function(content, callback) {
+Auth.prototype.writeAuthFile = function (content, callback) {
   // Make sure the path exists
   try {
     this.fs.mkdirSync(this.config.get("configPath"));
@@ -77,7 +77,7 @@ Auth.prototype.writeAuthFile = function(content, callback) {
   callback();
 };
 
-Auth.prototype.check = function() {
+Auth.prototype.check = function () {
   var authCache = this.loadAuthCache();
   // See if we have an auth key in there
   if (!authCache.token) {
@@ -96,7 +96,7 @@ Auth.prototype.check = function() {
   this.logger.debug("Authenticating user");
 };
 
-module.exports = function(logger, output, config) {
+module.exports = function (logger, output, config) {
   logger.debug("Creating authentication module");
   return new Auth(logger, output, config);
 };

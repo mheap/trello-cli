@@ -1,7 +1,7 @@
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Moving cards");
 
     // Grab our boards etc
@@ -34,23 +34,24 @@ var __ = function(program, output, logger, config, trello, translator) {
     // Build up arguments to send
     var params = {
       idBoard: destinationBoardId,
-      idList: destinationListId
+      idList: destinationListId,
     };
 
-    trello.post("/1/lists/" + sourceListId + "/moveAllCards", params, function(
-      err,
-      data
-    ) {
-      if (err) {
-        throw err;
+    trello.post(
+      "/1/lists/" + sourceListId + "/moveAllCards",
+      params,
+      function (err, data) {
+        if (err) {
+          throw err;
+        }
+        logger.info(
+          data.length + (data.length == 1 ? " card moved" : " cards moved")
+        );
       }
-      logger.info(
-        data.length + (data.length == 1 ? " card moved" : " cards moved")
-      );
-    });
+    );
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("move-all-cards")
       .help("Move all cards from one list to another")
@@ -59,34 +60,34 @@ var __ = function(program, output, logger, config, trello, translator) {
           abbr: "b",
           metavar: "BOARD",
           help: "The board containing the list to move",
-          required: true
+          required: true,
         },
         sourceList: {
           abbr: "l",
           metavar: "LIST",
           help: "The list containing the cards to move",
-          required: true
+          required: true,
         },
         destinationBoard: {
           abbr: "c",
           metavar: "BOARD",
           help: "The destination board",
-          required: true
+          required: true,
         },
         destinationList: {
           abbr: "d",
           metavar: "LIST",
           help: "The destination list",
-          required: true
+          required: true,
         },
         verbose: {
           abbr: "v",
           help: "Turn on increased error reporting",
           required: false,
-          flag: true
-        }
+          flag: true,
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

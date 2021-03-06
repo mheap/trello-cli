@@ -1,6 +1,6 @@
 "use strict";
 
-var __ = function(
+var __ = function (
   program,
   output,
   logger,
@@ -11,13 +11,13 @@ var __ = function(
 ) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     trello.get(
       "/1/members/me/tokens/",
       {
-        webhooks: "true"
+        webhooks: "true",
       },
-      function(err, data) {
+      function (err, data) {
         if (err) {
           throw err;
         }
@@ -43,11 +43,11 @@ var __ = function(
     );
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("show-webhooks")
       .help("display webhooks for current user applications")
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

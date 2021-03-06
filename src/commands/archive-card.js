@@ -3,10 +3,10 @@
 var List = require("term-list");
 var prompt = require("prompt");
 
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Archiving card");
 
     // Grab our boards etc
@@ -17,7 +17,7 @@ var __ = function(program, output, logger, config, trello, translator) {
     );
 
     // Get a list of cards on a board
-    trello.get("/1/boards/" + boardId + "/cards/visible", function(err, data) {
+    trello.get("/1/boards/" + boardId + "/cards/visible", function (err, data) {
       if (err) {
         throw err;
       }
@@ -59,18 +59,18 @@ var __ = function(program, output, logger, config, trello, translator) {
         promptListSelection(foundCards);
       } else if (foundCards.length > 1 && options.match == "contains") {
         if (options.force) {
-          foundCards.forEach(card => archiveCard(card));
+          foundCards.forEach((card) => archiveCard(card));
           return;
         } else {
           console.log("Matching cards:");
-          foundCards.forEach(function(card) {
+          foundCards.forEach(function (card) {
             console.log(' "' + card.name + '"');
           });
           promptConfirmation()
-            .then(function() {
-              foundCards.forEach(card => archiveCard(card));
+            .then(function () {
+              foundCards.forEach((card) => archiveCard(card));
             })
-            .catch(function(err) {
+            .catch(function (err) {
               logger.warning(err);
             });
         }
@@ -96,10 +96,10 @@ var __ = function(program, output, logger, config, trello, translator) {
             message: "Continue (y/n)?",
             validator: /y[es]*|n[o]?/,
             warning: "Must respond y or n",
-            default: "n"
+            default: "n",
           };
 
-          prompt.get(property, function(err, result) {
+          prompt.get(property, function (err, result) {
             logger.debug("Command-line input received:" + result.yesno);
             if (result.yesno == "n") {
               reject("Abort");
@@ -113,7 +113,7 @@ var __ = function(program, output, logger, config, trello, translator) {
 
       function promptListSelection(cardList) {
         if (options.force) {
-          cardList.forEach(function(card) {
+          cardList.forEach(function (card) {
             archiveCard(card);
           });
           return;
@@ -121,9 +121,9 @@ var __ = function(program, output, logger, config, trello, translator) {
 
         var list = new List({
           marker: "›".red + " ",
-          markerLength: 1
+          markerLength: 1,
         });
-        cardList.forEach(function(card) {
+        cardList.forEach(function (card) {
           var content = card.name;
           if (card.desc) {
             content += " [" + card.desc + "]";
@@ -132,7 +132,7 @@ var __ = function(program, output, logger, config, trello, translator) {
         });
         list.add(null, "[Cancel]");
 
-        list.on("keypress", function(key, item) {
+        list.on("keypress", function (key, item) {
           switch (key.name) {
             case "return":
               list.stop();
@@ -153,19 +153,20 @@ var __ = function(program, output, logger, config, trello, translator) {
       if (!card || !card.id) {
         return;
       }
-      trello.put("/1/cards/" + card.id + "/closed", { value: true }, function(
-        err,
-        data
-      ) {
-        if (err) {
-          throw err;
+      trello.put(
+        "/1/cards/" + card.id + "/closed",
+        { value: true },
+        function (err, data) {
+          if (err) {
+            throw err;
+          }
+          logger.debug("Card archived: " + card.id + ":" + card.name);
         }
-        logger.debug("Card archived: " + card.id + ":" + card.name);
-      });
+      );
     }
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("archive-card")
       .help("Archive a card from a board")
@@ -173,33 +174,33 @@ var __ = function(program, output, logger, config, trello, translator) {
         title: {
           position: 1,
           help: "The card's title. If omitted, implies all cards found",
-          list: true
+          list: true,
         },
         board: {
           abbr: "b",
           metavar: "BOARD",
           help: "The board name to add a card to",
-          required: true
+          required: true,
         },
         list: {
           abbr: "l",
           metavar: "LIST",
           help: "The list name to add a card to",
-          required: true
+          required: true,
         },
         match: {
           abbr: "m",
           metavar: "MATCH",
           help: "[exact | contains] : how to match the title given",
-          required: false
+          required: false,
         },
         force: {
           abbr: "f",
           flag: true,
-          help: "Do not prompt user"
-        }
+          help: "Do not prompt user",
+        },
       })
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };

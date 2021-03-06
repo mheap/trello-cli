@@ -1,11 +1,11 @@
 fs = require("fs");
 
-var __ = function(program, output, logger, config, trello, translator) {
+var __ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
-  trelloApiCommand.makeTrelloApiCall = function(options, onComplete) {
+  trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
     logger.info("Removing a webhook");
-    trello.del("/1/webhooks/" + options.id, function(err, data) {
+    trello.del("/1/webhooks/" + options.id, function (err, data) {
       if (err) {
         throw err;
       }
@@ -13,7 +13,7 @@ var __ = function(program, output, logger, config, trello, translator) {
     });
   };
 
-  trelloApiCommand.nomnomProgramCall = function() {
+  trelloApiCommand.nomnomProgramCall = function () {
     program
       .command("delete-webhook")
       .options({
@@ -22,11 +22,11 @@ var __ = function(program, output, logger, config, trello, translator) {
           metavar: "WEBHOOK_ID",
           help: "The webhook's ID",
           list: false,
-          required: true
-        }
+          required: true,
+        },
       })
       .help("Remove a webhook by ID")
-      .callback(function(options) {
+      .callback(function (options) {
         trelloApiCommand.makeTrelloApiCall(options);
       });
   };
