@@ -30,8 +30,7 @@ var __ = function (program, output, logger, config, trello, translator) {
           // THEN process the new ID into the arguments for a assign, or unassign request
           "/1/cards/" +
             cardId +
-            "/" +
-            idMembers +
+            "/idMembers" +
             (options.remove ? "/" + member : ""),
           options.remove ? { idMember: member } : { value: member },
           function (err, data) {
