@@ -17,7 +17,7 @@ var __ = function (program, output, logger, config, trello, translator) {
       return;
     }
     trello.get(
-      "/1/members/" + options.user ? options.user : "me",
+      "/1/members/" + (options.user ? options.user : "me"),
       function (err, userdata) {
         if (err) {
           console.error("Error in getting data for user " + options.user);
