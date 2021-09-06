@@ -17,7 +17,7 @@ var __ = function (
       throw "You must set an organization ID in order to set the permission level to org";
     }
 
-    var permissionLevel = "";
+    var permissionLevel = "private";
     if (options.permissionLevel) {
       permissionLevel = options.permissionLevel;
     }
