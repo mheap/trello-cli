@@ -64,8 +64,7 @@ var __ = function (
         },
         hideIds: {
           abbr: "i",
-          help:
-            "Do not include the board IDs in the output (default is to print IDs)",
+          help: "Do not include the board IDs in the output (default is to print IDs)",
           required: false,
           flag: true,
           default: false,

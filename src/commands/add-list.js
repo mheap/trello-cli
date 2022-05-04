@@ -104,8 +104,7 @@ var __ = function (
         listPosition: {
           abbr: "p",
           metavar: "LISTPOS",
-          help:
-            "The position of the new list: acceptable values are 'top' or 'bottom' (default: top)",
+          help: "The position of the new list: acceptable values are 'top' or 'bottom' (default: top)",
           required: false,
         },
         force: {

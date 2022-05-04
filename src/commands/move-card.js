@@ -4,10 +4,12 @@ var __ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
   trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
-    const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i;
-    const board_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/b\/)?([a-z0-9]+)\/?.*/i;
+    const card_re =
+      /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i;
+    const board_re =
+      /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/b\/)?([a-z0-9]+)\/?.*/i;
 
-    var comment = options.comment
+    var comment = options.comment;
 
     var cardId = card_re.test(options.card)
       ? card_re.exec(options.card)[1]
@@ -78,7 +80,7 @@ var __ = function (program, output, logger, config, trello, translator) {
             console.log(`Comment Added: ${comment}`);
           }
         }
-      )
+      );
     }
   };
 
@@ -105,8 +107,7 @@ var __ = function (program, output, logger, config, trello, translator) {
           position: 3,
           abbr: "b",
           metavar: "<board>",
-          help:
-            "The board name/id/url to move the card to (if the list is in another board)",
+          help: "The board name/id/url to move the card to (if the list is in another board)",
           required: false,
         },
         pos: {

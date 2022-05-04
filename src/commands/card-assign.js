@@ -4,7 +4,8 @@ var __ = function (program, output, logger, config, trello, translator) {
   var trelloApiCommand = {};
 
   trelloApiCommand.makeTrelloApiCall = function (options, onComplete) {
-    const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i;
+    const card_re =
+      /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i;
 
     var cardId = card_re.test(options.card)
       ? card_re.exec(options.card)[1]
@@ -78,8 +79,7 @@ var __ = function (program, output, logger, config, trello, translator) {
         user: {
           position: 2,
           metavar: "<user/ID>",
-          help:
-            "The user's name or ID to assign to the card, or current user if unspecified",
+          help: "The user's name or ID to assign to the card, or current user if unspecified",
           required: false,
         },
         remove: {

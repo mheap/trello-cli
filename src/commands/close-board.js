@@ -77,8 +77,7 @@ var __ = function (
         boardNameMatch: {
           abbr: "b",
           metavar: "BOARD",
-          help:
-            "The text to search for in the board name; all boards with the specified text in their name will be closed.",
+          help: "The text to search for in the board name; all boards with the specified text in their name will be closed.",
           required: true,
         },
         verbose: {

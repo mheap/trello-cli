@@ -150,21 +150,18 @@ var __ = function (
         cardPosition: {
           abbr: "q",
           metavar: "POS",
-          help:
-            "The position of the new card: acceptable values are 'top' or 'bottom' (default: bottom)",
+          help: "The position of the new card: acceptable values are 'top' or 'bottom' (default: bottom)",
           required: false,
         },
         labels: {
           abbr: "g",
           metavar: "LABELS",
-          help:
-            "Comma-separated list of labels to assign to the card (requires IDs, see show-labels command)",
+          help: "Comma-separated list of labels to assign to the card (requires IDs, see show-labels command)",
           required: false,
         },
         force: {
           abbr: "f",
-          help:
-            "Force - will create the board and/or list if they don't already exist",
+          help: "Force - will create the board and/or list if they don't already exist",
           flag: true,
           required: false,
         },
