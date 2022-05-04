@@ -29,13 +29,13 @@
     "eslint": "^7",
     "eslint-plugin-prettier": "^3",
     "husky": "^0.13.3",
-    "mocha": "^8.3.1",
+    "mocha": "^10.0.0",
     "prettier": "^2",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.9.0"
   },
   "dependencies": {
-    "async": "~0.2.9",
+    "async": "^3.2.3",
     "bottleneck": "^2.18.1",
     "colors": "~0.6.2",
     "limiter": "^1.1.0",
