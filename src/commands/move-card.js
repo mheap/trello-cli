@@ -7,6 +7,8 @@ var __ = function (program, output, logger, config, trello, translator) {
     const card_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/c\/)?([a-z0-9]+)\/?.*/i;
     const board_re = /(?:(?:https?:\/\/)?(?:www\.)?trello\.com\/b\/)?([a-z0-9]+)\/?.*/i;
 
+    var comment = options.comment
+
     var cardId = card_re.test(options.card)
       ? card_re.exec(options.card)[1]
       : null;
@@ -64,6 +66,20 @@ var __ = function (program, output, logger, config, trello, translator) {
         }
       }
     );
+
+    if (comment) {
+      trello.post(
+        "/1/cards/" + cardId + "/actions/comments",
+        { text: comment },
+        function (err, data) {
+          if (err) {
+            console.error(err, data);
+          } else {
+            console.log(`Comment Added: ${comment}`);
+          }
+        }
+      )
+    }
   };
 
   trelloApiCommand.nomnomProgramCall = function () {
