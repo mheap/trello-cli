@@ -90,6 +90,7 @@ var __ = function (
       name: options.title,
       idList: listId,
       desc: options.description ? options.description : "",
+      due: options.due ? options.due : "",
       pos:
         ["top", "bottom"].indexOf(options.cardPosition) > -1
           ? options.cardPosition
@@ -158,6 +159,11 @@ var __ = function (
           metavar: "LABELS",
           help: "Comma-separated list of labels to assign to the card (requires IDs, see show-labels command)",
           required: false,
+        },
+	due: {
+          abbr: "d",
+          help: "Due date of the card, written as YYYY-MM-DD",
+          required: false
         },
         force: {
           abbr: "f",
