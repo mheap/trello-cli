@@ -72,10 +72,14 @@ var __ = function (
           }
           for (var i in data.cards) {
             var formattedCardName = data.cards[i].name.replace(/\n/g, "");
+	    var formattedDue = data.cards[i].due
             if (!options.hideIds) {
               formattedCardName =
                 data.cards[i].shortLink + " - " + formattedCardName;
             }
+	    if (formattedDue) {
+               formattedCardName = formattedCardName + " - " + formattedDue.replace(/T/, ' ').replace(/\ .+/, '');
+	    }
             output.normal("* " + formattedCardName);
           }
           output.normal("");
