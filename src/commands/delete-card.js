@@ -113,13 +113,13 @@ var __ = function (program, output, logger, config, trello, translator) {
         board: {
           abbr: "b",
           metavar: "BOARD",
-          help: "The board name to add a card to",
+          help: "The board name to remove a card from",
           required: true,
         },
         list: {
           abbr: "l",
           metavar: "LIST",
-          help: "The list name to add a card to",
+          help: "The list name to remove a card from",
           required: true,
         },
       })
