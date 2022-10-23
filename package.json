@@ -51,5 +51,8 @@
   },
   "bin": {
     "trello": "./bin/trello"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
