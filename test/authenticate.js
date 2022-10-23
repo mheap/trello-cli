@@ -11,7 +11,6 @@ var output = {};
 var config = require('nconf');
 
 describe('Authenticate', sinon.test(function() {
-    this.stub(logger)
     var Auth = require('../src/authenticate')(logger, output, config);
 
     describe('#loadAuthCache()', sinon.test(function() {
@@ -19,7 +18,7 @@ describe('Authenticate', sinon.test(function() {
         config = sinon.stub(config, "get")
         config.withArgs('configPath').returns('/tmp/.missing.trello-cli/');
         config.withArgs('authCache').returns('auth.json');
-        logger = sinon.mock(logger)
+        logger = this.mock(logger)
 
         it('should parse valid JSON file', sinon.test(function() {
             this.stub(Auth.fs, "readFileSync").returns('{}');
