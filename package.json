@@ -26,9 +26,9 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.3.6",
-    "eslint": "^7",
-    "eslint-plugin-prettier": "^3",
-    "husky": "^0.13.3",
+    "eslint": "^8",
+    "eslint-plugin-prettier": "^4",
+    "husky": "^8.0.1",
     "mocha": "^10.1.0",
     "prettier": "^2",
     "sinon": "^1.17.7",
