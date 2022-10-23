@@ -47,7 +47,7 @@
     "shell-quote": "*",
     "term-list": "~0.2.1",
     "underscore": "^1.13.6",
-    "winston": "^2.4.5"
+    "winston": "^3.8.2"
   },
   "bin": {
     "trello": "./bin/trello"
