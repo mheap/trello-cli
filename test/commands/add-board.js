@@ -24,8 +24,7 @@ var translator = require("../../src/translator")(logger, config, trello, output)
 var command = require('../../src/commands/add-board')(program, output, logger, config, trello, translator, []); 
 
 describe('command/add-board', sinon.test(function(done) {
-    this.stub(logger)
-        logger = sinon.mock(logger)
+    logger = this.mock(logger)
 
     it('uses defaults', sinon.test(function() {
         logger.expects("info").withExactArgs('Adding new board...')
