@@ -1,0 +1,64 @@
+{
+  "name": "trello-cli",
+  "version": "0.0.0",
+  "description": "Access your Trello account using the CLI",
+  "author": "Michael Heap <m@michaelheap.com>",
+  "bin": {
+    "trello-cli": "./bin/run"
+  },
+  "homepage": "https://github.com/mheap/trello-cli",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": "mheap/trello-cli",
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "dependencies": {
+    "@oclif/core": "^1.19.1",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-plugins": "^2.1.4",
+    "chai": "^4.3.6",
+    "trello-auth": "workspace:*"
+  },
+  "devDependencies": {
+    "@oclif/test": "^2.2.4",
+    "@types/node": "^16.11.68",
+    "oclif": "^3",
+    "shx": "^0.3.3",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.8.4"
+  },
+  "oclif": {
+    "bin": "trello-cli",
+    "dirname": "trello-cli",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
+    ],
+    "topicSeparator": ":",
+    "topics": {}
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "dev": "tsc -b --watch",
+    "lint": "eslint . --ext .ts --config .eslintrc",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "test": "jest",
+    "version": "oclif readme && git add README.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "bugs": "https://github.com/mheap/trello-cli/issues",
+  "keywords": [
+    "oclif"
+  ],
+  "types": "dist/index.d.ts"
+}
