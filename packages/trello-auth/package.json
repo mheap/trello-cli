@@ -1,0 +1,14 @@
+{
+  "name": "trello-auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc --build tsconfig.build.json",
+    "dev": "tsc --build tsconfig.build.json --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
