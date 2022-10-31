@@ -21,22 +21,27 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     );
     this.flags = flags;
 
-    if (this.id?.startsWith("auth:") && this.argv.length){
+    if (this.id?.startsWith("auth:") && this.argv.length) {
       return;
     }
 
     try {
       Auth.getToken();
     } catch (e: any) {
+      let cmd = `./bin/run`;
+      if (process.env.TRELLO_CLI_PROFILE) {
+        cmd = `TRELLO_CLI_PROFILE=${process.env.TRELLO_CLI_PROFILE} ${cmd}`;
+      }
+
       let message = e.message || e;
       if (e.code == "ERR_NO_APP_KEY") {
         this.warn(
-          `Visit ${e.data.url} to get an API key then run trello-cli auth:api-key YOUR_API_KEY`
+          `Visit ${e.data.url} to get an API key then run ${cmd} auth:api-key YOUR_API_KEY`
         );
       } else if (e.code == "ERR_NO_AUTH_TOKEN") {
         this.warn(e.message);
         this.logToStderr(
-          `\nVisit ${e.data.authenticationUrl} to generate a token.\n\nRun trello-cli auth:set YOUR_API_KEY`
+          `\nVisit ${e.data.authenticationUrl} to generate a token.\n\nRun ${cmd} auth:set YOUR_API_KEY`
         );
       } else {
         this.warn(message);
