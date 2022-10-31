@@ -1,5 +1,5 @@
 import { BaseCommand } from "../../BaseCommand";
-import auth from "@trello-cli/config";
+import config from "@trello-cli/config";
 
 export default class AuthSet extends BaseCommand<typeof AuthSet> {
   static description = "Set authentication details";
@@ -9,7 +9,7 @@ export default class AuthSet extends BaseCommand<typeof AuthSet> {
   async run(): Promise<void> {
     const { args } = await this.parse(AuthSet);
 
-    auth.setToken(args.token);
+    config.setToken(args.token);
     this.log("Token updated");
   }
 }

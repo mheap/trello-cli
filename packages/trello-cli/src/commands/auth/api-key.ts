@@ -1,5 +1,5 @@
 import { BaseCommand } from "../../BaseCommand";
-import auth from "@trello-cli/config";
+import config from "@trello-cli/config";
 
 export default class AuthApiKey extends BaseCommand<typeof AuthApiKey> {
   static description = "Set authentication details";
@@ -9,7 +9,7 @@ export default class AuthApiKey extends BaseCommand<typeof AuthApiKey> {
   async run(): Promise<void> {
     const { args } = await this.parse(AuthApiKey);
 
-    auth.setApiKey(args.api_key);
+    config.setApiKey(args.api_key);
     this.log("API Key set");
   }
 }

@@ -1,5 +1,5 @@
 import { Command, Flags, Interfaces } from "@oclif/core";
-import Auth from "@trello-cli/config";
+import Config from "@trello-cli/config";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["globalFlags"] & T["flags"]
@@ -26,7 +26,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
 
     try {
-      Auth.getToken();
+      Config.getToken();
     } catch (e: any) {
       let cmd = `./bin/run`;
       if (process.env.TRELLO_CLI_PROFILE) {
