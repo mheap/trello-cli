@@ -1,6 +1,5 @@
 import * as path from "path";
 import * as fs from "fs";
-import config from "./config";
 
 const homePath =
   process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
@@ -16,9 +15,8 @@ const configFilePath = path.resolve(configFileDir, "config.json");
 const authFilePath = path.resolve(configFileDir, "authentication.json");
 
 class __ {
-
   static getToken = () => {
-    const appKey = config.getAppKey();
+    const appKey = __.getAppKey();
     __.ensureAuthenticationTokenExists(appKey);
     return __.loadToken();
   };
@@ -41,7 +39,7 @@ class __ {
     if (!fs.existsSync(configFileDir)) {
       fs.mkdirSync(configFileDir, "0700");
     }
-    
+
     fs.writeFileSync(
       configFilePath,
       JSON.stringify({
@@ -69,6 +67,38 @@ class __ {
         },
       };
     }
+  }
+
+  static getAppKey() {
+    __.ensureConfigFileExists();
+    return __.loadAppKey();
+  }
+
+  static loadAppKey() {
+    const c = JSON.parse(fs.readFileSync(configFilePath).toString());
+    return c.appKey;
+  }
+
+  static ensureConfigFileExists(): { message: string } {
+    let message = `Config file found at ${configFilePath}`;
+
+    if (!__.configFileExists()) {
+      throw {
+        message: `Go to https://trello.com/app-key to generate your API key and replace YOURAPIKEY in ${configFilePath}`,
+        code: "ERR_NO_APP_KEY",
+        data: {
+          url: "https://trello.com/app-key",
+        },
+      };
+    }
+
+    return {
+      message,
+    };
+  }
+
+  static configFileExists(): boolean {
+    return fs.existsSync(configFilePath);
   }
 }
 

@@ -21,7 +21,7 @@
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.1.4",
     "chai": "^4.3.6",
-    "trello-auth": "workspace:*"
+    "@trello-cli/config": "workspace:*"
   },
   "devDependencies": {
     "@oclif/test": "^2.2.4",

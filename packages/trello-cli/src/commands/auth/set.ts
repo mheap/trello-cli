@@ -1,5 +1,5 @@
 import { BaseCommand } from "../../BaseCommand";
-import auth from "trello-auth";
+import auth from "@trello-cli/config";
 
 export default class AuthSet extends BaseCommand<typeof AuthSet> {
   static description = "Set authentication details";

@@ -1,5 +1,5 @@
 import { Command, Flags, Interfaces } from "@oclif/core";
-import Auth from "trello-auth";
+import Auth from "@trello-cli/config";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["globalFlags"] & T["flags"]
