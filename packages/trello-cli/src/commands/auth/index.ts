@@ -1,6 +1,6 @@
-import { Command } from "@oclif/core";
+import { BaseCommand } from "../../BaseCommand";
 
-export default class AuthIndex extends Command {
+export default class AuthIndex extends BaseCommand<typeof AuthIndex> {
   static description = "Manage authentication credentials";
 
   async run(): Promise<void> {

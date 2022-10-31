@@ -9,10 +9,14 @@ if (!homePath) {
   throw new Error("Could not determine home folder");
 }
 
-const configFileDir = path.resolve(homePath, ".trello-cli");
+const profile = process.env.TRELLO_CLI_PROFILE || "default";
+
+const configFileDir = path.resolve(homePath, ".trello-cli", profile);
+const configFilePath = path.resolve(configFileDir, "config.json");
 const authFilePath = path.resolve(configFileDir, "authentication.json");
 
 class __ {
+
   static getToken = () => {
     const appKey = config.getAppKey();
     __.ensureAuthenticationTokenExists(appKey);
@@ -29,6 +33,19 @@ class __ {
       authFilePath,
       JSON.stringify({
         token,
+      })
+    );
+  }
+
+  static setApiKey(appKey: string) {
+    if (!fs.existsSync(configFileDir)) {
+      fs.mkdirSync(configFileDir, "0700");
+    }
+    
+    fs.writeFileSync(
+      configFilePath,
+      JSON.stringify({
+        appKey,
       })
     );
   }

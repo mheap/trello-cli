@@ -6,7 +6,7 @@ import * as fs from "fs";
 jest.mock("fs");
 const mockFS: jest.Mocked<typeof fs> = <jest.Mocked<typeof fs>>fs;
 
-const expectedAuthFile = "/tmp/trello-test/.trello-cli/authentication.json";
+const expectedAuthFile = "/tmp/trello-test/.trello-cli/default/authentication.json";
 
 describe("#getToken", () => {
   it("returns the token when set", () => {

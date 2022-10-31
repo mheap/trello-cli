@@ -1,7 +1,7 @@
-import { Command } from "@oclif/core";
+import { BaseCommand } from "../../BaseCommand";
 import auth from "trello-auth";
 
-export default class AuthSet extends Command {
+export default class AuthSet extends BaseCommand<typeof AuthSet> {
   static description = "Set authentication details";
 
   static args = [{ name: "token", required: true }];
