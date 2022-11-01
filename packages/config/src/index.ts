@@ -1,105 +1,110 @@
 import * as path from "path";
-import * as fs from "fs";
+import fs from "fs";
+const fsPromises = fs.promises;
 
-const homePath =
-  process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
+class Config {
+  private configFileDir: string;
+  private configFilePath: string;
 
-if (!homePath) {
-  throw new Error("Could not determine home folder");
-}
-
-const profile = process.env.TRELLO_CLI_PROFILE || "default";
-
-const configFileDir = path.resolve(homePath, ".trello-cli", profile);
-const configFilePath = path.resolve(configFileDir, "config.json");
-const authFilePath = path.resolve(configFileDir, "authentication.json");
-
-class __ {
-  static getToken = () => {
-    const appKey = __.getAppKey();
-    __.ensureAuthenticationTokenExists(appKey);
-    return __.loadToken();
-  };
-
-  static loadToken() {
-    const auth = JSON.parse(fs.readFileSync(authFilePath).toString());
-    return auth.token;
+  constructor(configFolder: string, profile: string) {
+    this.configFileDir = path.resolve(configFolder, profile);
+    this.configFilePath = path.resolve(this.configFileDir, "config.json");
   }
 
-  static setToken(token: string) {
-    fs.writeFileSync(
-      authFilePath,
-      JSON.stringify({
-        token,
-      })
-    );
-  }
+  // Getters + Setters
+  getAppKey() {
+    try {
+      return this.getConfigKey("appKey");
+    } catch (e: any) {
+      const url = "https://trello.com/app-key";
 
-  static setApiKey(appKey: string) {
-    if (!fs.existsSync(configFileDir)) {
-      fs.mkdirSync(configFileDir, "0700");
+      throw {
+        message: `[appKey] not found in ${this.configFilePath}. Get one at ${url}`,
+        code: "ERR_NO_APP_KEY",
+        data: {
+          url,
+        },
+      };
     }
-
-    fs.writeFileSync(
-      configFilePath,
-      JSON.stringify({
-        appKey,
-      })
-    );
   }
 
-  static authFileExists() {
-    return fs.existsSync(authFilePath);
+  setAppKey(appKey: string): Promise<void> {
+    return this.setConfigKey("appKey", appKey);
   }
 
-  static ensureAuthenticationTokenExists(appKey: string) {
-    if (!__.authFileExists() || !__.loadToken()) {
-      const authenticationUrl =
+  async getToken() {
+    try {
+      return this.getConfigKey("token");
+    } catch (e: any) {
+      const url =
         "https://trello.com/1/connect?key=" +
-        appKey +
+        (await this.getAppKey()) +
         "&name=trello-cli&response_type=token&scope=account,read,write&expiration=never";
 
       throw {
-        message: `The [token] field is missing from ${authFilePath}`,
-        code: "ERR_NO_AUTH_TOKEN",
+        message: `The [token] field is missing from ${this.configFilePath}`,
+        code: "ERR_NO_TOKEN",
         data: {
-          authenticationUrl,
+          url,
         },
       };
     }
   }
 
-  static getAppKey() {
-    __.ensureConfigFileExists();
-    return __.loadAppKey();
+  setToken(token: string): Promise<void> {
+    return this.setConfigKey("token", token);
   }
 
-  static loadAppKey() {
-    const c = JSON.parse(fs.readFileSync(configFilePath).toString());
-    return c.appKey;
+  // Config File
+  configDirExists(): boolean {
+    return fs.existsSync(this.configFileDir);
   }
 
-  static ensureConfigFileExists(): { message: string } {
-    let message = `Config file found at ${configFilePath}`;
+  configFileExists(): boolean {
+    return fs.existsSync(this.configFilePath);
+  }
 
-    if (!__.configFileExists()) {
+  // Helpers
+  private async setConfigKey(key: string, value: string | number | boolean) {
+    if (!this.configDirExists()) {
+      fs.mkdirSync(this.configFileDir, "0700");
+    }
+
+    let current;
+    if (this.configFileExists()) {
+      current = JSON.parse(
+        (await fsPromises.readFile(this.configFilePath)).toString()
+      );
+    } else {
+      current = {};
+    }
+
+    current[key] = value;
+
+    return fsPromises.writeFile(this.configFilePath, JSON.stringify(current));
+  }
+
+  private async getConfigKey(key: string): Promise<string | undefined> {
+    if (!this.configDirExists() || !this.configFileExists()) {
       throw {
-        message: `Go to https://trello.com/app-key to generate your API key and replace YOURAPIKEY in ${configFilePath}`,
-        code: "ERR_NO_APP_KEY",
-        data: {
-          url: "https://trello.com/app-key",
-        },
+        message: `No file found at ${this.configFilePath}`,
+        code: "ERR_NO_CONFIG",
       };
     }
 
-    return {
-      message,
-    };
-  }
+    const data = JSON.parse(
+      (await fsPromises.readFile(this.configFilePath)).toString()
+    );
 
-  static configFileExists(): boolean {
-    return fs.existsSync(configFilePath);
+    if (data[key] === undefined) {
+      throw {
+        message: `The [${key}] field is missing from ${this.configFilePath}`,
+        code: `ERR_MISSING_CONFIG`,
+      };
+    }
+
+    return data[key];
   }
 }
 
-export default __;
+export default Config;

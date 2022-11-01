@@ -1,84 +1,114 @@
-process.env.HOME = "/tmp/trello-test";
-import auth from ".";
+import Config from ".";
+import { when, resetAllWhenMocks, verifyAllWhenMocksCalled } from "jest-when";
+import fs from "fs";
 
-import * as fs from "fs";
-jest.mock("fs");
-const mockFS: jest.Mocked<typeof fs> = <jest.Mocked<typeof fs>>fs;
+jest.mock("fs", () => ({
+  promises: {
+    readFile: jest.fn(),
+    writeFile: jest.fn(),
+  },
+}));
 
-const expectedAuthFile =
-  "/tmp/trello-test/.trello-cli/default/authentication.json";
+afterEach(function () {
+  verifyAllWhenMocksCalled();
+  resetAllWhenMocks();
+});
 
-const expectedConfigFolder = "/tmp/trello-test/.trello-cli/default";
 const expectedConfigFile = "/tmp/trello-test/.trello-cli/default/config.json";
+
+const config = new Config("/tmp/trello-test/.trello-cli", "default");
 
 describe("#getToken", () => {
   it("returns the token when set", () => {
-    jest.spyOn(auth, "getAppKey").mockImplementation(() => "MY_APP_KEY");
-    jest
-      .spyOn(auth, "ensureAuthenticationTokenExists")
-      .mockImplementation(() => {});
-    jest.spyOn(auth, "loadToken").mockImplementation(() => "ABC123");
+    const configKeyMock = jest.spyOn(Config.prototype as any, "getConfigKey");
+    when(configKeyMock).calledWith("token").mockReturnValueOnce("ABC123");
 
-    expect(auth.getToken()).toBe("ABC123");
-  });
-});
-
-describe("#ensureAuthenticationTokenExists", () => {
-  it("throws if the auth file does not exist", () => {
-    mockFS.existsSync.mockImplementation(() => false);
-    expect(auth.ensureAuthenticationTokenExists).toThrow(
-      `The [token] field is missing from ${expectedAuthFile}`
-    );
+    expect(config.getToken()).resolves.toBe("ABC123");
   });
 
-  it("throws if the auth token is null", () => {
-    mockFS.existsSync.mockImplementation(() => true);
-    jest.spyOn(auth, "loadToken").mockImplementation(() => undefined);
+  it("throws an error when not set", () => {
+    const configKeyMock = jest.spyOn(Config.prototype as any, "getConfigKey");
 
-    jest.spyOn(auth, "getAppKey").mockImplementation(() => "AppKeyHere");
+    when(configKeyMock).calledWith("appKey").mockReturnValueOnce("my_app_key");
+    when(configKeyMock)
+      .calledWith("token")
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
 
-    expect(auth.getToken).toThrow({
-      message: `The [token] field is missing from ${expectedAuthFile}`,
-      code: "ERR_NO_AUTH_TOKEN",
+    expect(config.getToken()).rejects.toStrictEqual({
+      message: `The [token] field is missing from ${expectedConfigFile}`,
+      code: `ERR_NO_TOKEN`,
       data: {
-        authenticationUrl:
-          "https://trello.com/1/connect?key=" +
-          "AppKeyHere" +
-          "&name=trello-cli&response_type=token&scope=account,read,write&expiration=never",
+        url: `https://trello.com/1/connect?key=my_app_key&name=trello-cli&response_type=token&scope=account,read,write&expiration=never`,
       },
-    } as any);
+    });
   });
 });
 
-describe("#loadToken", () => {
-  it("returns the .token entry", () => {
-    mockFS.readFileSync.mockImplementation(() => '{"token":"here"}');
-    expect(auth.loadToken()).toBe("here");
+describe("#setToken", () => {
+  it("sets the token in an empty file", () => {
+    const configKeyMock = jest.spyOn(Config.prototype as any, "setConfigKey");
+
+    jest.spyOn(config, "configDirExists").mockReturnValueOnce(true);
+    jest.spyOn(config, "configFileExists").mockReturnValueOnce(true);
+
+    (fs.promises.readFile as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve("{}")
+    );
+
+    expect(config.setToken("ABC123")).resolves;
+    expect(configKeyMock).toBeCalledTimes(1);
+    expect(configKeyMock).toBeCalledWith("token", "ABC123");
   });
 });
 
-describe("#ensureConfigFileExists", () => {
-  it("takes no action if the config file exists", () => {
-    jest.spyOn(auth, "configFileExists").mockImplementation(() => true);
+describe("#getAppKey", () => {
+  it("returns the app key when set", () => {
+    const configKeyMock = jest.spyOn(Config.prototype as any, "getConfigKey");
+    when(configKeyMock)
+      .calledWith("appKey")
+      .mockReturnValueOnce(Promise.resolve("my_key"));
 
-    const details = auth.ensureConfigFileExists();
-
-    expect(details.message).toBe(`Config file found at ${expectedConfigFile}`);
-  });
-});
-
-describe("#configFileExists", () => {
-  it("returns true if the config file exists", () => {
-    mockFS.existsSync.mockReturnValue(true);
-
-    expect(auth.configFileExists()).toBe(true);
-    expect(mockFS.existsSync).toBeCalledWith(expectedConfigFile);
+    expect(config.getAppKey()).resolves.toBe("my_key");
   });
 
-  it("returns false if the config file does not exist", () => {
-    mockFS.existsSync.mockReturnValue(false);
+  it("throws an error when the config file does not exist", () => {
+    jest.spyOn(config, "configDirExists").mockReturnValueOnce(false);
 
-    expect(auth.configFileExists()).toBe(false);
-    expect(mockFS.existsSync).toBeCalledWith(expectedConfigFile);
+    expect(config.getToken()).rejects.toStrictEqual({
+      message: `No file found at ${expectedConfigFile}`,
+      code: `ERR_NO_CONFIG`,
+    });
+  });
+
+  it("throws an error when the config file exists but does not contain a token", () => {
+    jest.spyOn(config, "configDirExists").mockReturnValueOnce(true);
+    jest.spyOn(config, "configFileExists").mockReturnValueOnce(true);
+    (fs.promises.readFile as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve("{}")
+    );
+
+    expect(config.getToken()).rejects.toStrictEqual({
+      code: "ERR_MISSING_CONFIG",
+      message: `The [token] field is missing from ${expectedConfigFile}`,
+    });
+  });
+
+  describe("#setAppKey", () => {
+    it("sets the token in an empty file", () => {
+      const configKeyMock = jest.spyOn(Config.prototype as any, "setConfigKey");
+
+      jest.spyOn(config, "configDirExists").mockReturnValueOnce(true);
+      jest.spyOn(config, "configFileExists").mockReturnValueOnce(true);
+
+      (fs.promises.readFile as jest.Mock).mockImplementationOnce(() =>
+        Promise.resolve("{}")
+      );
+
+      expect(config.setAppKey("my_app_key")).resolves;
+      expect(configKeyMock).toBeCalledTimes(1);
+      expect(configKeyMock).toBeCalledWith("appKey", "my_app_key");
+    });
   });
 });
