@@ -14,6 +14,13 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected flags!: Flags<T>;
 
+  protected trelloConfig: Config;
+
+  constructor(a: any, b: any) {
+    super(a, b);
+    this.trelloConfig = new Config("/tmp/.trello-cli", "default");
+  }
+
   public async init(): Promise<void> {
     await super.init();
     const { flags } = await this.parse(
@@ -26,7 +33,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
 
     try {
-      Config.getToken();
+      await this.trelloConfig.getToken();
     } catch (e: any) {
       let cmd = `./bin/run`;
       if (process.env.TRELLO_CLI_PROFILE) {
@@ -34,14 +41,14 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       }
 
       let message = e.message || e;
-      if (e.code == "ERR_NO_APP_KEY") {
+      if (e.code == "ERR_NO_API_KEY") {
         this.warn(
           `Visit ${e.data.url} to get an API key then run ${cmd} auth:api-key YOUR_API_KEY`
         );
-      } else if (e.code == "ERR_NO_AUTH_TOKEN") {
+      } else if (e.code == "ERR_NO_TOKEN") {
         this.warn(e.message);
         this.logToStderr(
-          `\nVisit ${e.data.authenticationUrl} to generate a token.\n\nRun ${cmd} auth:set YOUR_API_KEY`
+          `\nVisit ${e.data.url} to generate a token.\n\nRun ${cmd} auth:set YOUR_TOKEN`
         );
       } else {
         this.warn(message);

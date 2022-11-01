@@ -12,14 +12,14 @@ class Config {
   }
 
   // Getters + Setters
-  getAppKey() {
+  async getApiKey() {
     try {
-      return this.getConfigKey("appKey");
+      return await this.getConfigKey("apiKey");
     } catch (e: any) {
       const url = "https://trello.com/app-key";
 
       throw {
-        message: `[appKey] not found in ${this.configFilePath}. Get one at ${url}`,
+        message: `[apiKey] not found in ${this.configFilePath}. Get one at ${url}`,
         code: "ERR_NO_APP_KEY",
         data: {
           url,
@@ -28,17 +28,17 @@ class Config {
     }
   }
 
-  setAppKey(appKey: string): Promise<void> {
-    return this.setConfigKey("appKey", appKey);
+  setApiKey(apiKey: string): Promise<void> {
+    return this.setConfigKey("apiKey", apiKey);
   }
 
   async getToken() {
     try {
-      return this.getConfigKey("token");
+      return await this.getConfigKey("token");
     } catch (e: any) {
       const url =
         "https://trello.com/1/connect?key=" +
-        (await this.getAppKey()) +
+        (await this.getApiKey()) +
         "&name=trello-cli&response_type=token&scope=account,read,write&expiration=never";
 
       throw {
@@ -67,7 +67,10 @@ class Config {
   // Helpers
   private async setConfigKey(key: string, value: string | number | boolean) {
     if (!this.configDirExists()) {
-      fs.mkdirSync(this.configFileDir, "0700");
+      fs.mkdirSync(this.configFileDir, {
+        recursive: true,
+        mode: "0700",
+      });
     }
 
     let current;

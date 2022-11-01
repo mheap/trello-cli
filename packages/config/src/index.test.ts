@@ -29,7 +29,7 @@ describe("#getToken", () => {
   it("throws an error when not set", () => {
     const configKeyMock = jest.spyOn(Config.prototype as any, "getConfigKey");
 
-    when(configKeyMock).calledWith("appKey").mockReturnValueOnce("my_app_key");
+    when(configKeyMock).calledWith("apiKey").mockReturnValueOnce("my_app_key");
     when(configKeyMock)
       .calledWith("token")
       .mockImplementationOnce(() => {
@@ -63,14 +63,14 @@ describe("#setToken", () => {
   });
 });
 
-describe("#getAppKey", () => {
+describe("#getApiKey", () => {
   it("returns the app key when set", () => {
     const configKeyMock = jest.spyOn(Config.prototype as any, "getConfigKey");
     when(configKeyMock)
-      .calledWith("appKey")
+      .calledWith("apiKey")
       .mockReturnValueOnce(Promise.resolve("my_key"));
 
-    expect(config.getAppKey()).resolves.toBe("my_key");
+    expect(config.getApiKey()).resolves.toBe("my_key");
   });
 
   it("throws an error when the config file does not exist", () => {
@@ -95,7 +95,7 @@ describe("#getAppKey", () => {
     });
   });
 
-  describe("#setAppKey", () => {
+  describe("#setApiKey", () => {
     it("sets the token in an empty file", () => {
       const configKeyMock = jest.spyOn(Config.prototype as any, "setConfigKey");
 
@@ -106,9 +106,9 @@ describe("#getAppKey", () => {
         Promise.resolve("{}")
       );
 
-      expect(config.setAppKey("my_app_key")).resolves;
+      expect(config.setApiKey("my_app_key")).resolves;
       expect(configKeyMock).toBeCalledTimes(1);
-      expect(configKeyMock).toBeCalledWith("appKey", "my_app_key");
+      expect(configKeyMock).toBeCalledWith("apiKey", "my_app_key");
     });
   });
 });
