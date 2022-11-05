@@ -18,7 +18,9 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   constructor(a: any, b: any) {
     super(a, b);
-    this.trelloConfig = new Config("/tmp/.trello-cli", "default");
+
+    const profile = process.env.TRELLO_CLI_PROFILE || 'default';
+    this.trelloConfig = new Config("/tmp/.trello-cli", profile);
   }
 
   public async init(): Promise<void> {
