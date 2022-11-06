@@ -28,6 +28,9 @@ importers:
     devDependencies:
       '@types/jest-when': 3.5.2
 
+  packages/sync:
+    specifiers: {}
+
   packages/tester:
     specifiers:
       '@trello-cli/config': workspace:*
