@@ -1,8 +1,7 @@
 import * as querystring from "querystring";
 
 const key = "KEY";
-const token =
-  "TOKEN";
+const token = "TOKEN";
 
 var queryParameters = {
   actions: "none",
@@ -26,7 +25,14 @@ var queryParameters = {
   fields: "all",
 };
 
+import DB from "./db";
+import Setup from "./setup";
 (async function () {
+  const db = new DB("/tmp/trello-db", "foo");
+  const r = new Setup(db);
+  r.bootstrap();
+
+  return;
   let boards = (
     await get(
       "https://api.trello.com/1/members/me/boards?" +

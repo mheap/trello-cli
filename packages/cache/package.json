@@ -1,5 +1,5 @@
 {
-  "name": "@trello-cli/sync",
+  "name": "@trello-cli/cache",
   "private": "true",
   "version": "1.0.0",
   "description": "",
@@ -11,5 +11,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^7.6.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.2"
+  }
 }
