@@ -20,8 +20,10 @@
     "@oclif/core": "^1.19.1",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.1.4",
+    "@trello-cli/cache": "workspace:*",
+    "@trello-cli/config": "workspace:*",
     "chai": "^4.3.6",
-    "@trello-cli/config": "workspace:*"
+    "trello.js": "^1.2.4"
   },
   "devDependencies": {
     "@oclif/test": "^2.2.4",

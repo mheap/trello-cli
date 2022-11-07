@@ -1,5 +1,8 @@
 import { Command, Flags, Interfaces } from "@oclif/core";
 import Config from "@trello-cli/config";
+import Cache from "@trello-cli/cache";
+import * as path from "path";
+import { TrelloClient } from "trello.js";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["globalFlags"] & T["flags"]
@@ -15,12 +18,16 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   protected flags!: Flags<T>;
 
   protected trelloConfig: Config;
+  protected cache!: Cache;
+  protected client!: TrelloClient;
+
+  protected profile: string;
 
   constructor(a: any, b: any) {
     super(a, b);
 
-    const profile = process.env.TRELLO_CLI_PROFILE || 'default';
-    this.trelloConfig = new Config("/tmp/.trello-cli", profile);
+    this.profile = process.env.TRELLO_CLI_PROFILE || "default";
+    this.trelloConfig = new Config("/tmp/.trello-cli", this.profile);
   }
 
   public async init(): Promise<void> {
@@ -35,7 +42,15 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
 
     try {
-      await this.trelloConfig.getToken();
+      const token = await this.trelloConfig.getToken();
+      const appKey = await this.trelloConfig.getApiKey();
+
+      this.client = new TrelloClient({
+        key: appKey,
+        token: token,
+      });
+
+      this.cache = new Cache(path.join("/tmp/.trello-cli", this.profile), appKey, token);
     } catch (e: any) {
       let cmd = `./bin/run`;
       if (process.env.TRELLO_CLI_PROFILE) {
@@ -43,7 +58,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       }
 
       let message = e.message || e;
-      if (e.code == "ERR_NO_API_KEY") {
+      if (e.code == "ERR_NO_APP_KEY") {
         this.warn(
           `Visit ${e.data.url} to get an API key then run ${cmd} auth:api-key YOUR_API_KEY`
         );
