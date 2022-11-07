@@ -32,7 +32,7 @@ class Config {
     return this.setConfigKey("apiKey", apiKey);
   }
 
-  async getToken() {
+  async getToken(): Promise<string> {
     try {
       return await this.getConfigKey("token");
     } catch (e: any) {
@@ -87,7 +87,7 @@ class Config {
     return fsPromises.writeFile(this.configFilePath, JSON.stringify(current));
   }
 
-  private async getConfigKey(key: string): Promise<string | undefined> {
+  private async getConfigKey(key: string): Promise<string> {
     if (!this.configDirExists() || !this.configFileExists()) {
       throw {
         message: `No file found at ${this.configFilePath}`,
