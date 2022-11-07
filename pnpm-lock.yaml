@@ -37,26 +37,19 @@ importers:
     devDependencies:
       '@types/jest-when': 3.5.2
 
-  packages/sync:
-    specifiers: {}
-
-  packages/tester:
-    specifiers:
-      '@trello-cli/config': workspace:*
-    dependencies:
-      '@trello-cli/config': link:../config
-
   packages/trello-cli:
     specifiers:
       '@oclif/core': ^1.19.1
       '@oclif/plugin-help': ^5
       '@oclif/plugin-plugins': ^2.1.4
       '@oclif/test': ^2.2.4
+      '@trello-cli/cache': workspace:*
       '@trello-cli/config': workspace:*
       '@types/node': ^16.11.68
       chai: ^4.3.6
       oclif: ^3
       shx: ^0.3.3
+      trello.js: ^1.2.4
       ts-node: ^10.9.1
       tslib: ^2.3.1
       typescript: ^4.8.4
@@ -64,8 +57,10 @@ importers:
       '@oclif/core': 1.19.2
       '@oclif/plugin-help': 5.1.16
       '@oclif/plugin-plugins': 2.1.5
+      '@trello-cli/cache': link:../cache
       '@trello-cli/config': link:../config
       chai: 4.3.6
+      trello.js: 1.2.4
     devDependencies:
       '@oclif/test': 2.2.6
       '@types/node': 16.18.0
@@ -74,9 +69,6 @@ importers:
       ts-node: 10.9.1_uwvrucnxy7xmunb7f53wnhbsze
       tslib: 2.4.0
       typescript: 4.8.4
-
-  packages/trello-sync:
-    specifiers: {}
 
 packages:
 
@@ -2557,7 +2549,6 @@ packages:
 
   /asynckit/0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
-    dev: true
 
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
@@ -2583,6 +2574,15 @@ packages:
       uuid: 8.0.0
       xml2js: 0.4.19
     dev: true
+
+  /axios/0.27.2:
+    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+    dependencies:
+      follow-redirects: 1.15.2
+      form-data: 4.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /axios/1.1.3:
     resolution: {integrity: sha512-00tXVRwKx/FZr/IDVFt4C+f9FYairX517WoGCL6dpOntqLkZofjhu43F/Xl44UOpqa+9sLFDrG/XAnFsUYgkDA==}
@@ -3150,7 +3150,6 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
-    dev: true
 
   /commander/7.1.0:
     resolution: {integrity: sha512-pRxBna3MJe6HKnBGsDyMv8ETbptw3axEdYHoqNh7gu5oDcew8fs0xnivZGm06Ogk8zGAJ9VX+OPEr2GXEQK4dg==}
@@ -3450,7 +3449,6 @@ packages:
   /delayed-stream/1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
-    dev: true
 
   /delegates/1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
@@ -3882,7 +3880,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
 
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -3897,7 +3894,6 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
-    dev: true
 
   /fs-constants/1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
@@ -5725,14 +5721,12 @@ packages:
   /mime-db/1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
-    dev: true
 
   /mime-types/2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.52.0
-    dev: true
 
   /mimic-fn/2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
@@ -7677,6 +7671,16 @@ packages:
     resolution: {integrity: sha512-N5gJCkLu1aXccpOTtqV6ddSEi6ZmGkh3hjmbu1IjcavJK4qyOVQmi0myQKM7z5jVGmD68SJoliaVrMmVObhj6A==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dev: true
+
+  /trello.js/1.2.4:
+    resolution: {integrity: sha512-dKG43MfwYonrDZs1kl24NxQtiJOKGuFnl1JLPkFz0HWVDpip/wXR+wzGtEWuVCk1xA4rWLbsrK51Ai1IUvM30Q==}
+    dependencies:
+      axios: 0.27.2
+      form-data: 4.0.0
+      tslib: 2.4.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /trim-newlines/3.0.1:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}
