@@ -3,6 +3,7 @@ import path from "path";
 
 class DB {
   protected db: Database.Database;
+
   constructor(configDir: string, dbName: string) {
     this.db = new Database(path.join(configDir, `${dbName}.db`));
   }
@@ -15,8 +16,18 @@ class DB {
     return this.db.prepare(sql).all(...params);
   }
 
-  run(sql: string) {
-    return this.db.prepare(sql).run();
+  run(sql: string, args?: any) {
+    args = args || [];
+    return this.db.prepare(sql).run(...args);
+  }
+
+  upsert(table: string, data: any) {
+    let sql = `REPLACE INTO ${table} `;
+    sql += `(${Object.keys(data).join(", ")}) VALUES `;
+    sql += `(${Object.values(data)
+      .map((n) => "?")
+      .join(", ")});`;
+    return this.run(sql, Object.values(data));
   }
 }
 
