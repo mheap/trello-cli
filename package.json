@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "pnpm lerna run test"
+    "test": "pnpm lerna run test",
+    "dev": "pnpm -r --parallel dev"
   },
   "keywords": [],
   "author": "",
