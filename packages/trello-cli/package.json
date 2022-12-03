@@ -1,5 +1,5 @@
 {
-  "name": "trello-cli",
+  "name": "@trello-cli/cli",
   "version": "0.0.0",
   "description": "Access your Trello account using the CLI",
   "author": "Michael Heap <m@michaelheap.com>",
