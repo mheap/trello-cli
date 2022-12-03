@@ -77,8 +77,11 @@ describe("#getApiKey", () => {
     jest.spyOn(config, "configDirExists").mockReturnValueOnce(false);
 
     expect(config.getToken()).rejects.toStrictEqual({
-      message: `No file found at ${expectedConfigFile}`,
-      code: `ERR_NO_CONFIG`,
+      message: `[apiKey] not found in ${expectedConfigFile}. Get one at https://trello.com/app-key`,
+      code: `ERR_NO_APP_KEY`,
+      data: {
+        url: "https://trello.com/app-key",
+      },
     });
   });
 
@@ -90,8 +93,11 @@ describe("#getApiKey", () => {
     );
 
     expect(config.getToken()).rejects.toStrictEqual({
-      code: "ERR_MISSING_CONFIG",
-      message: `The [token] field is missing from ${expectedConfigFile}`,
+      message: `[apiKey] not found in ${expectedConfigFile}. Get one at https://trello.com/app-key`,
+      code: `ERR_NO_APP_KEY`,
+      data: {
+        url: "https://trello.com/app-key",
+      },
     });
   });
 

@@ -1,9 +1,11 @@
 import { test } from "@oclif/test";
-import auth from "trello-auth";
+import Config from "@trello-cli/config";
 
 let setToken: any;
 beforeEach(() => {
-  setToken = jest.spyOn(auth, "setToken").mockImplementation(() => {});
+  setToken = jest
+    .spyOn(Config.prototype, "setToken")
+    .mockImplementation(() => Promise.resolve());
 });
 
 describe("auth:set", () => {
@@ -18,7 +20,7 @@ describe("auth:set", () => {
 
   run
     .command(["auth:set", "my_fake_token"])
-    .it("calls auth.setToken with the correct parameter", (ctx) => {
+    .it("calls config.setToken with the correct parameter", (ctx) => {
       expect(ctx.stdout).toBe("Token updated\n");
       expect(setToken).toBeCalledTimes(1);
       expect(setToken).toBeCalledWith("my_fake_token");
