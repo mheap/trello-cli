@@ -22,12 +22,17 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   protected client!: TrelloClient;
 
   protected profile: string;
+  protected configDir: string;
 
   constructor(a: any, b: any) {
     super(a, b);
 
+    const homeDir =
+      process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
+    this.configDir = path.join(homeDir!, ".trello-cli");
+
     this.profile = process.env.TRELLO_CLI_PROFILE || "default";
-    this.trelloConfig = new Config("/tmp/.trello-cli", this.profile);
+    this.trelloConfig = new Config(this.configDir, this.profile);
   }
 
   public async init(): Promise<void> {
@@ -50,7 +55,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         token: token,
       });
 
-      this.cache = new Cache(path.join("/tmp/.trello-cli", this.profile), appKey, token);
+      this.cache = new Cache(
+        path.join(this.configDir, this.profile),
+        appKey,
+        token
+      );
     } catch (e: any) {
       let cmd = `./bin/run`;
       if (process.env.TRELLO_CLI_PROFILE) {
