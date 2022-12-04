@@ -2,14 +2,21 @@
   "name": "@trello-cli/config",
   "version": "1.0.0",
   "description": "",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "test": "jest",
     "build": "tsc --build tsconfig.build.json",
-    "dev": "tsc --build tsconfig.build.json --watch --preserveWatchOutput"
+    "dev": "tsc --build tsconfig.build.json --watch --preserveWatchOutput",
+    "prepack": "pnpm build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Michael Heap <m@michaelheap.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/jest-when": "^3.5.2"

@@ -1,8 +1,11 @@
 {
   "name": "@trello-cli/cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Access your Trello account using the CLI",
   "author": "Michael Heap <m@michaelheap.com>",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "trello-cli": "./bin/run"
   },
@@ -49,7 +52,6 @@
     "build": "shx rm -rf dist && tsc -b",
     "dev": "tsc -b --watch",
     "lint": "eslint . --ext .ts --config .eslintrc",
-    "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",
     "prepack": "yarn build && oclif manifest && oclif readme",
     "test": "jest",
