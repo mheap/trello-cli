@@ -6,6 +6,6 @@ export default class SyncIndex extends BaseCommand<typeof SyncIndex> {
   async run(): Promise<void> {
     await this.cache.bootstrap();
     await this.cache.sync();
-    this.log("Sync complete");
+    this.output("Sync complete");
   }
 }

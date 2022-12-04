@@ -18,7 +18,7 @@ export default class BoardCreate extends BaseCommand<typeof BoardCreate> {
   async run(): Promise<void> {
     const { flags } = await this.parse(BoardCreate);
 
-    await this.client.boards.createBoard({
+    const board = await this.client.boards.createBoard({
       name: flags.name,
       desc: flags.description,
       defaultLists: !flags.skipDefaultLists, // Add them by default
@@ -33,5 +33,16 @@ export default class BoardCreate extends BaseCommand<typeof BoardCreate> {
 
     // Sync after adding a new board
     await this.cache.sync();
+
+    this.output(board);
+  }
+
+  protected toData(data: any) {
+    return {
+      id: data.id,
+      name: data.name,
+      desc: data.desc,
+      url: data.url,
+    };
   }
 }

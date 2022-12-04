@@ -3,17 +3,22 @@ import Config from "@trello-cli/config";
 import Cache from "@trello-cli/cache";
 import * as path from "path";
 import { TrelloClient } from "trello.js";
+import { parse } from "json2csv";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["globalFlags"] & T["flags"]
 >;
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {
-  // add the --json flag
-  static enableJsonFlag = true;
-
   // define flags that can be inherited by any command that extends BaseCommand
-  static globalFlags = {};
+  static globalFlags = {
+    format: Flags.enum({
+      options: ["default", "silent", "json", "csv"],
+      default: "default",
+    }),
+  };
+
+  protected defaultOutput: string = "silent";
 
   protected flags!: Flags<T>;
 
@@ -81,6 +86,48 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       }
       this.exit(1);
     }
+  }
+
+  protected output(data: any) {
+    let format = this.flags.format;
+    if (this.flags.format == "default") {
+      format = this.defaultOutput;
+    }
+
+    if (format == "silent") {
+      return;
+    }
+
+    const d = this.toData(data);
+    if (format == "json") {
+      return this.log(JSON.stringify(d, null, 2));
+    }
+    if (format == "csv") {
+      return this.log(this.outputCsv(d));
+    }
+
+    if (format == "fancy") {
+      return this.log(this.format(d));
+    }
+  }
+
+  protected toData(data: any) {
+    return data;
+  }
+
+  protected outputCsv(data: any): string {
+    let keyEntry = data;
+    if (Array.isArray(data)) {
+      keyEntry = data[0];
+    }
+    const fields = Object.keys(keyEntry);
+    const opts = { fields };
+
+    return parse(data, opts);
+  }
+
+  protected format(data: any): string {
+    throw new Error(`format not implemented for [${this.id}]`);
   }
 
   protected async catch(err: Error & { exitCode?: number }): Promise<any> {
