@@ -21,7 +21,6 @@ describe("auth:set", () => {
   run
     .command(["auth:set", "my_fake_token"])
     .it("calls config.setToken with the correct parameter", (ctx) => {
-      expect(ctx.stdout).toBe("Token updated\n");
       expect(setToken).toBeCalledTimes(1);
       expect(setToken).toBeCalledWith("my_fake_token");
     });

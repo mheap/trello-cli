@@ -9,6 +9,6 @@ export default class AuthSet extends BaseCommand<typeof AuthSet> {
     const { args } = await this.parse(AuthSet);
 
     this.trelloConfig.setToken(args.token);
-    this.log("Token updated");
+    this.output("Token updated");
   }
 }

@@ -9,6 +9,6 @@ export default class AuthApiKey extends BaseCommand<typeof AuthApiKey> {
     const { args } = await this.parse(AuthApiKey);
 
     this.trelloConfig.setApiKey(args.api_key);
-    this.log("API Key set");
+    this.output("API Key set");
   }
 }
