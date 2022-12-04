@@ -1,6 +1,9 @@
 name: Test
 
 on:
+  push:
+    branches:
+      - typescript-v2
   pull_request:
     types:
       - opened
