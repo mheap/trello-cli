@@ -1,6 +1,6 @@
 {
   "name": "@trello-cli/cli",
-  "version": "0.1.1",
+  "version": "1.0.0-alpha.0",
   "description": "Access your Trello account using the CLI",
   "author": "Michael Heap <m@michaelheap.com>",
   "publishConfig": {

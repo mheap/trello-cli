@@ -6,5 +6,7 @@
     "@trello-cli/config": "0.1.1",
     "@trello-cli/cli": "0.1.1"
   },
-  "changesets": []
+  "changesets": [
+    "smart-carrots-play"
+  ]
 }
