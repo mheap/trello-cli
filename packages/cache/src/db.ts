@@ -1,10 +1,14 @@
 import Database from "better-sqlite3";
 import path from "path";
+import fs from "fs";
 
 class DB {
   protected db: Database.Database;
 
   constructor(configDir: string, dbName: string) {
+    if (!fs.existsSync(configDir)) {
+      fs.mkdirSync(configDir, { recursive: true });
+    }
     this.db = new Database(path.join(configDir, `${dbName}.db`));
   }
 
