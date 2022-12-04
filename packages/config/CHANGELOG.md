@@ -1,7 +1,7 @@
 # @trello-cli/config
 
-## 1.0.0-alpha.0
+## 1.0.0-alpha.1
 
 ### Major Changes
 
-- da02ea4: Initial alpha release of all components
+- Initial alpha release of all components

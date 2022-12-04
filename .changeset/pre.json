@@ -7,6 +7,7 @@
     "@trello-cli/cli": "0.1.1"
   },
   "changesets": [
-    "smart-carrots-play"
+    "smart-carrots-play",
+    "wicked-eagles-happen"
   ]
 }
