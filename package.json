@@ -1,10 +1,11 @@
 {
   "name": "trello-cli",
   "version": "2.0.0",
+  "private": true,
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "pnpm lerna run test",
+    "test": "pnpm -r test",
     "dev": "pnpm -r --parallel dev"
   },
   "keywords": [],
