@@ -13,6 +13,10 @@ class Config {
 
   // Getters + Setters
   async getApiKey() {
+    if (process.env.TRELLO_API_KEY) {
+      return process.env.TRELLO_API_KEY;
+    }
+
     try {
       return await this.getConfigKey("apiKey");
     } catch (e: any) {
@@ -33,6 +37,10 @@ class Config {
   }
 
   async getToken(): Promise<string> {
+    if (process.env.TRELLO_TOKEN) {
+      return process.env.TRELLO_TOKEN;
+    }
+
     try {
       return await this.getConfigKey("token");
     } catch (e: any) {
