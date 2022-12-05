@@ -5,7 +5,7 @@ export default class BoardSetClosed extends BaseCommand<typeof BoardSetClosed> {
   static description = "Change a board's 'closed' status";
 
   static flags = {
-    id: Flags.string({ required: true, description: "The board's ID" }),
+    board: Flags.string({ required: true, description: "The board's ID" }),
     open: Flags.boolean({
       default: false,
       description: "Pass to set `closed: false`",
@@ -13,11 +13,9 @@ export default class BoardSetClosed extends BaseCommand<typeof BoardSetClosed> {
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(BoardSetClosed);
-
     const board = await this.client.boards.updateBoard({
-      id: flags.id,
-      closed: !flags.open,
+      id: this.lookups.board,
+      closed: !this.flags.open,
     });
 
     // Sync after closing a board

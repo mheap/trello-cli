@@ -9,10 +9,8 @@ export default class ListArchive extends BaseCommand<typeof ListArchive> {
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(ListArchive);
-
     await this.client.lists.updateList({
-      id: flags.id,
+      id: this.flags.id,
       closed: true,
     });
   }

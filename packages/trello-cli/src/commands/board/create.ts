@@ -16,18 +16,19 @@ export default class BoardCreate extends BaseCommand<typeof BoardCreate> {
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(BoardCreate);
-
     const board = await this.client.boards.createBoard({
-      name: flags.name,
-      desc: flags.description,
-      defaultLists: !flags.skipDefaultLists, // Add them by default
-      idOrganization: flags.org,
+      name: this.flags.name,
+      desc: this.flags.description,
+      defaultLists: !this.flags.skipDefaultLists, // Add them by default
+      idOrganization: this.flags.org,
       prefs: {
-        cardAging: flags.aging ? "pirate" : "regular",
-        cardCovers: flags.coverImages,
-        permissionLevel: flags.permissionLevel as "org" | "private" | "public",
-        selfJoin: flags.selfJoin,
+        cardAging: this.flags.aging ? "pirate" : "regular",
+        cardCovers: this.flags.coverImages,
+        permissionLevel: this.flags.permissionLevel as
+          | "org"
+          | "private"
+          | "public",
+        selfJoin: this.flags.selfJoin,
       },
     });
 

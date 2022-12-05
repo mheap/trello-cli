@@ -11,12 +11,10 @@ export default class ListCreate extends BaseCommand<typeof ListCreate> {
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(ListCreate);
-
     const board = await this.client.lists.createList({
-      idBoard: flags.board,
-      name: flags.name,
-      pos: flags.position as any,
+      idBoard: this.lookups.board,
+      name: this.flags.name,
+      pos: this.flags.position as any,
     });
 
     // Sync after adding a new list
