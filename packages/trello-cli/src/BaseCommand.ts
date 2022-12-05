@@ -66,6 +66,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         token
       );
     } catch (e: any) {
+      // If we're in debug mode, don't show how to generate credentials
+      if (this.id == "debug") {
+        return;
+      }
+
       let cmd = `./bin/run`;
       if (process.env.TRELLO_CLI_PROFILE) {
         cmd = `TRELLO_CLI_PROFILE=${process.env.TRELLO_CLI_PROFILE} ${cmd}`;
@@ -108,6 +113,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
     if (format == "fancy") {
       return this.log(this.format(d));
+    }
+
+    // Not user controllable - may be set as the default for a command
+    if (format == "raw") {
+      return this.log(d);
     }
   }
 
