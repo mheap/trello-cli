@@ -1,19 +1,23 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
 
-export default class BoardClose extends BaseCommand<typeof BoardClose> {
-  static description = "Create a new board";
+export default class BoardSetClosed extends BaseCommand<typeof BoardSetClosed> {
+  static description = "Change a board's 'closed' status";
 
   static flags = {
-    id: Flags.string({ required: true }),
+    id: Flags.string({ required: true, description: "The board's ID" }),
+    open: Flags.boolean({
+      default: false,
+      description: "Pass to set `closed: false`",
+    }),
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(BoardClose);
+    const { flags } = await this.parse(BoardSetClosed);
 
     const board = await this.client.boards.updateBoard({
       id: flags.id,
-      closed: true
+      closed: !flags.open,
     });
 
     // Sync after closing a board
@@ -28,7 +32,7 @@ export default class BoardClose extends BaseCommand<typeof BoardClose> {
       name: data.name,
       desc: data.desc,
       url: data.url,
-      closed: data.closed
+      closed: data.closed,
     };
   }
 }

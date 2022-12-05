@@ -2,7 +2,7 @@ import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
 
 export default class BoardDelete extends BaseCommand<typeof BoardDelete> {
-  static description = "Create a new board";
+  static description = "Delete a board";
 
   static flags = {
     id: Flags.string({ required: true }),
