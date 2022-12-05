@@ -12,11 +12,8 @@ export default class List extends BaseCommand<typeof List> {
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(List);
-    const board = await this.cache.getBoardIdByName(flags.board);
-    const id = await this.cache.getListIdByBoardAndName(board, flags.list);
     const cards = await this.client.lists.getListCards({
-      id,
+      id: this.lookups.list,
     });
     this.output(cards);
   }

@@ -10,6 +10,11 @@ export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["globalFlags"] & T["flags"]
 >;
 
+type Lookup = {
+  board: string;
+  list: string;
+};
+
 export abstract class BaseCommand<T extends typeof Command> extends Command {
   // define flags that can be inherited by any command that extends BaseCommand
   static globalFlags = {
@@ -30,6 +35,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected profile: string;
   protected configDir: string;
+
+  protected lookups: Lookup = {
+    board: "!!! Missing --board Flag !!!",
+    list: "!!! Missing --list Flag !!!",
+  };
 
   constructor(a: any, b: any) {
     super(a, b);
@@ -67,6 +77,19 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         appKey,
         token
       );
+
+      // Auto-translate any `board` and `list` entries in this.flags
+      if (this.flags.board) {
+        this.lookups.board = await this.cache.getBoardIdByName(
+          this.flags.board
+        );
+      }
+      if (this.flags.list) {
+        this.lookups.list = await this.cache.getListIdByBoardAndName(
+          this.lookups.board,
+          this.flags.list
+        );
+      }
     } catch (e: any) {
       // If we're in debug mode, don't show how to generate credentials
       if (this.id == "debug") {
