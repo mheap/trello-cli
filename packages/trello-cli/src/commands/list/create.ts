@@ -19,7 +19,7 @@ export default class ListCreate extends BaseCommand<typeof ListCreate> {
       pos: flags.position as any,
     });
 
-    // Sync after adding a new board
+    // Sync after adding a new list
     await this.cache.sync();
 
     this.output(board);
