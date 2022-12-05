@@ -4,6 +4,7 @@ import Cache from "@trello-cli/cache";
 import * as path from "path";
 import { TrelloClient } from "trello.js";
 import { parse } from "json2csv";
+import { run } from "./index";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["globalFlags"] & T["flags"]
@@ -15,6 +16,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     format: Flags.enum({
       options: ["default", "silent", "json", "csv"],
       default: "default",
+      description: "Output format",
     }),
   };
 
@@ -138,6 +140,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected format(data: any): string {
     throw new Error(`format not implemented for [${this.id}]`);
+  }
+
+  async run(): Promise<void> {
+    await run([this.id!, "--help"]);
   }
 
   protected async catch(err: Error & { exitCode?: number }): Promise<any> {
