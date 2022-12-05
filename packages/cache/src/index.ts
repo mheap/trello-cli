@@ -34,6 +34,17 @@ export default class {
     return r.id;
   }
 
+  async getListIdByBoardAndName(board: string, name: string): Promise<string> {
+    const r = this.db.get(
+      "SELECT id FROM lists WHERE boardId=? AND (name=? OR id=?)",
+      [board, name, name]
+    );
+    if (!r){
+      throw new Error(`List [${name}] not found on board [${board}]`)
+    }
+    return r.id;
+  }
+
   async getListsOnBoard(id: string): Promise<string> {
     const r = this.db.all("SELECT id FROM lists WHERE boardId=?", [id]);
     return r.map((n: any) => n.id);
