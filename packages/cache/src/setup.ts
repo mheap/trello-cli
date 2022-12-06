@@ -36,6 +36,12 @@ export default class {
       fullName: "VARCHAR",
       initials: "VARCHAR",
     },
+    labels: {
+      id: "VARCHAR",
+      name: "VARCHAR",
+      boardId: "VARCHAR",
+      color: "VARCHAR",
+    },
   };
   constructor(db: DB) {
     this.db = db;

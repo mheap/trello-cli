@@ -39,8 +39,16 @@ export default class {
       "SELECT id FROM lists WHERE boardId=? AND (name=? OR id=?)",
       [board, name, name]
     );
-    if (!r){
-      throw new Error(`List [${name}] not found on board [${board}]`)
+    if (!r) {
+      throw new Error(`List [${name}] not found on board [${board}]`);
+    }
+    return r.id;
+  }
+
+  async getLabelIdByName(name: string): Promise<string> {
+    const r = this.db.get("SELECT id FROM labels WHERE name=? OR id=?", [name, name]);
+    if (!r) {
+      throw new Error(`Label [${name}] not found`);
     }
     return r.id;
   }

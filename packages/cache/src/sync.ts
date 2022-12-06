@@ -61,6 +61,18 @@ export default class {
       shortLink: board.shortLink,
       closed: board.closed ? 1 : 0,
     });
+    this.processLabels(board.labels);
+  }
+
+  protected async processLabels(labels: any): Promise<any> {
+    for (let label of labels) {
+      this.db.upsert("labels", {
+        id: label.id,
+        name: label.name,
+        boardId: label.idBoard,
+        color: label.color,
+      });
+    }
   }
 
   protected async processLists(lists: any): Promise<any> {
