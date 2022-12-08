@@ -1,6 +1,6 @@
 {
   "name": "@trello-cli/config",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "",
   "publishConfig": {
     "access": "public"

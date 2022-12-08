@@ -7,6 +7,9 @@
     "@trello-cli/cli": "0.1.1"
   },
   "changesets": [
+    "famous-trainers-visit",
+    "pink-dryers-divide",
+    "selfish-cows-matter",
     "smart-carrots-play",
     "wicked-eagles-happen"
   ]
