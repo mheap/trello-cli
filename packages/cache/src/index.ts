@@ -46,10 +46,18 @@ export default class {
   }
 
   async getLabelIdByName(name: string): Promise<string> {
-    const r = this.db.get("SELECT id FROM labels WHERE name=? OR id=?", [name, name]);
+    const r = this.db.get("SELECT id FROM labels WHERE name=? OR id=?", [
+      name,
+      name,
+    ]);
     if (!r) {
       throw new Error(`Label [${name}] not found`);
     }
+    return r.id;
+  }
+
+  async getUserIdByName(name: string): Promise<string> {
+    const r = this.db.get("SELECT id FROM members WHERE username=?", [name]);
     return r.id;
   }
 

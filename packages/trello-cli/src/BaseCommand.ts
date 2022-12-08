@@ -14,6 +14,7 @@ type Lookup = {
   board: string;
   list: string;
   card: string;
+  user: string;
 };
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {
@@ -41,6 +42,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     board: "!!! Missing --board Flag !!!",
     list: "!!! Missing --list Flag !!!",
     card: "!!! Missing --card Flag !!!",
+    user: "!!! Missing --card Flag !!!",
   };
 
   constructor(a: any, b: any) {
@@ -91,6 +93,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
           this.lookups.board,
           this.flags.list
         );
+      }
+
+      if (this.flags.user) {
+        this.lookups.user = await this.cache.getUserIdByName(this.flags.user);
       }
 
       if (this.flags.card && this.flags.list) {
