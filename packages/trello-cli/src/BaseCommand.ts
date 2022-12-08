@@ -97,6 +97,9 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
       if (this.flags.user) {
         this.lookups.user = await this.cache.getUserIdByName(this.flags.user);
+        if (!this.lookups.user) {
+          this.lookups.user = this.flags.user;
+        }
       }
 
       if (this.flags.card && this.flags.list) {
@@ -167,7 +170,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
 
     if (format == "fancy") {
-      return this.log(this.format(d));
+      return this.log(await this.format(d));
     }
 
     // Not user controllable - may be set as the default for a command
@@ -191,7 +194,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     return parse(data, opts);
   }
 
-  protected format(data: any): string {
+  protected async format(data: any): Promise<string> {
     throw new Error(`format not implemented for [${this.id}]`);
   }
 

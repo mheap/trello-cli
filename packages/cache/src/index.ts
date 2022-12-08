@@ -29,6 +29,16 @@ export default class {
     return sync.run();
   }
 
+  async getBoard(id: string): Promise<string> {
+    const r = this.db.get("SELECT name FROM boards WHERE id=?", [id]);
+    return r.name;
+  }
+
+  async getList(id: string): Promise<string> {
+    const r = this.db.get("SELECT name FROM lists WHERE id=?", [id]);
+    return r.name;
+  }
+
   async getBoardIdByName(name: string): Promise<string> {
     const r = this.db.get("SELECT id FROM boards WHERE name=?", [name]);
     return r.id;
@@ -58,6 +68,9 @@ export default class {
 
   async getUserIdByName(name: string): Promise<string> {
     const r = this.db.get("SELECT id FROM members WHERE username=?", [name]);
+    if (!r) {
+      return "";
+    }
     return r.id;
   }
 

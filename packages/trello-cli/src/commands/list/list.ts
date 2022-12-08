@@ -31,7 +31,7 @@ export default class ListList extends BaseCommand<typeof ListList> {
     });
   }
 
-  protected format(data: any): string {
+  protected format(data: any): Promise<string> {
     return data
       .map((b: any) => {
         return `${b.name} (ID: ${b.id})`;
