@@ -148,7 +148,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
   }
 
-  protected output(data: any) {
+  protected async output(data: any) {
     let format = this.flags.format;
     if (this.flags.format == "default") {
       format = this.defaultOutput;
@@ -158,7 +158,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       return;
     }
 
-    const d = this.toData(data);
+    const d = await this.toData(data);
     if (format == "json") {
       return this.log(JSON.stringify(d, null, 2));
     }

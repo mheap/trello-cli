@@ -61,6 +61,14 @@ export default class {
     return r.id;
   }
 
+  async convertMemberIdsToEntity(ids: string[]): Promise<string> {
+    const placeholder = ids.map((i) => "?").join(",");
+    return this.db.all(
+      `SELECT * FROM members WHERE id IN (${placeholder})`,
+      ids
+    );
+  }
+
   async getListsOnBoard(id: string): Promise<string> {
     const r = this.db.all("SELECT id FROM lists WHERE boardId=?", [id]);
     return r.map((n: any) => n.id);
