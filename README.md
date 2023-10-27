@@ -47,6 +47,8 @@ trello-cli currently supports the following commands:
     show-lists         Show the list of cached lists
     show-webhooks      display webhooks for current user applications
 
+[Full command documentation on the Wiki](https://github.com/mheap/trello-cli/wiki)
+
 # On Windows
 
 Depending on how `node.js` is setup, you may not be able to run `trello` straight from the command line as shown above.  To remedy that, add the following to your Powershell profile (type `$profile` at the Powershell prompt to find where your profile is stored):
