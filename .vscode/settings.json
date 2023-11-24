@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/dist": true,
+    "**/node_modules": true,
+    "packages/**/jest.config.js": true,
+    "packages/**/tsconfig.build.json": true,
+    "packages/**/tsconfig.json": true
+  }
+}
