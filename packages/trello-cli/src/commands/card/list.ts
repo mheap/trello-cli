@@ -27,6 +27,7 @@ export default class List extends BaseCommand<typeof List> {
         due: d.due,
         closed: d.closed,
         url: d.url,
+        labels: d.labels,
       };
     });
   }
