@@ -7,6 +7,7 @@
     "@trello-cli/cli": "1.0.0"
   },
   "changesets": [
+    "bright-dolls-hear",
     "plenty-horses-taste"
   ]
 }
