@@ -36,12 +36,12 @@ importers:
   packages/cache:
     dependencies:
       better-sqlite3:
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^9.1.1
+        version: 9.1.1
     devDependencies:
       '@types/better-sqlite3':
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^7.6.8
+        version: 7.6.8
 
   packages/config:
     devDependencies:
@@ -1508,8 +1508,8 @@ packages:
       '@babel/types': 7.19.4
     dev: true
 
-  /@types/better-sqlite3@7.6.2:
-    resolution: {integrity: sha512-RgmaapusqTq6IMAr4McMyAsC6RshYTCjXCnzwVV59WctUxC8bNPyUfT9t5F81lKcU41lLurhjqjoMHfauzfqGg==}
+  /@types/better-sqlite3@7.6.8:
+    resolution: {integrity: sha512-ASndM4rdGrzk7iXXqyNC4fbwt4UEjpK0i3j4q4FyeQrLAthfB6s7EF135ZJE0qQxtKIMFwmyT6x0switET7uIw==}
     dependencies:
       '@types/node': 18.11.4
     dev: true
@@ -1949,8 +1949,8 @@ packages:
       is-windows: 1.0.2
     dev: true
 
-  /better-sqlite3@7.6.2:
-    resolution: {integrity: sha512-S5zIU1Hink2AH4xPsN0W43T1/AJ5jrPh7Oy07ocuW/AKYYY02GWzz9NH0nbSMn/gw6fDZ5jZ1QsHt1BXAwJ6Lg==}
+  /better-sqlite3@9.1.1:
+    resolution: {integrity: sha512-FhW7bS7cXwkB2SFnPJrSGPmQerVSCzwBgmQ1cIRcYKxLsyiKjljzCbyEqqhYXo5TTBqt5BISiBj2YE2Sy2ynaA==}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
