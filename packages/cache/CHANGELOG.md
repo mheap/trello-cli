@@ -1,5 +1,11 @@
 # @trello-cli/cache
 
+## 1.0.1
+
+### Patch Changes
+
+- Update version of better-sqlite-3
+
 ## 1.0.0
 
 ### Patch Changes
