@@ -137,12 +137,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       let message = e.message || e;
       if (e.code == "ERR_NO_APP_KEY") {
         this.warn(
-          `Visit ${e.data.url} to get an API key then run ${cmd} auth:api-key YOUR_API_KEY`
+          `Visit ${e.data.url} to get an API key then run '${cmd} auth:api-key YOUR_API_KEY'`
         );
       } else if (e.code == "ERR_NO_TOKEN") {
         this.warn(e.message);
         this.logToStderr(
-          `\nVisit ${e.data.url} to generate a token.\n\nRun ${cmd} auth:set YOUR_TOKEN`
+          `\nVisit ${e.data.url} to generate a token\n\nNext, run '${cmd} auth:token YOUR_TOKEN'`
         );
       } else {
         this.warn(message);
