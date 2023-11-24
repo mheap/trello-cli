@@ -2,33 +2,43 @@ import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
 
 export default class BoardCreate extends BaseCommand<typeof BoardCreate> {
-  static description = "Create a new board";
+  static description = "Create a board";
 
   static flags = {
     name: Flags.string({ char: "n", required: true }),
     description: Flags.string({ char: "d" }),
-    aging: Flags.boolean(),
-    coverImages: Flags.boolean(),
-    skipDefaultLists: Flags.boolean(),
-    org: Flags.string(),
-    permissionLevel: Flags.enum({ options: ["org", "private", "public"] }),
-    selfJoin: Flags.boolean(),
+    org: Flags.string({
+      description:
+        "The id or name of the Workspace the board should belong to.",
+    }),
+    "prefs.permissionLevel": Flags.enum({
+      options: ["org", "private", "public"],
+    }),
+    "prefs.cardAging": Flags.enum({ options: ["regular", "pirate"] }),
+    "prefs.cardCovers": Flags.boolean({
+      description: "Whether card covers should be displayed on this board",
+    }),
+    "prefs.selfJoin": Flags.boolean({
+      description:
+        "Determines whether users can join the boards themselves or whether they have to be invited.",
+    }),
+    defaultLists: Flags.boolean({"default": true}),
   };
 
   async run(): Promise<void> {
     const board = await this.client.boards.createBoard({
       name: this.flags.name,
       desc: this.flags.description,
-      defaultLists: !this.flags.skipDefaultLists, // Add them by default
+      defaultLists: this.flags.defaultLists, // Add them by default
       idOrganization: this.flags.org,
       prefs: {
-        cardAging: this.flags.aging ? "pirate" : "regular",
-        cardCovers: this.flags.coverImages,
-        permissionLevel: this.flags.permissionLevel as
+        cardAging: this.flags["prefs.cardAging"] as "regular" | "pirate",
+        cardCovers: this.flags["prefs.cardCovers"],
+        permissionLevel: this.flags["prefs.permissionLevel"] as
           | "org"
           | "private"
           | "public",
-        selfJoin: this.flags.selfJoin,
+        selfJoin: this.flags["prefs.selfJoin"],
       },
     });
 

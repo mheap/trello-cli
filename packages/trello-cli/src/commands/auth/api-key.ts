@@ -1,7 +1,7 @@
 import { BaseCommand } from "../../BaseCommand";
 
 export default class AuthApiKey extends BaseCommand<typeof AuthApiKey> {
-  static description = "Set authentication details";
+  static description = "Set the Trello API key (used to generate a token)";
 
   static args = [{ name: "api_key", required: true }];
 

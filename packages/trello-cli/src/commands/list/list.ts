@@ -2,7 +2,7 @@ import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
 
 export default class ListList extends BaseCommand<typeof ListList> {
-  static description = "List all lists on a board";
+  static description = "Show all lists on a board";
 
   protected defaultOutput: string = "fancy";
 

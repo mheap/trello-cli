@@ -8,7 +8,7 @@ export default class BoardSetClosed extends BaseCommand<typeof BoardSetClosed> {
     board: Flags.string({ required: true, description: "The board's ID" }),
     open: Flags.boolean({
       default: false,
-      description: "Pass to set `closed: false`",
+      description: "Set the board status to `closed: false`",
     }),
   };
 

@@ -2,7 +2,7 @@ import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
 
 export default class List extends BaseCommand<typeof List> {
-  static description = "List all cards in a list";
+  static description = "Show all cards in a list";
 
   protected defaultOutput: string = "fancy";
 

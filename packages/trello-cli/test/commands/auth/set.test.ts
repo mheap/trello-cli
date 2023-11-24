@@ -12,14 +12,14 @@ describe("auth:set", () => {
   const run = test.stdout();
 
   run
-    .command(["auth:set"])
+    .command(["auth:token"])
     .catch((err) =>
       expect(err.message).toContain("Missing 1 required arg:\ntoken")
     )
     .it("throws when the token parameter is missing", (ctx) => {});
 
   run
-    .command(["auth:set", "my_fake_token"])
+    .command(["auth:token", "my_fake_token"])
     .it("calls config.setToken with the correct parameter", (ctx) => {
       expect(setToken).toBeCalledTimes(1);
       expect(setToken).toBeCalledWith("my_fake_token");
