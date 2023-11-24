@@ -1,22 +1,29 @@
-name: Release
+name: Test
 
 on:
   push:
     branches:
-      - main
-
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
-permissions: write-all
+      - typescript-v2
+  pull_request:
+    types:
+      - opened
+      - synchronize
 
 jobs:
-  release:
-    name: Release
+  build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    env:
+      CI: true
+
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - uses: pnpm/action-setup@v2
@@ -41,12 +48,3 @@ jobs:
         run: pnpm build
       - name: Run tests
         run: pnpm test
-
-      - name: Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          publish: pnpm changeset publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
