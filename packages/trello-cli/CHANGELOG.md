@@ -1,5 +1,11 @@
 # @trello-cli/cli
 
+## 1.0.3
+
+### Patch Changes
+
+- d12b08f: Show labels when listing all cards
+
 ## 1.0.2
 
 ### Patch Changes
