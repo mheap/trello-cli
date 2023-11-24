@@ -4,4 +4,5 @@ module.exports = {
   ...base,
   roots: ["<rootDir>/test"],
   displayName: "trello-cli",
+  setupFilesAfterEnv: ["./test/setup.js"],
 };

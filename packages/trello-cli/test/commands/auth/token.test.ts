@@ -8,7 +8,7 @@ beforeEach(() => {
     .mockImplementation(() => Promise.resolve());
 });
 
-describe("auth:set", () => {
+describe("auth:token", () => {
   const run = test.stdout();
 
   run
