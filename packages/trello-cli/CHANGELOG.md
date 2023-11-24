@@ -1,5 +1,11 @@
 # @trello-cli/cli
 
+## 1.0.0-alpha.6
+
+### Patch Changes
+
+- 7b7415c: Allow setting due date when creating a card
+
 ## 1.0.0-alpha.5
 
 ### Patch Changes
