@@ -1,5 +1,11 @@
 # @trello-cli/cli
 
+## 1.0.1
+
+### Patch Changes
+
+- Fix binary name in help messages
+
 ## 1.0.0
 
 ### Patch Changes
