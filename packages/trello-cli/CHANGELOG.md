@@ -1,5 +1,22 @@
 # @trello-cli/cli
 
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies
+  - @trello-cli/cache@1.0.1
+
+## 1.0.4
+
+### Patch Changes
+
+- 22e8fbf: Make tests pass on Node 20.
+
+  This is a workaround for a bug in Jest that reports the parent CLI exit code instead of the test suite exit code.
+
+  See https://github.com/jestjs/jest/issues/14501
+
 ## 1.0.3
 
 ### Patch Changes
