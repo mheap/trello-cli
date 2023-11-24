@@ -19,9 +19,9 @@
   "author": "Michael Heap <m@michaelheap.com>",
   "license": "MIT",
   "dependencies": {
-    "better-sqlite3": "^7.6.2"
+    "better-sqlite3": "^9.1.1"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.2"
+    "@types/better-sqlite3": "^7.6.8"
   }
 }
