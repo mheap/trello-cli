@@ -129,7 +129,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         return;
       }
 
-      let cmd = `./bin/run`;
+      let cmd = this.config.bin;
       if (process.env.TRELLO_CLI_PROFILE) {
         cmd = `TRELLO_CLI_PROFILE=${process.env.TRELLO_CLI_PROFILE} ${cmd}`;
       }

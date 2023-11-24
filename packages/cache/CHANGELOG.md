@@ -1,5 +1,11 @@
 # @trello-cli/cache
 
+## 1.0.0
+
+### Patch Changes
+
+- c6ae218: Initial Release
+
 ## 1.0.0-alpha.4
 
 ### Patch Changes

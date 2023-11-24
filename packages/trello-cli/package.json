@@ -1,13 +1,13 @@
 {
-  "name": "@trello-cli/cli",
-  "version": "1.0.0-alpha.6",
+  "name": "trello-cli",
+  "version": "1.0.0",
   "description": "Access your Trello account using the CLI",
   "author": "Michael Heap <m@michaelheap.com>",
   "publishConfig": {
     "access": "public"
   },
   "bin": {
-    "trello-cli": "./bin/run"
+    "trello": "./bin/run"
   },
   "homepage": "https://github.com/mheap/trello-cli",
   "license": "MIT",
