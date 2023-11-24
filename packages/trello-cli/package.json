@@ -27,6 +27,7 @@
     "@trello-cli/cache": "workspace:*",
     "@trello-cli/config": "workspace:*",
     "chai": "^4.3.6",
+    "chrono-node": "^2.7.3",
     "json2csv": "^5.0.7",
     "trello.js": "^1.2.4"
   },

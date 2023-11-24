@@ -72,6 +72,9 @@ importers:
       chai:
         specifier: ^4.3.6
         version: 4.3.6
+      chrono-node:
+        specifier: ^2.7.3
+        version: 2.7.3
       json2csv:
         specifier: ^5.0.7
         version: 5.0.7
@@ -2208,6 +2211,13 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /chrono-node@2.7.3:
+    resolution: {integrity: sha512-M/CusGocGJaubS8OFPEzmSa6IT/MJo2LaVqFyUVaLMo+UWwqyahKHsDe9FQBzwaytVGwR/bwZ5JhnAcu894Owg==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      dayjs: 1.11.10
+    dev: false
+
   /ci-info@3.5.0:
     resolution: {integrity: sha512-yH4RezKOGlOhxkmhbeNuC4eYZKAUsEaGtBuBzDDP1eFUKiccDWzBABxBfOx31IDwDIXMTxWuwAxUGModvkbuVw==}
     dev: true
@@ -2482,6 +2492,10 @@ packages:
   /dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
     dev: true
+
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+    dev: false
 
   /debug@4.3.4(supports-color@8.1.1):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}

@@ -1,5 +1,6 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import * as chrono from "chrono-node";
 
 export default class Create extends BaseCommand<typeof Create> {
   static description = "Create a card";
@@ -10,10 +11,10 @@ export default class Create extends BaseCommand<typeof Create> {
     list: Flags.string({ required: true }),
     position: Flags.enum({ options: ["top", "bottom"], default: "bottom" }),
     label: Flags.string({ multiple: true }),
+    due: Flags.string(),
   };
 
   async run(): Promise<void> {
-
     this.flags.label = this.flags.label || [];
 
     // Convert label name to ID
@@ -23,9 +24,15 @@ export default class Create extends BaseCommand<typeof Create> {
       }) as any
     );
 
+    let dueDate = null;
+    if (this.flags.due) {
+      dueDate = chrono.parseDate(this.flags.due).toString();
+    }
+
     const card = await this.client.cards.createCard({
       idList: this.lookups.list,
       name: this.flags.name,
+      due: dueDate!,
       pos: this.flags.position as "top" | "bottom",
       idLabels,
     });
