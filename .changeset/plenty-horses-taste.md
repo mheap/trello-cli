@@ -4,4 +4,4 @@
 "@trello-cli/cli": patch
 ---
 
-Bump patch release to alpha.1
+Initial Release
