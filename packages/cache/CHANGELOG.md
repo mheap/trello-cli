@@ -1,5 +1,11 @@
 # @trello-cli/cache
 
+## 1.0.2
+
+### Patch Changes
+
+- Show Board details when sync fails
+
 ## 1.0.1
 
 ### Patch Changes
