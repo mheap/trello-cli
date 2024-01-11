@@ -33,18 +33,24 @@ export default class {
   }
 
   protected async process(data: any): Promise<any> {
-    for (let board of data) {
-      this.processBoard(board);
-      this.processLists(board.lists);
-      this.processCards(board.cards);
-      this.processMembers(board.members);
-      this.processOrg(board.organization);
+    let board;
+    for (board of data) {
+      try {
+        await this.processBoard(board);
+        await this.processLists(board.lists);
+        await this.processCards(board.cards);
+        await this.processMembers(board.members);
+        await this.processOrg(board.organization);
+      } catch (e) {
+        console.error("Error processing board", board);
+        throw e;
+      }
     }
   }
 
   protected async processOrg(org: any): Promise<any> {
     // Insert into boards
-    this.db.upsert("orgs", {
+    return this.db.upsert("orgs", {
       id: org.id,
       displayName: org.displayName,
       creatorId: org.idMemberCreator,
@@ -53,7 +59,7 @@ export default class {
 
   protected async processBoard(board: any): Promise<any> {
     // Insert into boards
-    this.db.upsert("boards", {
+    await this.db.upsert("boards", {
       id: board.id,
       name: board.name,
       orgId: board.idOrganization,
@@ -61,12 +67,12 @@ export default class {
       shortLink: board.shortLink,
       closed: board.closed ? 1 : 0,
     });
-    this.processLabels(board.labels);
+    return this.processLabels(board.labels);
   }
 
   protected async processLabels(labels: any): Promise<any> {
     for (let label of labels) {
-      this.db.upsert("labels", {
+      await this.db.upsert("labels", {
         id: label.id,
         name: label.name,
         boardId: label.idBoard,
@@ -77,7 +83,7 @@ export default class {
 
   protected async processLists(lists: any): Promise<any> {
     for (let list of lists) {
-      this.db.upsert("lists", {
+      await this.db.upsert("lists", {
         id: list.id,
         name: list.name,
         boardId: list.idBoard,
@@ -88,7 +94,7 @@ export default class {
 
   protected async processCards(cards: any): Promise<any> {
     for (let card of cards) {
-      this.db.upsert("cards", {
+      await this.db.upsert("cards", {
         id: card.id,
         name: card.name,
         boardId: card.idBoard,
@@ -100,7 +106,7 @@ export default class {
 
   protected async processMembers(members: any): Promise<any> {
     for (let member of members) {
-      this.db.upsert("members", {
+      await this.db.upsert("members", {
         id: member.id,
         username: member.username,
         fullName: member.fullName,
