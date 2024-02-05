@@ -1,5 +1,11 @@
 # @trello-cli/cache
 
+## 1.0.3
+
+### Patch Changes
+
+- Remove NOT NULL constraint from all fields
+
 ## 1.0.2
 
 ### Patch Changes

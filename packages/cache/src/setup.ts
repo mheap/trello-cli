@@ -57,7 +57,7 @@ export default class {
         if (name == "id") {
           pKey = "PRIMARY KEY";
         }
-        columns.push(`${name} ${type} NOT NULL ${pKey}`);
+        columns.push(`${name} ${type} ${pKey}`);
       });
       sql = `${sql} (${columns.join(", ")})`;
 

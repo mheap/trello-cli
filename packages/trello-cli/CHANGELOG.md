@@ -1,5 +1,12 @@
 # @trello-cli/cli
 
+## 1.0.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @trello-cli/cache@1.0.3
+
 ## 1.0.6
 
 ### Patch Changes
