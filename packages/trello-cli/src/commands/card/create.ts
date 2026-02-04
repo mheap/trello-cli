@@ -26,7 +26,10 @@ export default class Create extends BaseCommand<typeof Create> {
 
     let dueDate = null;
     if (this.flags.due) {
-      dueDate = chrono.parseDate(this.flags.due).toString();
+      const parsed = chrono.parseDate(this.flags.due);
+      if (parsed) {
+        dueDate = parsed.toString();
+      }
     }
 
     const card = await this.client.cards.createCard({

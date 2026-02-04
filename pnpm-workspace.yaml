@@ -1,2 +1,7 @@
 packages:
-  - 'packages/*'
+  - packages/*
+
+onlyBuiltDependencies:
+  - aws-sdk
+  - better-sqlite3
+  - yarn
