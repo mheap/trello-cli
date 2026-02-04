@@ -1,5 +1,11 @@
 # @trello-cli/cache
 
+## 1.0.4
+
+### Patch Changes
+
+- 9b13556: Upgrade better-sqlite3 from ^9.1.1 → ^12.6.1 to enable node24 support
+
 ## 1.0.3
 
 ### Patch Changes
