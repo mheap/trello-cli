@@ -1,5 +1,17 @@
 # @trello-cli/cli
 
+## 1.1.0
+
+### Minor Changes
+
+- 202a566: card:create accepts an optional flag "description"
+
+### Patch Changes
+
+- 9b13556: Fix dueDate bug when date cannot be parsed
+- Updated dependencies [9b13556]
+  - @trello-cli/cache@1.0.4
+
 ## 1.0.7
 
 ### Patch Changes
