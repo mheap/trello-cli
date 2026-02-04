@@ -12,6 +12,7 @@ export default class Create extends BaseCommand<typeof Create> {
     position: Flags.enum({ options: ["top", "bottom"], default: "bottom" }),
     label: Flags.string({ multiple: true }),
     due: Flags.string(),
+    description: Flags.string(),
   };
 
   async run(): Promise<void> {
@@ -35,6 +36,7 @@ export default class Create extends BaseCommand<typeof Create> {
     const card = await this.client.cards.createCard({
       idList: this.lookups.list,
       name: this.flags.name,
+      desc: this.flags.description,
       due: dueDate!,
       pos: this.flags.position as "top" | "bottom",
       idLabels,
