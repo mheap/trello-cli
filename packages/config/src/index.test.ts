@@ -58,8 +58,8 @@ describe("#setToken", () => {
     );
 
     expect(config.setToken("ABC123")).resolves;
-    expect(configKeyMock).toBeCalledTimes(1);
-    expect(configKeyMock).toBeCalledWith("token", "ABC123");
+    expect(configKeyMock).toHaveBeenCalledTimes(1);
+    expect(configKeyMock).toHaveBeenCalledWith("token", "ABC123");
   });
 });
 
@@ -113,8 +113,8 @@ describe("#getApiKey", () => {
       );
 
       expect(config.setApiKey("my_app_key")).resolves;
-      expect(configKeyMock).toBeCalledTimes(1);
-      expect(configKeyMock).toBeCalledWith("apiKey", "my_app_key");
+      expect(configKeyMock).toHaveBeenCalledTimes(1);
+      expect(configKeyMock).toHaveBeenCalledWith("apiKey", "my_app_key");
     });
   });
 });

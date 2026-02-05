@@ -21,7 +21,7 @@ describe("auth:token", () => {
 
   it("calls config.setToken with the correct parameter", async () => {
     await runCommand(["auth:token", "my_fake_token"]);
-    expect(setToken).toBeCalledTimes(1);
-    expect(setToken).toBeCalledWith("my_fake_token");
+    expect(setToken).toHaveBeenCalledTimes(1);
+    expect(setToken).toHaveBeenCalledWith("my_fake_token");
   });
 });
