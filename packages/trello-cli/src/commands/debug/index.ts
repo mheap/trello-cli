@@ -2,7 +2,7 @@ import { BaseCommand } from "../../BaseCommand";
 
 export default class DebugIndex extends BaseCommand<typeof DebugIndex> {
   static description = "Debug your installation";
-  protected defaultOutput: string = "json";
+  protected defaultOutput = "json" as const;
 
   async run(): Promise<void> {
     let validCredentials = false;

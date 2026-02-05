@@ -4,7 +4,7 @@ import { Flags } from "@oclif/core";
 export default class AssignedTo extends BaseCommand<typeof AssignedTo> {
   static description = "Show all cards assigned to a user (default 'me')";
 
-  protected defaultOutput: string = "fancy";
+  protected defaultOutput = "fancy" as const;
 
   static flags = {
     user: Flags.string({ default: "me" }),

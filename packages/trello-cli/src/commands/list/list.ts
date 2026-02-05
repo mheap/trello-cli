@@ -4,14 +4,14 @@ import { Flags } from "@oclif/core";
 export default class ListList extends BaseCommand<typeof ListList> {
   static description = "Show all lists on a board";
 
-  protected defaultOutput: string = "fancy";
+  protected defaultOutput = "fancy" as const;
 
   static flags = {
     board: Flags.string({ required: true }),
-    filter: Flags.enum({
-      options: ["all", "closed", "none", "open"],
+    filter: Flags.option({
+      options: ["all", "closed", "none", "open"] as const,
       default: "open",
-    }),
+    })(),
   };
 
   async run(): Promise<void> {

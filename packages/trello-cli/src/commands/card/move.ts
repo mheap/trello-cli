@@ -9,7 +9,7 @@ export default class Move extends BaseCommand<typeof Move> {
     board: Flags.string({ required: true }),
     list: Flags.string({ required: true }),
     to: Flags.string({ required: true }),
-    position: Flags.enum({ options: ["top", "bottom"], default: "bottom" }),
+    position: Flags.option({ options: ["top", "bottom"] as const, default: "bottom" })(),
   };
 
   async run(): Promise<void> {

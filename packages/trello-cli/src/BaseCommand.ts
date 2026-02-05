@@ -7,8 +7,9 @@ import { parse } from "json2csv";
 import { run } from "./index";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
-  typeof BaseCommand["globalFlags"] & T["flags"]
+  typeof BaseCommand["baseFlags"] & T["flags"]
 >;
+export type Args<T extends typeof Command> = Interfaces.InferredArgs<T["args"]>;
 
 type Lookup = {
   board: string;
@@ -19,15 +20,15 @@ type Lookup = {
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {
   // define flags that can be inherited by any command that extends BaseCommand
-  static globalFlags = {
-    format: Flags.enum({
-      options: ["default", "silent", "json", "csv"],
-      default: "default",
+  static baseFlags = {
+    format: Flags.option({
+      options: ["default", "silent", "json", "csv"] as const,
+      default: "default" as const,
       description: "Output format",
-    }),
+    })(),
   };
 
-  protected defaultOutput: string = "silent";
+  protected defaultOutput: "default" | "silent" | "json" | "csv" | "fancy" | "raw" = "silent";
 
   protected flags!: Flags<T>;
 
@@ -58,10 +59,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   public async init(): Promise<void> {
     await super.init();
-    const { flags } = await this.parse(
-      this.constructor as Interfaces.Command.Class
-    );
-    this.flags = flags;
+    const { flags } = await this.parse(this.ctor);
+    this.flags = flags as Flags<T>;
 
     if (this.id?.startsWith("auth:") && this.argv.length) {
       return;
@@ -152,8 +151,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   protected async output(data: any) {
-    let format = this.flags.format;
-    if (this.flags.format == "default") {
+    let format: string = this.flags.format ?? "default";
+    if (format === "default") {
       format = this.defaultOutput;
     }
 
