@@ -19,7 +19,7 @@ export default class Create extends BaseCommand<typeof Create> {
     this.flags.label = this.flags.label || [];
 
     // Convert label name to ID
-    let idLabels = await Promise.all(
+    const idLabels = await Promise.all(
       this.flags.label.map(async (l) => {
         return this.cache.getLabelIdByName(l);
       }) as any

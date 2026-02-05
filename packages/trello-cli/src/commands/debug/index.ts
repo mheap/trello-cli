@@ -7,11 +7,13 @@ export default class DebugIndex extends BaseCommand<typeof DebugIndex> {
   async run(): Promise<void> {
     let validCredentials = false;
     try {
-      const trelloMember = await this.client.members.getMember({
+      await this.client.members.getMember({
         id: "me",
       });
       validCredentials = true;
-    } catch (e) {}
+    } catch {
+      // Credentials are invalid or API call failed
+    }
 
     const config = {
       configDirectory: this.configDir,
