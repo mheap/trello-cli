@@ -1,0 +1,83 @@
+name: Update AUR Package
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0" # Weekly on Sunday at midnight UTC
+
+jobs:
+  update-aur:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install dependencies
+        run: pacman -Sy --noconfirm jq openssh git
+
+      - name: Get latest npm version
+        id: npm
+        run: |
+          VERSION=$(curl -s https://registry.npmjs.org/trello-cli/latest | jq -r '.version')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download tarball and get sha512sum
+        id: checksum
+        run: |
+          curl -sLO "https://registry.npmjs.org/trello-cli/-/trello-cli-${{ steps.npm.outputs.version }}.tgz"
+          SHA512=$(sha512sum trello-cli-${{ steps.npm.outputs.version }}.tgz | cut -d' ' -f1)
+          echo "sha512=$SHA512" >> $GITHUB_OUTPUT
+
+      - name: Setup SSH for AUR
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > ~/.ssh/aur
+          chmod 600 ~/.ssh/aur
+
+      - name: Clone AUR repo
+        env:
+          GIT_SSH_COMMAND: "ssh -i ~/.ssh/aur -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+        run: git clone ssh://aur@aur.archlinux.org/trello-cli.git aur-repo
+
+      - name: Check if update needed
+        id: check
+        working-directory: aur-repo
+        run: |
+          CURRENT=$(grep '^pkgver=' PKGBUILD | cut -d= -f2)
+          if [ "$CURRENT" = "${{ steps.npm.outputs.version }}" ]; then
+            echo "Already up-to-date (version $CURRENT)"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "Update available: $CURRENT -> ${{ steps.npm.outputs.version }}"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update PKGBUILD
+        if: steps.check.outputs.skip != 'true'
+        working-directory: aur-repo
+        run: |
+          sed -i "s/^pkgver=.*/pkgver=${{ steps.npm.outputs.version }}/" PKGBUILD
+          sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+          sed -i "s/^sha512sums=.*/sha512sums=('${{ steps.checksum.outputs.sha512 }}')/" PKGBUILD
+
+      - name: Update .SRCINFO
+        if: steps.check.outputs.skip != 'true'
+        working-directory: aur-repo
+        run: |
+          useradd -m builder
+          mkdir -p /home/builder/build
+          cp -a . /home/builder/build
+          chown -R builder:builder /home/builder/build
+          runuser -u builder -- bash -lc 'cd /home/builder/build && makepkg --printsrcinfo > .SRCINFO'
+          cp /home/builder/build/.SRCINFO ./.SRCINFO
+
+      - name: Commit and push
+        if: steps.check.outputs.skip != 'true'
+        working-directory: aur-repo
+        env:
+          GIT_SSH_COMMAND: "ssh -i ~/.ssh/aur -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+        run: |
+          git config user.name "Michael Heap"
+          git config user.email "m@michaelheap.com"
+          git add PKGBUILD .SRCINFO
+          git commit -m "Update to version ${{ steps.npm.outputs.version }}"
+          git push
