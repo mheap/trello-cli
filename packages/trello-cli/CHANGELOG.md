@@ -1,5 +1,16 @@
 # @trello-cli/cli
 
+## 1.2.0
+
+### Minor Changes
+
+- 5ecb98b: Update all dependencies to the latest version
+- 2066518: Add card:get-by-id command
+
+### Patch Changes
+
+- bfc961b: Add default card output for card:show and card:get-by-id
+
 ## 1.1.0
 
 ### Minor Changes
