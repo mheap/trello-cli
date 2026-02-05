@@ -6,7 +6,7 @@ export default class ListCreate extends BaseCommand<typeof ListCreate> {
 
   static flags = {
     name: Flags.string({ char: "n", required: true }),
-    position: Flags.enum({ options: ["top", "bottom"], default: "top" }),
+    position: Flags.option({ options: ["top", "bottom"] as const, default: "top" })(),
     board: Flags.string({ required: true }),
   };
 

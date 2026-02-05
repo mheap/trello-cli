@@ -11,10 +11,10 @@ export default class BoardCreate extends BaseCommand<typeof BoardCreate> {
       description:
         "The id or name of the Workspace the board should belong to.",
     }),
-    "prefs.permissionLevel": Flags.enum({
-      options: ["org", "private", "public"],
-    }),
-    "prefs.cardAging": Flags.enum({ options: ["regular", "pirate"] }),
+    "prefs.permissionLevel": Flags.option({
+      options: ["org", "private", "public"] as const,
+    })(),
+    "prefs.cardAging": Flags.option({ options: ["regular", "pirate"] as const })(),
     "prefs.cardCovers": Flags.boolean({
       description: "Whether card covers should be displayed on this board",
     }),

@@ -4,7 +4,7 @@ import { Flags } from "@oclif/core";
 export default class List extends BaseCommand<typeof List> {
   static description = "Show all cards in a list";
 
-  protected defaultOutput: string = "fancy";
+  protected defaultOutput = "fancy" as const;
 
   static flags = {
     board: Flags.string({ required: true }),

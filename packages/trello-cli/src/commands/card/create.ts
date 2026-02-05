@@ -9,7 +9,7 @@ export default class Create extends BaseCommand<typeof Create> {
     name: Flags.string({ char: "n", required: true }),
     board: Flags.string({ required: true }),
     list: Flags.string({ required: true }),
-    position: Flags.enum({ options: ["top", "bottom"], default: "bottom" }),
+    position: Flags.option({ options: ["top", "bottom"] as const, default: "bottom" })(),
     label: Flags.string({ multiple: true }),
     due: Flags.string(),
     description: Flags.string(),

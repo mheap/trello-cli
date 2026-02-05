@@ -4,10 +4,10 @@ import { Flags } from "@oclif/core";
 export default class BoardList extends BaseCommand<typeof BoardList> {
   static description = "List all boards that you have access to";
 
-  protected defaultOutput: string = "fancy";
+  protected defaultOutput = "fancy" as const;
 
   static flags = {
-    filter: Flags.enum({
+    filter: Flags.option({
       options: [
         "all",
         "closed",
@@ -16,9 +16,9 @@ export default class BoardList extends BaseCommand<typeof BoardList> {
         "organization",
         "public",
         "starred",
-      ],
+      ] as const,
       default: "open",
-    }),
+    })(),
   };
 
   async run(): Promise<void> {
