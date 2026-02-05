@@ -1,6 +1,7 @@
-import { test } from "@oclif/test";
+import { runCommand } from "@oclif/test";
 import Config from "@trello-cli/config";
 import Cache from "@trello-cli/cache";
+import { ux } from "@oclif/core";
 
 const mockCard = {
   id: "abc123",
@@ -28,6 +29,7 @@ jest.mock("trello.js", () => ({
 }));
 
 let convertMemberIdsToEntity: jest.SpyInstance;
+let stdoutSpy: jest.SpyInstance;
 
 beforeEach(() => {
   jest
@@ -41,6 +43,9 @@ beforeEach(() => {
     .spyOn(Cache.prototype, "convertMemberIdsToEntity")
     .mockImplementation(() => Promise.resolve(mockMembers) as any);
 
+  // Capture stdout from oclif's ux module
+  stdoutSpy = jest.spyOn(ux, "stdout").mockImplementation(() => {});
+
   getCard.mockClear();
 });
 
@@ -49,41 +54,38 @@ afterEach(() => {
 });
 
 describe("card:get-by-id", () => {
-  test
-    .stdout()
-    .command(["card:get-by-id"])
-    .catch((err) => expect(err.message).toContain("Missing required flag id"))
-    .it("throws when --id flag is missing");
+  it("throws when --id flag is missing", async () => {
+    const { error } = await runCommand(["card:get-by-id"]);
+    expect(error?.message).toContain("Missing required flag id");
+  });
 
-  test
-    .stdout()
-    .command(["card:get-by-id", "--id", "abc123", "--format", "json"])
-    .it("fetches card by ID and outputs JSON", (ctx) => {
-      expect(getCard).toHaveBeenCalledTimes(1);
-      expect(getCard).toHaveBeenCalledWith({ id: "abc123" });
+  it("fetches card by ID and outputs JSON", async () => {
+    await runCommand(["card:get-by-id", "--id", "abc123", "--format", "json"]);
+    expect(getCard).toHaveBeenCalledTimes(1);
+    expect(getCard).toHaveBeenCalledWith({ id: "abc123" });
 
-      const output = JSON.parse(ctx.stdout);
-      expect(output.id).toBe("abc123");
-      expect(output.name).toBe("Test Card");
-      expect(output.description).toBe("Test description");
-      expect(output.url).toBe("https://trello.com/c/abc123/test-card");
-    });
+    // Get the output that was passed to ux.stdout
+    const outputCall = stdoutSpy.mock.calls[0][0];
+    const output = JSON.parse(outputCall);
+    expect(output.id).toBe("abc123");
+    expect(output.name).toBe("Test Card");
+    expect(output.description).toBe("Test description");
+    expect(output.url).toBe("https://trello.com/c/abc123/test-card");
+  });
 
-  test
-    .stdout()
-    .command(["card:get-by-id", "--id", "abc123", "--format", "json"])
-    .it("converts member IDs to entities", (ctx) => {
-      expect(convertMemberIdsToEntity).toHaveBeenCalledTimes(1);
-      expect(convertMemberIdsToEntity).toHaveBeenCalledWith(["member1", "member2"]);
+  it("converts member IDs to entities", async () => {
+    await runCommand(["card:get-by-id", "--id", "abc123", "--format", "json"]);
+    expect(convertMemberIdsToEntity).toHaveBeenCalledTimes(1);
+    expect(convertMemberIdsToEntity).toHaveBeenCalledWith(["member1", "member2"]);
 
-      const output = JSON.parse(ctx.stdout);
-      expect(output.members).toEqual(mockMembers);
-    });
+    // Get the output that was passed to ux.stdout
+    const outputCall = stdoutSpy.mock.calls[0][0];
+    const output = JSON.parse(outputCall);
+    expect(output.members).toEqual(mockMembers);
+  });
 
-  test
-    .stdout()
-    .command(["card:get-by-id", "--id", "different-id", "--format", "json"])
-    .it("passes the correct ID to the API", () => {
-      expect(getCard).toHaveBeenCalledWith({ id: "different-id" });
-    });
+  it("passes the correct ID to the API", async () => {
+    await runCommand(["card:get-by-id", "--id", "different-id", "--format", "json"]);
+    expect(getCard).toHaveBeenCalledWith({ id: "different-id" });
+  });
 });
