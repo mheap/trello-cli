@@ -133,7 +133,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         cmd = `TRELLO_CLI_PROFILE=${process.env.TRELLO_CLI_PROFILE} ${cmd}`;
       }
 
-      let message = e.message || e;
+      const message = e.message || e;
       if (e.code == "ERR_NO_APP_KEY") {
         this.warn(
           `Visit ${e.data.url} to get an API key then run '${cmd} auth:api-key YOUR_API_KEY'`
@@ -193,7 +193,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     return parse(data, opts);
   }
 
-  protected async format(data: any): Promise<string> {
+  protected async format(_data: any): Promise<string> {
     throw new Error(`format not implemented for [${this.id}]`);
   }
 
