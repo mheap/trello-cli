@@ -1,6 +1,5 @@
 import { runCommand } from "@oclif/test";
 import Config from "@trello-cli/config";
-import Cache from "@trello-cli/cache";
 import { ux } from "@oclif/core";
 
 const mockCard = {
@@ -28,7 +27,19 @@ jest.mock("trello.js", () => ({
   })),
 }));
 
-let convertMemberIdsToEntity: jest.SpyInstance;
+const mockConvertMemberIdsToEntity = jest
+  .fn()
+  .mockResolvedValue(mockMembers);
+
+jest.mock("@trello-cli/cache", () => {
+  return {
+    __esModule: true,
+    default: jest.fn().mockImplementation(() => ({
+      convertMemberIdsToEntity: mockConvertMemberIdsToEntity,
+    })),
+  };
+});
+
 let stdoutSpy: jest.SpyInstance;
 
 beforeEach(() => {
@@ -39,14 +50,11 @@ beforeEach(() => {
     .spyOn(Config.prototype, "getApiKey")
     .mockImplementation(() => Promise.resolve("fake_api_key"));
 
-  convertMemberIdsToEntity = jest
-    .spyOn(Cache.prototype, "convertMemberIdsToEntity")
-    .mockImplementation(() => Promise.resolve(mockMembers) as any);
-
   // Capture stdout from oclif's ux module
   stdoutSpy = jest.spyOn(ux, "stdout").mockImplementation(() => {});
 
   getCard.mockClear();
+  mockConvertMemberIdsToEntity.mockClear();
 });
 
 afterEach(() => {
@@ -75,8 +83,8 @@ describe("card:get-by-id", () => {
 
   it("converts member IDs to entities", async () => {
     await runCommand(["card:get-by-id", "--id", "abc123", "--format", "json"]);
-    expect(convertMemberIdsToEntity).toHaveBeenCalledTimes(1);
-    expect(convertMemberIdsToEntity).toHaveBeenCalledWith(["member1", "member2"]);
+    expect(mockConvertMemberIdsToEntity).toHaveBeenCalledTimes(1);
+    expect(mockConvertMemberIdsToEntity).toHaveBeenCalledWith(["member1", "member2"]);
 
     // Get the output that was passed to ux.stdout
     const outputCall = stdoutSpy.mock.calls[0][0];

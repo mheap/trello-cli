@@ -30,6 +30,9 @@ export default class Create extends BaseCommand<typeof Create> {
       const parsed = chrono.parseDate(this.flags.due);
       if (parsed) {
         dueDate = parsed.toString();
+      } else {
+        this.warn(`Could not parse due date: "${this.flags.due}"`);
+        this.exit(1);
       }
     }
 
