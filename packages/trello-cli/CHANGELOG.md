@@ -1,5 +1,12 @@
 # @trello-cli/cli
 
+## 1.3.0
+
+### Minor Changes
+
+- 1fe454b: Add card:update command for modifying card name, description, and due date. Supports natural language dates via chrono-node.
+- 86b37ef: Add list:move-all-cards command
+
 ## 1.2.0
 
 ### Minor Changes
