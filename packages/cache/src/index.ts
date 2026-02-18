@@ -31,16 +31,25 @@ export default class {
 
   async getBoard(id: string): Promise<string> {
     const r = this.db.get("SELECT name FROM boards WHERE id=?", [id]);
+    if (!r) {
+      throw new Error(`Board [${id}] not found`);
+    }
     return r.name;
   }
 
   async getList(id: string): Promise<string> {
     const r = this.db.get("SELECT name FROM lists WHERE id=?", [id]);
+    if (!r) {
+      throw new Error(`List [${id}] not found`);
+    }
     return r.name;
   }
 
   async getBoardIdByName(name: string): Promise<string> {
     const r = this.db.get("SELECT id FROM boards WHERE name=?", [name]);
+    if (!r) {
+      throw new Error(`Board [${name}] not found`);
+    }
     return r.id;
   }
 
