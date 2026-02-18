@@ -75,6 +75,31 @@ export default class {
     return r.id;
   }
 
+  async getLabelIdByBoardAndColor(
+    boardId: string,
+    color: string,
+    name?: string
+  ): Promise<string> {
+    const rows = name
+      ? this.db.all(
+          "SELECT id FROM labels WHERE boardId=? AND color=? AND name=?",
+          [boardId, color, name]
+        )
+      : this.db.all(
+          "SELECT id FROM labels WHERE boardId=? AND color=?",
+          [boardId, color]
+        );
+    if (!rows || rows.length === 0) {
+      throw new Error(`Label with color [${color}] not found on board`);
+    }
+    if (rows.length > 1) {
+      throw new Error(
+        `Multiple labels with color [${color}] found on board. Use --text to disambiguate.`
+      );
+    }
+    return rows[0].id;
+  }
+
   async getUserIdByName(name: string): Promise<string> {
     const r = this.db.get("SELECT id FROM members WHERE username=?", [name]);
     if (!r) {
