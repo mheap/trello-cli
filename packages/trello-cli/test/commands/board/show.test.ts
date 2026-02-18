@@ -77,4 +77,10 @@ describe("board:show", () => {
     await runCommand(["board:show", "--board", "MyBoard", "--format", "json"]);
     expect(mockGetBoardIdByName).toHaveBeenCalledWith("MyBoard");
   });
+
+  it("exits with error when board is not found", async () => {
+    mockGetBoardIdByName.mockRejectedValueOnce(new Error("Board [NonExistent] not found"));
+    const { error } = await runCommand(["board:show", "--board", "NonExistent", "--format", "json"]);
+    expect(error?.oclif?.exit).toBe(1);
+  });
 });
