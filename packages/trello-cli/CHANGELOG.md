@@ -1,5 +1,29 @@
 # @trello-cli/cli
 
+## 1.4.0
+
+### Minor Changes
+
+- 2d3f398: Add board:members command to list members of a board
+- 2d3f398: Add board:show command to display board details
+- 2d3f398: Add board:update command to update board name, description, and open/closed state
+- 6e0858a: Add card:attach command to attach a URL to a card
+- 6e0858a: Add card:attachments command to list attachments on a card
+- 6e0858a: Add card:check-item command to toggle checklist items complete/incomplete
+- 6e0858a: Add card:checklist command to create checklists on cards
+- 6e0858a: Add card:checklists command to list checklists on a card
+- 6e0858a: Add card:comment command to add comments to cards
+- 6e0858a: Add card:comments command to list comments on a card
+- 6e0858a: Add card:label command to add a label to a card
+- 6e0858a: Add card:unlabel command to remove a label from a card
+- 1f2d8a9: Add label:create command to create labels on a board
+- 1f2d8a9: Add label:delete command to remove labels from a board
+- 1f2d8a9: Add label topic with label:list command to list labels on a board
+- 1f2d8a9: Add label:update command to update or create labels by board and color
+- 3e089f6: Add list:archive-cards command to archive all cards in a list
+- 3e089f6: Add list:rename command to rename a list on a board
+- 0b8dfde: Add search command to search across Trello
+
 ## 1.3.0
 
 ### Minor Changes
