@@ -75,6 +75,22 @@ export default class {
     return r.id;
   }
 
+  async getLabelsByBoardAndColor(
+    boardId: string,
+    color: string,
+    name?: string
+  ): Promise<Array<{ id: string; name: string }>> {
+    return name
+      ? this.db.all(
+          "SELECT id, name FROM labels WHERE boardId=? AND color=? AND name=?",
+          [boardId, color, name]
+        )
+      : this.db.all(
+          "SELECT id, name FROM labels WHERE boardId=? AND color=?",
+          [boardId, color]
+        );
+  }
+
   async getLabelIdByBoardAndColor(
     boardId: string,
     color: string,
