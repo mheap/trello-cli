@@ -17,6 +17,9 @@ importers:
       '@types/node':
         specifier: ^25.2.0
         version: 25.2.0
+      ink-testing-library:
+        specifier: 2.1.0
+        version: 2.1.0(@types/react@17.0.91)
       jest:
         specifier: ^30.2.0
         version: 30.2.0(@types/node@25.2.0)(ts-node@10.9.2(@types/node@25.2.0)(typescript@5.9.3))
@@ -115,6 +118,9 @@ importers:
       eslint:
         specifier: ^9.27.0
         version: 9.39.2
+      ink-testing-library:
+        specifier: 2.1.0
+        version: 2.1.0(@types/react@17.0.91)
       oclif:
         specifier: ^4.22.73
         version: 4.22.73(@types/node@25.2.0)
@@ -2275,6 +2281,15 @@ packages:
     peerDependencies:
       ink: '>=3.0.5'
       react: '>=16.8.2'
+
+  ink-testing-library@2.1.0:
+    resolution: {integrity: sha512-7TNlOjJlJXB33vG7yVa+MMO7hCjaC1bCn+zdpSjknWoLbOWMaFdKc7LJvqVkZ0rZv2+akhjXPrcR/dbxissjUw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@types/react': '>=16.8.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   ink-text-input@4.0.3:
     resolution: {integrity: sha512-eQD01ik9ltmNoHmkeQ2t8LszYkv2XwuPSUz3ie/85qer6Ll/j0QSlSaLNl6ENHZakBHdCBVZY04iOXcLLXA0PQ==}
@@ -6510,6 +6525,10 @@ snapshots:
       cli-spinners: 2.9.2
       ink: 3.2.0(@types/react@17.0.91)(react@17.0.2)
       react: 17.0.2
+
+  ink-testing-library@2.1.0(@types/react@17.0.91):
+    optionalDependencies:
+      '@types/react': 17.0.91
 
   ink-text-input@4.0.3(ink@3.2.0(@types/react@17.0.91)(react@17.0.2))(react@17.0.2):
     dependencies:
