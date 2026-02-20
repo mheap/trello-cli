@@ -1,5 +1,11 @@
 # @trello-cli/cache
 
+## 1.0.5
+
+### Patch Changes
+
+- da2e9d5: Fix crash in `trello sync` when processing boards without organization. Boards with `null` organization (personal boards or boards not in a workspace) are now handled correctly instead of throwing `TypeError: Cannot read properties of undefined (reading 'id')`.
+
 ## 1.0.4
 
 ### Patch Changes
