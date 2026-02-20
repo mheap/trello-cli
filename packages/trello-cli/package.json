@@ -28,7 +28,12 @@
     "@trello-cli/config": "workspace:*",
     "chai": "^6.2.2",
     "chrono-node": "^2.7.3",
+    "ink": "3.2.0",
+    "ink-select-input": "4.2.2",
+    "ink-spinner": "4.0.3",
+    "ink-text-input": "4.0.3",
     "json2csv": "6.0.0-alpha.2",
+    "react": "17.0.2",
     "trello.js": "^1.2.4"
   },
   "devDependencies": {
@@ -36,7 +41,9 @@
     "@oclif/test": "^4.1.16",
     "@types/json2csv": "^5.0.3",
     "@types/node": "^25.2.0",
+    "@types/react": "17.0.91",
     "eslint": "^9.27.0",
+    "ink-testing-library": "2.1.0",
     "oclif": "^4.22.73",
     "shx": "^0.4.0",
     "ts-node": "^10.9.1",
