@@ -40,7 +40,9 @@ export default class {
         await this.processLists(board.lists);
         await this.processCards(board.cards);
         await this.processMembers(board.members);
-        await this.processOrg(board.organization);
+        if (board.organization) {
+          await this.processOrg(board.organization);
+        }
       } catch (e) {
         console.error("Error processing board", board);
         throw e;
