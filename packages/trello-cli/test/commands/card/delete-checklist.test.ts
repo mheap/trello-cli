@@ -35,12 +35,10 @@ jest.mock("@trello-cli/cache", () => ({
   })),
 }));
 
-let stdoutSpy: jest.SpyInstance;
-
 beforeEach(() => {
   jest.spyOn(Config.prototype, "getToken").mockResolvedValue("fake_token");
   jest.spyOn(Config.prototype, "getApiKey").mockResolvedValue("fake_api_key");
-  stdoutSpy = jest.spyOn(ux, "stdout").mockImplementation(() => {});
+  jest.spyOn(ux, "stdout").mockImplementation(() => {});
 
   // Reset call counts between tests so assertions stay isolated
   deleteCardChecklist.mockClear();
