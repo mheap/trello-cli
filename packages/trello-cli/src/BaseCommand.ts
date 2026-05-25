@@ -201,6 +201,20 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     await run([this.id!, "--help"]);
   }
 
+  // Resolves a checklist name or ID to its Trello ID.
+  // Skips the API call when the value is already a 24-char hex ID.
+  protected async resolveChecklistId(cardId: string, checklist: string): Promise<string> {
+    if (/^[a-f0-9]{24}$/.test(checklist)) {
+      return checklist;
+    }
+    const checklists = (await this.client.cards.getCardChecklists({ id: cardId })) as any[];
+    const found = checklists.find((cl: any) => cl.name === checklist || cl.id === checklist);
+    if (!found) {
+      this.error(`No checklist found matching "${checklist}"`);
+    }
+    return found.id;
+  }
+
   protected async catch(err: Error & { exitCode?: number }): Promise<any> {
     // add any custom logic to handle errors from the command
     // or simply return the parent class error handling
