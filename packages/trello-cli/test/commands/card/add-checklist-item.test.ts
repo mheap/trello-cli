@@ -170,6 +170,20 @@ describe("card:add-checklist-item", () => {
     });
   });
 
+  // Error handling: invalid --pos value (not top/bottom/number) should error
+  it("errors when --pos is an invalid value", async () => {
+    const { error } = await runCommand([
+      "card:add-checklist-item",
+      "--board", "MyBoard",
+      "--list", "ToDo",
+      "--card", "TestCard",
+      "--checklist", "MyChecklist",
+      "--item", "NewTask",
+      "--pos", "invalid",
+    ]);
+    expect(error?.message).toContain('Invalid --pos value "invalid"');
+  });
+
   // Error handling: checklist name provided but doesn't exist on the card
   it("errors when checklist name not found", async () => {
     const { error } = await runCommand([

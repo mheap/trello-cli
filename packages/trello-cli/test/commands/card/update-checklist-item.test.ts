@@ -248,6 +248,30 @@ describe("card:update-checklist-item", () => {
     });
   });
 
+  // Moving "TaskOne" (first item, idx=0) down: new pos should be midpoint of
+  // TaskTwo and TaskThree, since both exist after the landing slot.
+  // New pos = (TaskTwo.pos + TaskThree.pos) / 2 = (32768 + 49152) / 2 = 40960
+  it("moves first item down by computing midpoint between the two following items", async () => {
+    const { error } = await runCommand([
+      "card:update-checklist-item",
+      "--board", "MyBoard",
+      "--list", "ToDo",
+      "--card", "TestCard",
+      "--checklist", "MyChecklist",
+      "--item", "TaskOne",   // currently at index 0 (pos 16384)
+      "--pos", "down",
+      "--format", "json",
+    ]);
+    expect(error).toBeUndefined();
+    // TaskOne moves down past TaskTwo. TaskTwo and TaskThree bracket the target slot.
+    // New pos = (TaskTwo.pos + TaskThree.pos) / 2 = (32768 + 49152) / 2 = 40960
+    expect(updateCardCheckItem).toHaveBeenCalledWith({
+      id: "card123",
+      idCheckItem: "item1",
+      pos: 40960,
+    });
+  });
+
   // Edge case: cannot move the first item further up
   it("errors when trying to move first item up", async () => {
     const { error } = await runCommand([
@@ -300,6 +324,28 @@ describe("card:update-checklist-item", () => {
     });
   });
 
+  // Skip-fetch optimisation: when both --checklist and --item are raw 24-char hex IDs
+  // and --pos is not a relative move, getCardChecklists must not be called
+  it("skips getCardChecklists when both checklist and item are raw IDs", async () => {
+    const { error } = await runCommand([
+      "card:update-checklist-item",
+      "--board", "MyBoard",
+      "--list", "ToDo",
+      "--card", "TestCard",
+      "--checklist", "aabbccddeeff001122334455",
+      "--item", "aabbccddeeff001122334456",
+      "--pos", "top",
+      "--format", "json",
+    ]);
+    expect(error).toBeUndefined();
+    expect(getCardChecklists).not.toHaveBeenCalled();
+    expect(updateCardCheckItem).toHaveBeenCalledWith({
+      id: "card123",
+      idCheckItem: "aabbccddeeff001122334456",
+      pos: "top",
+    });
+  });
+
   // --- Error handling ---
 
   // Error handling: item name provided but doesn't exist in the specified checklist
@@ -314,6 +360,20 @@ describe("card:update-checklist-item", () => {
       "--name", "Whatever",
     ]);
     expect(error?.message).toContain('No checklist item found with name "NoSuch"');
+  });
+
+  // Error handling: invalid --pos value (not top/bottom/up/down/number) should error
+  it("errors when --pos is an invalid value", async () => {
+    const { error } = await runCommand([
+      "card:update-checklist-item",
+      "--board", "MyBoard",
+      "--list", "ToDo",
+      "--card", "TestCard",
+      "--checklist", "MyChecklist",
+      "--item", "TaskOne",
+      "--pos", "invalid",
+    ]);
+    expect(error?.message).toContain('Invalid --pos value "invalid"');
   });
 
   // Error handling: checklist name provided but doesn't exist on the card
