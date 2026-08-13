@@ -25,6 +25,7 @@ Most commands identify boards, lists, and cards by name, e.g. `--board "My Board
 - `trello card:get-by-id` — Show card details by ID. Flag: `--id`
 - `trello card:assigned-to` — Show cards assigned to a user (default: `me`). Flag: `--user`
 - `trello card:comments` — List comments on a card. Flags: `--board`, `--list`, `--card`
+- `trello card:activity` — List recent activity on a card. Flags: `--board`, `--list`, `--card`, `--filter` (comma-separated action types, e.g. `commentCard,updateCard`)
 - `trello card:attachments` — List attachments on a card. Flags: `--board`, `--list`, `--card`
 - `trello card:checklists` — List checklists on a card. Flags: `--board`, `--list`, `--card`
 
@@ -160,6 +161,10 @@ $ trello card:create --board "Inbox" --list "Inbox" --name "Quick card added fro
 
 ```bash
 $ trello card:comments --board "Inbox" --list "Inbox" --card "Quick card added from command line"
+```
+
+```bash
+$ trello card:activity --board "Inbox" --list "Inbox" --card "Quick card added from command line" --filter "commentCard,updateCard"
 ```
 
 ```bash
