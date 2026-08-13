@@ -1,5 +1,11 @@
 # @trello-cli/cli
 
+## 1.7.0
+
+### Minor Changes
+
+- 016029c: Add card:activity command to list recent activity on a card, with an optional --filter flag for comma-separated action types
+
 ## 1.6.0
 
 ### Minor Changes
