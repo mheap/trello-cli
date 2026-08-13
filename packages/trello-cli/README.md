@@ -14,15 +14,41 @@ If you're an Arch user, it's also available in the [Arch User Repository](https:
 
 You need to create a configuration file with an API key and token to use this CLI. Ensure that you're logged in to Trello and run `trello auth` to get started.
 
-To see a list of available commands, run `trello --help`. Each command contains subcommands e.g.:
+To see a list of available commands, run `trello --help`. Each command contains subcommands e.g. `trello card:list`, `trello card:create`. To see all available subcommands, run `trello <command> --help`.
 
-- `trello card`
-  - `trello card:list`
-  - `trello card:create`
-  - `trello card:delete`
-  - And more
+Most commands identify boards, lists, and cards by name, e.g. `--board "My Board" --list "To Do" --card "My card"`. All commands accept `--format json` or `--format csv` for machine-readable output.
 
-To see all available subcommands, run `trello <command> --help` e.g. `trello card --help`
+### Reading card data
+
+- `trello card:list` — Show all cards in a list. Flags: `--board`, `--list`
+- `trello card:show` — Show card details. Flags: `--board`, `--list`, `--card`
+- `trello card:get-by-id` — Show card details by ID. Flag: `--id`
+- `trello card:assigned-to` — Show cards assigned to a user (default: `me`). Flag: `--user`
+- `trello card:comments` — List comments on a card. Flags: `--board`, `--list`, `--card`
+- `trello card:attachments` — List attachments on a card. Flags: `--board`, `--list`, `--card`
+- `trello card:checklists` — List checklists on a card. Flags: `--board`, `--list`, `--card`
+
+### Creating and updating cards
+
+- `trello card:create` — Create a card. Flags: `--name`, `--board`, `--list`, `--description`, `--due`, `--label` (repeatable), `--position` (`top` or `bottom`)
+- `trello card:update` — Update a card's name, description, or due date. Flags: `--board`, `--list`, `--card`, `--name`, `--description`, `--due`, `--clear-due`. Dates accept natural language, e.g. `--due "next friday"`.
+- `trello card:move` — Move a card to another list. Flags: `--board`, `--list`, `--card`, `--to`, `--position`
+- `trello card:comment` — Add a comment to a card. Flags: `--board`, `--list`, `--card`, `--text`
+- `trello card:attach` — Add an attachment to a card by URL. Flags: `--board`, `--list`, `--card`, `--url`, `--name`
+- `trello card:label` — Add a label to a card. Flags: `--board`, `--list`, `--card`, `--label`
+- `trello card:unlabel` — Remove a label from a card. Flags: `--board`, `--list`, `--card`, `--label`
+- `trello card:assign` — Assign a user to a card. Flags: `--board`, `--list`, `--card`, `--user`
+- `trello card:unassign` — Unassign a user from a card. Flags: `--board`, `--list`, `--card`, `--user`
+- `trello card:checklist` — Add a checklist to a card. Flags: `--board`, `--list`, `--card`, `--name`
+- `trello card:check-item` — Update a checklist item to `complete` or `incomplete`. Flags: `--board`, `--list`, `--card`, `--item`, `--state`, `--checklist`
+- `trello card:archive` — Archive a card. Flags: `--board`, `--list`, `--card`
+- `trello card:delete` — Delete a card. Flags: `--board`, `--list`, `--card`
+
+### Updating boards, lists, and labels
+
+- `trello board:update` — Update a board's name or description. Flags: `--board`, `--name`, `--description`
+- `trello list:rename` — Rename a list. Flags: `--board`, `--list`, `--name`
+- `trello label:update` — Update a label's text, creating it if needed. Flags: `--board`, `--color`, `--name`, `--old-name`
 
 ## Interactive Terminal UI
 
@@ -130,6 +156,18 @@ You will then have the `trello` command available anywhere.
 
 ```bash
 $ trello card:create --board "Inbox" --list "Inbox" --name "Quick card added from command line"
+```
+
+```bash
+$ trello card:comments --board "Inbox" --list "Inbox" --card "Quick card added from command line"
+```
+
+```bash
+$ trello card:attachments --board "Inbox" --list "Inbox" --card "Quick card added from command line"
+```
+
+```bash
+$ trello card:update --board "Inbox" --list "Inbox" --card "Quick card added from command line" --name "New name" --due "next friday"
 ```
 
 ```bash
