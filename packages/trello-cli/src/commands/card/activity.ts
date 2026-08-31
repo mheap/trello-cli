@@ -7,9 +7,13 @@ export default class CardActivity extends BaseCommand<typeof CardActivity> {
   protected defaultOutput = "fancy" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
-    card: Flags.string({ required: true }),
+    id: Flags.string({
+      description: "The Trello card ID (alternative to --board/--list/--card)",
+      exclusive: ["board", "list", "card"],
+    }),
+    board: Flags.string(),
+    list: Flags.string(),
+    card: Flags.string(),
     filter: Flags.string({
       char: "f",
       description:
@@ -18,8 +22,16 @@ export default class CardActivity extends BaseCommand<typeof CardActivity> {
   };
 
   async run(): Promise<void> {
+    const cardId = this.flags.id ?? this.lookups.card;
+
+    if (!cardId) {
+      this.error(
+        "Provide either --id or all of --board, --list, and --card",
+      );
+    }
+
     const actions = await this.client.cards.getCardActions({
-      id: this.lookups.card,
+      id: cardId,
       ...(this.flags.filter ? { filter: this.flags.filter } : {}),
     });
     this.output(actions);

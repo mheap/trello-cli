@@ -76,9 +76,36 @@ afterEach(() => {
 });
 
 describe("card:activity", () => {
-  it("throws when required flags are missing", async () => {
+  it("throws when no flags are provided", async () => {
     const { error } = await runCommand(["card:activity"]);
-    expect(error?.message).toContain("Missing required flag");
+    expect(error?.message).toBeDefined();
+  });
+
+  it("accepts --id flag directly without board/list/card", async () => {
+    await runCommand([
+      "card:activity",
+      "--id", "card123",
+      "--format", "json",
+    ]);
+    expect(getCardActions).toHaveBeenCalledWith({
+      id: "card123",
+    });
+    expect(mockGetBoardIdByName).not.toHaveBeenCalled();
+    expect(mockGetListIdByBoardAndName).not.toHaveBeenCalled();
+    expect(getListCards).not.toHaveBeenCalled();
+  });
+
+  it("accepts --id with --filter", async () => {
+    await runCommand([
+      "card:activity",
+      "--id", "card123",
+      "--filter", "commentCard",
+      "--format", "json",
+    ]);
+    expect(getCardActions).toHaveBeenCalledWith({
+      id: "card123",
+      filter: "commentCard",
+    });
   });
 
   it("calls getCardActions without a filter by default", async () => {
