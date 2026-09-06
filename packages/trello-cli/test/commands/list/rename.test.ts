@@ -50,9 +50,9 @@ afterEach(() => {
 });
 
 describe("list:rename", () => {
-  it("throws when required flags are missing", async () => {
+  it("requires either a list ID or name selectors", async () => {
     const { error } = await runCommand(["list:rename"]);
-    expect(error?.message).toContain("Missing required flag");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("resolves old list name to ID via board/list lookups", async () => {
@@ -78,6 +78,23 @@ describe("list:rename", () => {
     expect(error).toBeUndefined();
     expect(updateList).toHaveBeenCalledTimes(1);
     expect(updateList).toHaveBeenCalledWith({ id: "list123", name: "NewName" });
+  });
+
+  it("uses a list ID without board or list lookups", async () => {
+    const { error } = await runCommand([
+      "list:rename",
+      "--id", "list-direct-id",
+      "--name", "NewName",
+      "--format", "json",
+    ]);
+
+    expect(error).toBeUndefined();
+    expect(updateList).toHaveBeenCalledWith({
+      id: "list-direct-id",
+      name: "NewName",
+    });
+    expect(mockGetBoardIdByName).not.toHaveBeenCalled();
+    expect(mockGetListIdByBoardAndName).not.toHaveBeenCalled();
   });
 
   it("calls cache.sync() after successful rename", async () => {

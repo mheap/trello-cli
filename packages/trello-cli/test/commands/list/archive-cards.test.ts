@@ -52,7 +52,7 @@ afterEach(() => {
 describe("list:archive-cards", () => {
   it("throws when required flags are missing", async () => {
     const { error } = await runCommand(["list:archive-cards"]);
-    expect(error?.message).toContain("Missing required flag");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("calls archiveAllCardsInList with correct list ID", async () => {

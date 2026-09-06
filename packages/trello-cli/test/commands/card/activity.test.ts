@@ -76,9 +76,9 @@ afterEach(() => {
 });
 
 describe("card:activity", () => {
-  it("throws when required flags are missing", async () => {
+  it("requires either a card ID or name selectors", async () => {
     const { error } = await runCommand(["card:activity"]);
-    expect(error?.message).toContain("Missing required flag");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("calls getCardActions without a filter by default", async () => {
@@ -94,6 +94,40 @@ describe("card:activity", () => {
     expect(getCardActions).toHaveBeenCalledWith({
       id: "card123",
     });
+  });
+
+  it("uses a card ID without name lookups", async () => {
+    const { error } = await runCommand([
+      "card:activity",
+      "--id", "card-direct-id",
+      "--format", "json",
+    ]);
+
+    expect(error).toBeUndefined();
+    expect(getCardActions).toHaveBeenCalledWith({ id: "card-direct-id" });
+    expect(getListCards).not.toHaveBeenCalled();
+    expect(mockGetBoardIdByName).not.toHaveBeenCalled();
+    expect(mockGetListIdByBoardAndName).not.toHaveBeenCalled();
+  });
+
+  it("rejects an ID combined with name selectors", async () => {
+    const { error } = await runCommand([
+      "card:activity",
+      "--id", "card-direct-id",
+      "--board", "MyBoard",
+    ]);
+
+    expect(error?.message).toContain("cannot also be provided");
+  });
+
+  it("requires a board when selecting a list by name", async () => {
+    const { error } = await runCommand([
+      "card:activity",
+      "--list", "ToDo",
+      "--card", "TestCard",
+    ]);
+
+    expect(error?.message).toContain("All of the following must be provided");
   });
 
   it("passes the filter flag to getCardActions", async () => {
