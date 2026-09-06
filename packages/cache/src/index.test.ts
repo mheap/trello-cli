@@ -28,6 +28,17 @@ describe("getBoardIdByName", () => {
     expect(id).toBe("board123");
   });
 
+  it("accepts a board ID", async () => {
+    mockGet.mockReturnValue({ id: "board123" });
+    const id = await cache.getBoardIdByName("board123");
+
+    expect(id).toBe("board123");
+    expect(mockGet).toHaveBeenCalledWith(
+      "SELECT id FROM boards WHERE name=? OR id=?",
+      ["board123", "board123"]
+    );
+  });
+
   it("throws when board is not found", async () => {
     mockGet.mockReturnValue(undefined);
     await expect(cache.getBoardIdByName("NonExistent")).rejects.toThrow(
