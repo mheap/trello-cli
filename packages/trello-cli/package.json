@@ -69,7 +69,7 @@
     "lint": "eslint src test",
     "posttest": "yarn lint",
     "prepack": "yarn build && oclif manifest && oclif readme",
-    "test": "jest",
+    "test": "jest --runInBand",
     "version": "oclif readme && git add README.md"
   },
   "engines": {
