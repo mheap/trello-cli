@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useCallback } from "react";
+import React, { createContext, useContext, useReducer } from "react";
 import { View, InputMode, TuiConfig, DEFAULT_TUI_CONFIG } from "../types";
 
 interface NavigationState {
