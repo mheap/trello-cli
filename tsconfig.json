@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "useUnknownInCatchVariables": false,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": ["node", "jest"]
   },
   "exclude": ["node_modules", "packages/*/dist"]
 }
