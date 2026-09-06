@@ -8,8 +8,10 @@
     "strict": true,
     "target": "es2019",
     "esModuleInterop": true,
+    "ignoreDeprecations": "6.0",
     "jsx": "react-jsx",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node", "jest"]
   },
   "include": [
     "src/**/*"

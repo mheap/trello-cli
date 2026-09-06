@@ -2,6 +2,7 @@ packages:
   - packages/*
 
 allowBuilds:
+  '@parcel/watcher': false
   better-sqlite3: true
   unrs-resolver: false
   yarn: false

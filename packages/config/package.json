@@ -19,6 +19,7 @@
   "author": "Michael Heap <m@michaelheap.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest-when": "^3.5.2"
+    "@types/node": "^26.4.1",
+    "@types/jest-when": "^3.5.5"
   }
 }
