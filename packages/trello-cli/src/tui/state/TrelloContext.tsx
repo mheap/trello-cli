@@ -7,9 +7,6 @@ import {
   TrelloCard,
   TrelloLabel,
   TrelloMember,
-  TrelloChecklist,
-  TrelloCheckItem,
-  TrelloAttachment,
 } from "../types";
 
 // Helper to normalize any API card response into our TrelloCard type

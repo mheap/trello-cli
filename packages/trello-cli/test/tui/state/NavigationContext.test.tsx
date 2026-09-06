@@ -20,7 +20,6 @@ function TestHarness({ actions }: { actions: any[] }) {
       actions.forEach((a) => dispatch(a));
       setDispatched(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatched]);
 
   if (!dispatched && actions.length > 0) {

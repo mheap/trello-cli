@@ -15,7 +15,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const { config } = useNavigation();
 
-  useInput((input, key) => {
+  useInput((input, _key) => {
     if (input === "y" || input === "Y") {
       onConfirm();
     } else {

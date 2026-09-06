@@ -51,7 +51,7 @@ afterEach(() => {
 describe("board:members", () => {
   it("throws when --board flag is missing", async () => {
     const { error } = await runCommand(["board:members"]);
-    expect(error?.message).toContain("Missing required flag board");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("calls getBoardMembers with correct board ID", async () => {

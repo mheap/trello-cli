@@ -57,7 +57,7 @@ afterEach(() => {
 describe("card:attachments", () => {
   it("throws when required flags are missing", async () => {
     const { error } = await runCommand(["card:attachments"]);
-    expect(error?.message).toContain("Missing required flag");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("calls getCardAttachments with correct card ID", async () => {

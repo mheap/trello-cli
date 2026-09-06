@@ -1,13 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class CardUnlabel extends BaseCommand<typeof CardUnlabel> {
   static description = "Remove a label from a card";
+  static selectorTarget = "card" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
-    card: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
     label: Flags.string({ required: true }),
   };
 

@@ -55,7 +55,7 @@ afterEach(() => {
 describe("board:update", () => {
   it("throws when --board flag is missing", async () => {
     const { error } = await runCommand(["board:update"]);
-    expect(error?.message).toContain("Missing required flag board");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("warns when no update flags provided", async () => {

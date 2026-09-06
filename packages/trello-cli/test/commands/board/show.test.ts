@@ -53,9 +53,9 @@ afterEach(() => {
 });
 
 describe("board:show", () => {
-  it("throws when --board flag is missing", async () => {
+  it("requires either a board ID or name", async () => {
     const { error } = await runCommand(["board:show"]);
-    expect(error?.message).toContain("Missing required flag board");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("fetches board by ID and outputs JSON", async () => {
@@ -71,6 +71,18 @@ describe("board:show", () => {
     expect(output.description).toBe("Board description");
     expect(output.url).toBe("https://trello.com/b/board123");
     expect(output.closed).toBe(false);
+  });
+
+  it("uses a board ID without a cache lookup", async () => {
+    const { error } = await runCommand([
+      "board:show",
+      "--id", "board-direct-id",
+      "--format", "json",
+    ]);
+
+    expect(error).toBeUndefined();
+    expect(getBoard).toHaveBeenCalledWith({ id: "board-direct-id" });
+    expect(mockGetBoardIdByName).not.toHaveBeenCalled();
   });
 
   it("resolves board name to ID via cache lookup", async () => {

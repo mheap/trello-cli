@@ -1,11 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { boardSelectorFlags } from "../../selectors";
 
 export default class BoardUpdate extends BaseCommand<typeof BoardUpdate> {
   static description = "Update a board";
+  static selectorTarget = "board" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
+    ...boardSelectorFlags(),
     name: Flags.string({ char: "n" }),
     description: Flags.string(),
   };

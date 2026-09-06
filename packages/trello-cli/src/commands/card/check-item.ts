@@ -1,13 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class CardCheckItem extends BaseCommand<typeof CardCheckItem> {
   static description = "Update a checklist item on a card";
+  static selectorTarget = "card" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
-    card: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
     checklist: Flags.string({
       description:
         "Checklist name or ID to narrow item lookup when multiple checklists share the same item name",

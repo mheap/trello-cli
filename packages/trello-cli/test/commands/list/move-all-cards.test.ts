@@ -1,6 +1,5 @@
 import { runCommand } from "@oclif/test";
 import Config from "@trello-cli/config";
-import Cache from "@trello-cli/cache";
 import { ux } from "@oclif/core";
 
 const mockMovedCards = [
@@ -19,9 +18,17 @@ jest.mock("trello.js", () => ({
   })),
 }));
 
-let getBoardIdByName: jest.SpyInstance;
-let getListIdByBoardAndName: jest.SpyInstance;
+const mockGetBoardIdByName = jest.fn();
+const mockGetListIdByBoardAndName = jest.fn();
 let stdoutSpy: jest.SpyInstance;
+
+jest.mock("@trello-cli/cache", () => ({
+  __esModule: true,
+  default: jest.fn().mockImplementation(() => ({
+    getBoardIdByName: mockGetBoardIdByName,
+    getListIdByBoardAndName: mockGetListIdByBoardAndName,
+  })),
+}));
 
 beforeEach(() => {
   jest
@@ -31,17 +38,13 @@ beforeEach(() => {
     .spyOn(Config.prototype, "getApiKey")
     .mockImplementation(() => Promise.resolve("fake_api_key"));
 
-  getBoardIdByName = jest
-    .spyOn(Cache.prototype, "getBoardIdByName")
-    .mockImplementation((name: string) => {
+  mockGetBoardIdByName.mockImplementation((name: string) => {
       if (name === "SourceBoard") return Promise.resolve("source-board-id");
       if (name === "DestBoard") return Promise.resolve("dest-board-id");
       return Promise.resolve(name);
     });
 
-  getListIdByBoardAndName = jest
-    .spyOn(Cache.prototype, "getListIdByBoardAndName")
-    .mockImplementation((boardId: string, name: string) => {
+  mockGetListIdByBoardAndName.mockImplementation((boardId: string, name: string) => {
       if (boardId === "source-board-id" && name === "SourceList")
         return Promise.resolve("source-list-id");
       if (boardId === "dest-board-id" && name === "DestList")
@@ -52,6 +55,8 @@ beforeEach(() => {
   stdoutSpy = jest.spyOn(ux, "stdout").mockImplementation(() => {});
 
   moveAllCardsInList.mockClear();
+  mockGetBoardIdByName.mockClear();
+  mockGetListIdByBoardAndName.mockClear();
 });
 
 afterEach(() => {
@@ -86,9 +91,7 @@ describe("list:move-all-cards", () => {
       "--list=SourceList",
       "--destination-list=DestList",
     ]);
-    expect(error?.message).toContain(
-      "Missing required flag destination-board"
-    );
+    expect(error?.message).toContain("Missing required flag destination-board");
   });
 
   it("throws when --destination-list flag is missing", async () => {
@@ -111,8 +114,8 @@ describe("list:move-all-cards", () => {
       "--format=json",
     ]);
 
-    expect(getBoardIdByName).toHaveBeenCalledWith("DestBoard");
-    expect(getListIdByBoardAndName).toHaveBeenCalledWith(
+    expect(mockGetBoardIdByName).toHaveBeenCalledWith("DestBoard");
+    expect(mockGetListIdByBoardAndName).toHaveBeenCalledWith(
       "dest-board-id",
       "DestList"
     );
@@ -122,6 +125,34 @@ describe("list:move-all-cards", () => {
       idBoard: "dest-board-id",
       idList: "dest-list-id",
     });
+  });
+
+  it("accepts IDs for source and destination selectors", async () => {
+    const { error } = await runCommand([
+      "list:move-all-cards",
+      "--board", "source-board-direct-id",
+      "--list", "source-list-direct-id",
+      "--destination-board", "destination-board-direct-id",
+      "--destination-list", "destination-list-direct-id",
+      "--format", "json",
+    ]);
+
+    expect(error).toBeUndefined();
+    expect(moveAllCardsInList).toHaveBeenCalledWith({
+      id: "source-list-direct-id",
+      idBoard: "destination-board-direct-id",
+      idList: "destination-list-direct-id",
+    });
+    expect(mockGetBoardIdByName).toHaveBeenCalledWith("source-board-direct-id");
+    expect(mockGetBoardIdByName).toHaveBeenCalledWith("destination-board-direct-id");
+    expect(mockGetListIdByBoardAndName).toHaveBeenCalledWith(
+      "source-board-direct-id",
+      "source-list-direct-id"
+    );
+    expect(mockGetListIdByBoardAndName).toHaveBeenCalledWith(
+      "destination-board-direct-id",
+      "destination-list-direct-id"
+    );
   });
 
   it("outputs JSON with mapped card data", async () => {

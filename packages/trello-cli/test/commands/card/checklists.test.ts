@@ -63,7 +63,7 @@ afterEach(() => {
 describe("card:checklists", () => {
   it("throws when required flags are missing", async () => {
     const { error } = await runCommand(["card:checklists"]);
-    expect(error?.message).toContain("Missing required flag");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("calls getCardChecklists with correct card ID", async () => {

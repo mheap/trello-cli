@@ -8,7 +8,7 @@ export default tseslint.config(
     ignores: ["dist/**", "node_modules/**", "bin/**"],
   },
   {
-    files: ["src/**/*.ts"],
+    files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -21,7 +21,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["test/**/*.ts"],
+    files: ["test/**/*.{ts,tsx}"],
     languageOptions: {
       globals: {
         jest: "readonly",
@@ -35,6 +35,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
   {

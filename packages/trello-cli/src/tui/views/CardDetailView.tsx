@@ -25,8 +25,6 @@ export function CardDetailView() {
   const {
     state: trelloState,
     archiveCard,
-    moveCard,
-    updateCard,
     loadCardDetails,
   } = useTrello();
   const { state: navState, dispatch, config } = useNavigation();

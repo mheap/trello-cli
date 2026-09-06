@@ -46,7 +46,10 @@ export default class {
   }
 
   async getBoardIdByName(name: string): Promise<string> {
-    const r = this.db.get("SELECT id FROM boards WHERE name=?", [name]);
+    const r = this.db.get("SELECT id FROM boards WHERE name=? OR id=?", [
+      name,
+      name,
+    ]);
     if (!r) {
       throw new Error(`Board [${name}] not found`);
     }

@@ -1,13 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class Unassign extends BaseCommand<typeof Unassign> {
   static description = "Unassign a card";
+  static selectorTarget = "card" as const;
 
   static flags = {
-    card: Flags.string({ required: true }),
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
     user: Flags.string({ required: true }),
   };
 

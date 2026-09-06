@@ -1,13 +1,14 @@
 import { BaseCommand } from "../../BaseCommand";
-import { Flags } from "@oclif/core";
+import { boardSelectorFlags } from "../../selectors";
 
 export default class BoardShow extends BaseCommand<typeof BoardShow> {
   static description = "Show board details";
+  static selectorTarget = "board" as const;
 
   protected defaultOutput = "fancy" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
+    ...boardSelectorFlags(),
   };
 
   async run(): Promise<void> {

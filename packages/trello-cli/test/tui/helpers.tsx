@@ -1,4 +1,3 @@
-import React from "react";
 import {
   TuiConfig,
   DEFAULT_TUI_CONFIG,

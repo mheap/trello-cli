@@ -1,13 +1,12 @@
 import { BaseCommand } from "../../BaseCommand";
-import { Flags } from "@oclif/core";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class Archive extends BaseCommand<typeof Archive> {
   static description = "Archive a card";
+  static selectorTarget = "card" as const;
 
   static flags = {
-    card: Flags.string({ required: true }),
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
   };
 
   async run(): Promise<void> {

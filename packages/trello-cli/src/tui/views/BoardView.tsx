@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { exec } from "child_process";
+import * as chrono from "chrono-node";
 import { Box, Text, useInput, useApp, Key } from "ink";
 import TextInput from "ink-text-input";
 import { useTrello } from "../state/TrelloContext";
@@ -755,7 +756,6 @@ export function BoardView() {
     async (dueStr: string) => {
       if (selectedCard) {
         try {
-          const chrono = require("chrono-node");
           let due: string | null = null;
           if (dueStr.trim().toLowerCase() === "none" || dueStr.trim() === "") {
             due = "";

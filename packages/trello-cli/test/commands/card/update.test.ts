@@ -69,7 +69,7 @@ async function run(args: string[]) {
 describe("card:update", () => {
   it("throws when required flags are missing", async () => {
     const { error } = await runCommand(["card:update"]);
-    expect(error?.message).toContain("Missing required flag");
+    expect(error?.message).toContain("Exactly one of the following must be provided");
   });
 
   it("updates card name", async () => {

@@ -12,7 +12,7 @@ interface CardGroup {
 }
 
 export function MyCardsView() {
-  const { loadAssignedCards, state: trelloState, cache } = useTrello();
+  const { loadAssignedCards, cache } = useTrello();
   const { dispatch, config } = useNavigation();
   const [cards, setCards] = useState<TrelloCard[]>([]);
   const [loading, setLoading] = useState(true);

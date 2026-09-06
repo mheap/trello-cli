@@ -1,14 +1,14 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
 import * as chrono from "chrono-node";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class Update extends BaseCommand<typeof Update> {
   static description = "Update a card";
+  static selectorTarget = "card" as const;
 
   static flags = {
-    card: Flags.string({ required: true }),
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
     name: Flags.string({ char: "n", description: "New name for the card" }),
     description: Flags.string(),
     due: Flags.string(),

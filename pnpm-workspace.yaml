@@ -1,6 +1,11 @@
 packages:
   - packages/*
 
+allowBuilds:
+  better-sqlite3: true
+  unrs-resolver: false
+  yarn: false
+
 onlyBuiltDependencies:
   - aws-sdk
   - better-sqlite3
