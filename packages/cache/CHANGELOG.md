@@ -1,5 +1,15 @@
 # @trello-cli/cache
 
+## 1.1.0
+
+### Minor Changes
+
+- d0ae8b7: Allow board and list selectors to accept cached Trello IDs alongside names, and add direct ID selectors for board, list, and card commands.
+
+### Patch Changes
+
+- 4764ca5: Update runtime dependencies and pnpm tooling.
+
 ## 1.0.5
 
 ### Patch Changes
