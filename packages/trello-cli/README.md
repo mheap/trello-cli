@@ -18,10 +18,22 @@ To see a list of available commands, run `trello --help`. Each command contains 
 
 Most commands identify boards, lists, and cards by name, e.g. `--board "My Board" --list "To Do" --card "My card"`. All commands accept `--format json` or `--format csv` for machine-readable output.
 
+### Selecting resources
+
+Commands that operate on one board, list, or card accept either its direct `--id` or its name-based selector. Do not combine the two forms.
+
+- Board target: `--id BOARD_ID` or `--board "My Board"`
+- List target: `--id LIST_ID` or `--board "My Board" --list "To Do"`
+- Card target: `--id CARD_ID` or `--board "My Board" --list "To Do" --card "My card"`
+
+`--board` and `--list` accept either a name or cached Trello ID. For commands that create or list child resources, use these parent selectors: `list:create --board BOARD_ID`, `list:list --board BOARD_ID`, and `card:create` / `card:list --board BOARD_ID --list LIST_ID`. `list:archive` accepts both list selector forms.
+
+`list:move-all-cards` uses `--board --list --destination-board --destination-list`; each accepts a name or cached Trello ID. `card:move --id CARD_ID --to DESTINATION_LIST_ID` moves a card directly by IDs.
+
 ### Reading card data
 
-- `trello card:list` — Show all cards in a list. Flags: `--board`, `--list`
-- `trello card:show` — Show card details. Flags: `--board`, `--list`, `--card`
+- `trello card:list` — Show all cards in a list. Selectors: `--board`, `--list`
+- `trello card:show` — Show card details. Selector: `--id` or `--board`, `--list`, `--card`
 - `trello card:get-by-id` — Show card details by ID. Flag: `--id`
 - `trello card:assigned-to` — Show cards assigned to a user (default: `me`). Flag: `--user`
 - `trello card:comments` — List comments on a card. Flags: `--board`, `--list`, `--card`
@@ -32,8 +44,8 @@ Most commands identify boards, lists, and cards by name, e.g. `--board "My Board
 ### Creating and updating cards
 
 - `trello card:create` — Create a card. Flags: `--name`, `--board`, `--list`, `--description`, `--due`, `--label` (repeatable), `--position` (`top` or `bottom`)
-- `trello card:update` — Update a card's name, description, or due date. Flags: `--board`, `--list`, `--card`, `--name`, `--description`, `--due`, `--clear-due`. Dates accept natural language, e.g. `--due "next friday"`.
-- `trello card:move` — Move a card to another list. Flags: `--board`, `--list`, `--card`, `--to`, `--position`
+- `trello card:update` — Update a card's name, description, or due date. Selector: `--id` or `--board`, `--list`, `--card`. Flags: `--name`, `--description`, `--due`, `--clear-due`. Dates accept natural language, e.g. `--due "next friday"`.
+- `trello card:move` — Move a card to another list. Selector: `--id` or `--board`, `--list`, `--card`. Destination: `--to`. Flag: `--position`
 - `trello card:comment` — Add a comment to a card. Flags: `--board`, `--list`, `--card`, `--text`
 - `trello card:attach` — Add an attachment to a card by URL. Flags: `--board`, `--list`, `--card`, `--url`, `--name`
 - `trello card:label` — Add a label to a card. Flags: `--board`, `--list`, `--card`, `--label`
@@ -47,8 +59,8 @@ Most commands identify boards, lists, and cards by name, e.g. `--board "My Board
 
 ### Updating boards, lists, and labels
 
-- `trello board:update` — Update a board's name or description. Flags: `--board`, `--name`, `--description`
-- `trello list:rename` — Rename a list. Flags: `--board`, `--list`, `--name`
+- `trello board:update` — Update a board's name or description. Selector: `--id` or `--board`. Flags: `--name`, `--description`
+- `trello list:rename` — Rename a list. Selector: `--id` or `--board`, `--list`. Flag: `--name`
 - `trello label:update` — Update a label's text, creating it if needed. Flags: `--board`, `--color`, `--name`, `--old-name`
 
 ## Interactive Terminal UI
