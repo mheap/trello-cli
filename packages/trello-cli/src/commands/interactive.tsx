@@ -3,6 +3,7 @@ import Config from "@trello-cli/config";
 import Cache from "@trello-cli/cache";
 import * as path from "path";
 import { TrelloClient } from "trello.js";
+import { sendParamsInBody } from "../paramsInBody";
 import { render } from "ink";
 import React from "react";
 import { App } from "../tui/App";
@@ -58,10 +59,12 @@ export default class Interactive extends Command {
       return;
     }
 
-    const client = new TrelloClient({
-      key: appKey,
-      token: token,
-    });
+    const client = sendParamsInBody(
+      new TrelloClient({
+        key: appKey,
+        token: token,
+      })
+    );
 
     const cache = new Cache(
       path.join(configDir, profile),

@@ -3,6 +3,7 @@ import Config from "@trello-cli/config";
 import Cache from "@trello-cli/cache";
 import * as path from "path";
 import { TrelloClient } from "trello.js";
+import { sendParamsInBody } from "./paramsInBody";
 import { parse } from "json2csv";
 import { run } from "./index";
 
@@ -73,10 +74,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       const token = await this.trelloConfig.getToken();
       const appKey = await this.trelloConfig.getApiKey();
 
-      this.client = new TrelloClient({
-        key: appKey,
-        token: token,
-      });
+      this.client = sendParamsInBody(
+        new TrelloClient({
+          key: appKey,
+          token: token,
+        })
+      );
 
       this.cache = new Cache(
         path.join(this.configDir, this.profile),
