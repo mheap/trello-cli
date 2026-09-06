@@ -1,13 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { boardReferenceFlags } from "../../selectors";
 
 export default class ListCreate extends BaseCommand<typeof ListCreate> {
   static description = "Create a new list";
-
   static flags = {
+    ...boardReferenceFlags(),
     name: Flags.string({ char: "n", required: true }),
     position: Flags.option({ options: ["top", "bottom"] as const, default: "top" })(),
-    board: Flags.string({ required: true }),
   };
 
   async run(): Promise<void> {

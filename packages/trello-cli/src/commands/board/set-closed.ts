@@ -1,11 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { boardSelectorFlags } from "../../selectors";
 
 export default class BoardSetClosed extends BaseCommand<typeof BoardSetClosed> {
   static description = "Change a board's 'closed' status";
+  static selectorTarget = "board" as const;
 
   static flags = {
-    board: Flags.string({ required: true, description: "The board's ID" }),
+    ...boardSelectorFlags(),
     open: Flags.boolean({
       default: false,
       description: "Set the board status to `closed: false`",

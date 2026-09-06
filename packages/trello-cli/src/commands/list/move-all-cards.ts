@@ -1,5 +1,6 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { listReferenceFlags } from "../../selectors";
 
 export default class ListMoveAllCards extends BaseCommand<typeof ListMoveAllCards> {
   static description = "Move all cards from one list to another";
@@ -7,21 +8,15 @@ export default class ListMoveAllCards extends BaseCommand<typeof ListMoveAllCard
   protected defaultOutput = "fancy" as const;
 
   static flags = {
-    board: Flags.string({
-      required: true,
-      description: "The board containing the source list",
-    }),
-    list: Flags.string({
-      required: true,
-      description: "The source list containing the cards to move",
-    }),
+    ...listReferenceFlags(),
     "destination-board": Flags.string({
       required: true,
-      description: "The destination board",
+      description: "The destination board name or ID",
     }),
     "destination-list": Flags.string({
       required: true,
-      description: "The destination list",
+      description: "The destination list name or ID",
+      dependsOn: ["destination-board"],
     }),
   };
 

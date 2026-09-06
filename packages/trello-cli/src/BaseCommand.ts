@@ -6,6 +6,8 @@ import { TrelloClient } from "trello.js";
 import { parse } from "json2csv";
 import { run } from "./index";
 
+type SelectorTarget = "board" | "list" | "card";
+
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["baseFlags"] & T["flags"]
 >;
@@ -19,6 +21,7 @@ type Lookup = {
 };
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {
+  static selectorTarget?: SelectorTarget;
   // define flags that can be inherited by any command that extends BaseCommand
   static baseFlags = {
     format: Flags.option({
@@ -81,6 +84,14 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         token
       );
 
+      const target = (this.ctor as typeof BaseCommand).selectorTarget;
+      const id = (this.flags as { id?: string }).id;
+
+      // A direct ID identifies the command's primary resource without cache lookup.
+      if (id && target) {
+        this.lookups[target] = id;
+      }
+
       // Auto-translate any `board` and `list` entries in this.flags
       if (this.flags.board) {
         this.lookups.board = await this.cache.getBoardIdByName(
@@ -119,7 +130,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         }
 
         this.lookups.card = cards[0].id;
-      } else {
+      } else if (!(id && target === "card")) {
         this.lookups.card = this.flags.card;
       }
     } catch (e: any) {

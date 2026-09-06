@@ -1,13 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class CardLabel extends BaseCommand<typeof CardLabel> {
   static description = "Add a label to a card";
+  static selectorTarget = "card" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
-    card: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
     label: Flags.string({ required: true }),
   };
 

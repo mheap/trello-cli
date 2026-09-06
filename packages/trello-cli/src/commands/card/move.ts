@@ -1,22 +1,27 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class Move extends BaseCommand<typeof Move> {
   static description = "Move a card";
+  static selectorTarget = "card" as const;
 
   static flags = {
-    card: Flags.string({ required: true }),
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
-    to: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
+    to: Flags.string({
+      required: true,
+      description: "The destination list name or ID",
+    }),
     position: Flags.option({ options: ["top", "bottom"] as const, default: "bottom" })(),
   };
 
   async run(): Promise<void> {
-    const to = await this.cache.getListIdByBoardAndName(
-      this.lookups.board,
-      this.flags.to
-    );
+    const to = this.flags.board
+      ? await this.cache.getListIdByBoardAndName(
+        this.lookups.board,
+        this.flags.to
+      )
+      : this.flags.to;
 
     const card = await this.client.cards.updateCard({
       id: this.lookups.card,

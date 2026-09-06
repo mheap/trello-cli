@@ -1,14 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
 import * as chrono from "chrono-node";
+import { listReferenceFlags } from "../../selectors";
 
 export default class Create extends BaseCommand<typeof Create> {
   static description = "Create a card";
-
   static flags = {
+    ...listReferenceFlags(),
     name: Flags.string({ char: "n", required: true }),
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
     position: Flags.option({ options: ["top", "bottom"] as const, default: "bottom" })(),
     label: Flags.string({ multiple: true }),
     due: Flags.string(),

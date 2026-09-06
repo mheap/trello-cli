@@ -1,11 +1,12 @@
 import { BaseCommand } from "../../BaseCommand";
-import { Flags } from "@oclif/core";
+import { boardSelectorFlags } from "../../selectors";
 
 export default class BoardDelete extends BaseCommand<typeof BoardDelete> {
   static description = "Delete a board";
+  static selectorTarget = "board" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
+    ...boardSelectorFlags(),
   };
 
   async run(): Promise<void> {

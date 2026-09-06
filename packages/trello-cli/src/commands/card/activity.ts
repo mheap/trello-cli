@@ -1,15 +1,15 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { cardSelectorFlags } from "../../selectors";
 
 export default class CardActivity extends BaseCommand<typeof CardActivity> {
   static description = "Show recent activity on a card";
+  static selectorTarget = "card" as const;
 
   protected defaultOutput = "fancy" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
-    card: Flags.string({ required: true }),
+    ...cardSelectorFlags(),
     filter: Flags.string({
       char: "f",
       description:

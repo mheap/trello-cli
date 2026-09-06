@@ -1,12 +1,13 @@
 import { BaseCommand } from "../../BaseCommand";
 import { Flags } from "@oclif/core";
+import { listSelectorFlags } from "../../selectors";
 
 export default class ListRename extends BaseCommand<typeof ListRename> {
   static description = "Rename a list";
+  static selectorTarget = "list" as const;
 
   static flags = {
-    board: Flags.string({ required: true }),
-    list: Flags.string({ required: true }),
+    ...listSelectorFlags(),
     name: Flags.string({ char: "n", required: true }),
   };
 
