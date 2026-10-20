@@ -1,7 +1,7 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
-const { stripVTControlCharacters } = require("node:util");
-import { CardDetailView } from "../../../src/tui/views/CardDetailView";
+import { stripVTControlCharacters } from "node:util";
 import {
   createMockNavContext,
   createMockTrelloContext,
@@ -13,16 +13,17 @@ import {
 } from "../helpers";
 import { TrelloChecklist, TrelloAttachment } from "../../../src/tui/types";
 
-jest.mock("../../../src/tui/state/NavigationContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/NavigationContext", () => ({
   useNavigation: jest.fn(),
 }));
 
-jest.mock("../../../src/tui/state/TrelloContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/TrelloContext", () => ({
   useTrello: jest.fn(),
 }));
 
-import { useNavigation } from "../../../src/tui/state/NavigationContext";
-import { useTrello } from "../../../src/tui/state/TrelloContext";
+const { CardDetailView } = await import("../../../src/tui/views/CardDetailView");
+const { useNavigation } = await import("../../../src/tui/state/NavigationContext");
+const { useTrello } = await import("../../../src/tui/state/TrelloContext");
 
 const mockUseNavigation = useNavigation as jest.MockedFunction<typeof useNavigation>;
 const mockUseTrello = useTrello as jest.MockedFunction<typeof useTrello>;
@@ -290,6 +291,8 @@ describe("CardDetailView", () => {
       const inst = render(<CardDetailView />);
       await flushEffects();
       inst.stdin.write("\u001B");
+      // Ink buffers standalone Escape to distinguish it from escape sequences.
+      await new Promise((resolve) => setTimeout(resolve, 30));
       expect(navDispatch).toHaveBeenCalledWith(
         expect.objectContaining({ type: "SET_VIEW", view: "board", preserveSelection: true })
       );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text } from "ink";
-import { TrelloCard } from "../types";
-import { useNavigation } from "../state/NavigationContext";
+import { TrelloCard } from "../types.js";
+import { useNavigation } from "../state/NavigationContext.js";
 
 interface CardProps {
   card: TrelloCard;

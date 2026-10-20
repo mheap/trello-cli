@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text, useInput } from "ink";
-import { useTrello } from "../state/TrelloContext";
-import { useNavigation } from "../state/NavigationContext";
-import { TrelloCard } from "../types";
+import { useTrello } from "../state/TrelloContext.js";
+import { useNavigation } from "../state/NavigationContext.js";
+import { TrelloCard } from "../types.js";
 import Spinner from "ink-spinner";
 
 interface CardGroup {

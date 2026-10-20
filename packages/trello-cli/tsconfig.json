@@ -2,13 +2,13 @@
   "compilerOptions": {
     "declaration": true,
     "importHelpers": true,
-    "module": "commonjs",
+    "module": "NodeNext",
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,
     "target": "es2019",
     "esModuleInterop": true,
-    "ignoreDeprecations": "6.0",
+    "isolatedModules": true,
     "jsx": "react-jsx",
     "skipLibCheck": true,
     "types": ["node", "jest"]

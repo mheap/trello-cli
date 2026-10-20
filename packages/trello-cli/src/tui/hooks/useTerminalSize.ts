@@ -7,7 +7,8 @@ interface TerminalSize {
 }
 
 export function useTerminalSize(): TerminalSize {
-  const { stdout } = useStdout();
+  const { stdout: stream } = useStdout();
+  const stdout = stream as NodeJS.WriteStream;
 
   const [size, setSize] = useState<TerminalSize>({
     columns: stdout?.columns || 80,

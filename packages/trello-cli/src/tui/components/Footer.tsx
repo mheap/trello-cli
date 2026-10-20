@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Text } from "ink";
-import { useNavigation } from "../state/NavigationContext";
+import { useNavigation } from "../state/NavigationContext.js";
 
 interface Shortcut {
   key: string;

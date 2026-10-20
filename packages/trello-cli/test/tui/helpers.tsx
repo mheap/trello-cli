@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import {
   TuiConfig,
   DEFAULT_TUI_CONFIG,

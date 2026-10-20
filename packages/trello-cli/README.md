@@ -2,7 +2,7 @@
 
 ## Installation
 
-> Trello CLI requires node 18+
+> Trello CLI requires node 22+
 
 ```bash
 npm install -g trello-cli

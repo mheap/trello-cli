@@ -1,14 +1,15 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
-const { stripVTControlCharacters } = require("node:util");
-import { ListColumn } from "../../../src/tui/components/ListColumn";
+import { stripVTControlCharacters } from "node:util";
 import { createMockNavContext, makeList, makeCard } from "../helpers";
 
-jest.mock("../../../src/tui/state/NavigationContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/NavigationContext", () => ({
   useNavigation: jest.fn(),
 }));
 
-import { useNavigation } from "../../../src/tui/state/NavigationContext";
+const { ListColumn } = await import("../../../src/tui/components/ListColumn");
+const { useNavigation } = await import("../../../src/tui/state/NavigationContext");
 const mockUseNavigation = useNavigation as jest.MockedFunction<typeof useNavigation>;
 
 describe("ListColumn", () => {

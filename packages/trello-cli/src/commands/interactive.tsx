@@ -4,10 +4,7 @@ import Cache from "@trello-cli/cache";
 import * as path from "path";
 import { TrelloClient } from "trello.js";
 import { sendParamsInBody } from "../paramsInBody";
-import { render } from "ink";
 import React from "react";
-import { App } from "../tui/App";
-import { loadTuiConfig } from "../tui/config";
 
 export default class Interactive extends Command {
   static description = "Launch interactive terminal UI for Trello";
@@ -76,6 +73,11 @@ export default class Interactive extends Command {
     await cache.bootstrap();
 
     // Load TUI config
+    const [{ render }, { App }, { loadTuiConfig }] = await Promise.all([
+      import("ink"),
+      import("../tui/App.js"),
+      import("../tui/config.js"),
+    ]);
     const tuiConfig = loadTuiConfig(configDir);
 
     // Apply mouse flag override

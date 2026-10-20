@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Text, useInput } from "ink";
-import { useNavigation } from "../state/NavigationContext";
+import { useNavigation } from "../state/NavigationContext.js";
 
 interface ConfirmDialogProps {
   message: string;

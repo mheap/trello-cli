@@ -1,13 +1,14 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
-import { ConfirmDialog } from "../../../src/tui/components/ConfirmDialog";
 import { createMockNavContext } from "../helpers";
 
-jest.mock("../../../src/tui/state/NavigationContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/NavigationContext", () => ({
   useNavigation: jest.fn(),
 }));
 
-import { useNavigation } from "../../../src/tui/state/NavigationContext";
+const { ConfirmDialog } = await import("../../../src/tui/components/ConfirmDialog");
+const { useNavigation } = await import("../../../src/tui/state/NavigationContext");
 const mockUseNavigation = useNavigation as jest.MockedFunction<typeof useNavigation>;
 
 // Helper to flush useEffect — React 17 scheduler uses MessageChannel/setTimeout

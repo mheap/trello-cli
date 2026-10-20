@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { TuiConfig, DEFAULT_TUI_CONFIG } from "./types";
+import { TuiConfig, DEFAULT_TUI_CONFIG } from "./types.js";
 
 export function loadTuiConfig(configDir: string): TuiConfig {
   const configPath = path.join(configDir, "tui.json");
