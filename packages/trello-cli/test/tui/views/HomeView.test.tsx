@@ -1,45 +1,24 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
-const { stripVTControlCharacters } = require("node:util");
-import { HomeView } from "../../../src/tui/views/HomeView";
+import { stripVTControlCharacters } from "node:util";
 import {
   createMockNavContext,
   createMockTrelloContext,
   makeBoard,
 } from "../helpers";
 
-jest.mock("../../../src/tui/state/NavigationContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/NavigationContext", () => ({
   useNavigation: jest.fn(),
 }));
 
-jest.mock("../../../src/tui/state/TrelloContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/TrelloContext", () => ({
   useTrello: jest.fn(),
 }));
 
-jest.mock("ink", () => {
-  const actual = jest.requireActual("ink");
-  return {
-    ...actual,
-    useApp: () => ({ exit: jest.fn() }),
-  };
-});
-
-jest.mock("ink-spinner", () => {
-  return function Spinner() {
-    return "⠋";
-  };
-});
-
-jest.mock("ink-text-input", () => {
-  return function TextInput({ value }: { value: string }) {
-    const React = require("react");
-    const { Text } = require("ink");
-    return React.createElement(Text, null, value || "");
-  };
-});
-
-import { useNavigation } from "../../../src/tui/state/NavigationContext";
-import { useTrello } from "../../../src/tui/state/TrelloContext";
+const { HomeView } = await import("../../../src/tui/views/HomeView");
+const { useNavigation } = await import("../../../src/tui/state/NavigationContext");
+const { useTrello } = await import("../../../src/tui/state/TrelloContext");
 
 const mockUseNavigation = useNavigation as jest.MockedFunction<typeof useNavigation>;
 const mockUseTrello = useTrello as jest.MockedFunction<typeof useTrello>;

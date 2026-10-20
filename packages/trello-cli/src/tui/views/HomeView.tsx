@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Box, Text, useInput, useApp } from "ink";
 import TextInput from "ink-text-input";
-import { useTrello } from "../state/TrelloContext";
-import { useNavigation } from "../state/NavigationContext";
+import { useTrello } from "../state/TrelloContext.js";
+import { useNavigation } from "../state/NavigationContext.js";
 import Spinner from "ink-spinner";
 
 export function HomeView() {

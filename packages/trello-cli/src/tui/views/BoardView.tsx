@@ -3,13 +3,13 @@ import { exec } from "child_process";
 import * as chrono from "chrono-node";
 import { Box, Text, useInput, useApp, Key } from "ink";
 import TextInput from "ink-text-input";
-import { useTrello } from "../state/TrelloContext";
-import { useNavigation } from "../state/NavigationContext";
-import { ListColumn } from "../components/ListColumn";
-import { ConfirmDialog } from "../components/ConfirmDialog";
-import { HelpScreen } from "../components/HelpScreen";
-import { MultiLineInput } from "../components/MultiLineInput";
-import { useTerminalSize, getListColumns, getListWidth } from "../hooks/useTerminalSize";
+import { useTrello } from "../state/TrelloContext.js";
+import { useNavigation } from "../state/NavigationContext.js";
+import { ListColumn } from "../components/ListColumn.js";
+import { ConfirmDialog } from "../components/ConfirmDialog.js";
+import { HelpScreen } from "../components/HelpScreen.js";
+import { MultiLineInput } from "../components/MultiLineInput.js";
+import { useTerminalSize, getListColumns, getListWidth } from "../hooks/useTerminalSize.js";
 import Spinner from "ink-spinner";
 
 // Key sequence for checklist items: 1-9, then a-h (skip i), j-z

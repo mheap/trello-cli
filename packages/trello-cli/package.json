@@ -28,12 +28,12 @@
     "@trello-cli/config": "workspace:*",
     "chai": "^6.2.2",
     "chrono-node": "^2.10.1",
-    "ink": "3.2.0",
-    "ink-select-input": "4.2.2",
-    "ink-spinner": "4.0.3",
-    "ink-text-input": "4.0.3",
+    "ink": "8.0.0",
+    "ink-select-input": "6.2.0",
+    "ink-spinner": "5.0.0",
+    "ink-text-input": "6.0.0",
     "json2csv": "6.0.0-alpha.2",
-    "react": "17.0.2",
+    "react": "19.3.1",
     "trello.js": "^1.2.8"
   },
   "devDependencies": {
@@ -42,9 +42,9 @@
     "@types/jest": "^30.0.0",
     "@types/json2csv": "^5.0.7",
     "@types/node": "^26.4.1",
-    "@types/react": "17.0.91",
+    "@types/react": "19.3.0",
     "eslint": "^9.39.5",
-    "ink-testing-library": "2.1.0",
+    "ink-testing-library": "4.0.0",
     "oclif": "^4.24.0",
     "shx": "^0.4.0",
     "ts-node": "^10.9.2",
@@ -65,16 +65,16 @@
     "topics": {}
   },
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b",
-    "dev": "tsc -b --watch",
+    "build": "shx rm -rf dist && tsc -b && shx cp src/tui/package.json dist/tui/package.json",
+    "dev": "shx mkdir -p dist/tui && shx cp src/tui/package.json dist/tui/package.json && tsc -b --watch",
     "lint": "eslint src test",
     "posttest": "pnpm lint",
     "prepack": "pnpm build && oclif manifest && oclif readme",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --config jest.config.js && node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --runInBand --config jest.tui.config.js",
     "version": "oclif readme && git add README.md"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "bugs": "https://github.com/mheap/trello-cli/issues",
   "keywords": [

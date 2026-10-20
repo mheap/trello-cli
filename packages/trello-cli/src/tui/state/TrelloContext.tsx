@@ -1,13 +1,15 @@
 import React, { createContext, useContext, useReducer, useCallback } from "react";
 import { TrelloClient } from "trello.js";
-import Cache from "@trello-cli/cache";
+import type CacheModule from "@trello-cli/cache";
 import {
   TrelloBoard,
   TrelloList,
   TrelloCard,
   TrelloLabel,
   TrelloMember,
-} from "../types";
+} from "../types.js";
+
+type TrelloCache = InstanceType<typeof CacheModule.default>;
 
 // Helper to normalize any API card response into our TrelloCard type
 function toTrelloCard(c: any): TrelloCard {
@@ -158,7 +160,7 @@ interface TrelloContextType {
   state: TrelloState;
   dispatch: React.Dispatch<TrelloAction>;
   client: TrelloClient;
-  cache: Cache;
+  cache: TrelloCache;
   loadBoards: () => Promise<void>;
   loadBoard: (board: TrelloBoard) => Promise<void>;
   createCard: (listId: string, name: string, opts?: { desc?: string; due?: string; position?: "top" | "bottom" }) => Promise<TrelloCard>;
@@ -192,7 +194,7 @@ export function TrelloProvider({
 }: {
   children: React.ReactNode;
   client: TrelloClient;
-  cache: Cache;
+  cache: TrelloCache;
 }) {
   const [state, dispatch] = useReducer(trelloReducer, initialState);
 

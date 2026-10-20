@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
 import { Box, Text } from "ink";
 import {

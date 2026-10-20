@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text } from "ink";
-import { useNavigation } from "../state/NavigationContext";
-import { useTrello } from "../state/TrelloContext";
+import { useNavigation } from "../state/NavigationContext.js";
+import { useTrello } from "../state/TrelloContext.js";
 
 export function Header() {
   const { state: navState, config } = useNavigation();

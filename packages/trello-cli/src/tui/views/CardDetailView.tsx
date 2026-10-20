@@ -1,9 +1,9 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { exec } from "child_process";
 import { Box, Text, useInput } from "ink";
-import { useTrello } from "../state/TrelloContext";
-import { useNavigation } from "../state/NavigationContext";
-import { TrelloCard } from "../types";
+import { useTrello } from "../state/TrelloContext.js";
+import { useNavigation } from "../state/NavigationContext.js";
+import { TrelloCard } from "../types.js";
 
 const CARD_DETAIL_HELP = [
   { key: "e", desc: "Edit card name" },

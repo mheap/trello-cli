@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useTrello } from "../state/TrelloContext";
+import { useTrello } from "../state/TrelloContext.js";
 
 export function usePeriodicSync(intervalMs: number) {
   const { syncCache, state } = useTrello();

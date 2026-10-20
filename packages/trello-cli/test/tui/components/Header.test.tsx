@@ -1,18 +1,19 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
-const { stripVTControlCharacters } = require("node:util");
-import { Header } from "../../../src/tui/components/Header";
+import { stripVTControlCharacters } from "node:util";
 import { createMockNavContext, createMockTrelloContext, makeBoard, makeList, makeCard } from "../helpers";
 
-jest.mock("../../../src/tui/state/NavigationContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/NavigationContext", () => ({
   useNavigation: jest.fn(),
 }));
-jest.mock("../../../src/tui/state/TrelloContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/TrelloContext", () => ({
   useTrello: jest.fn(),
 }));
 
-import { useNavigation } from "../../../src/tui/state/NavigationContext";
-import { useTrello } from "../../../src/tui/state/TrelloContext";
+const { Header } = await import("../../../src/tui/components/Header");
+const { useNavigation } = await import("../../../src/tui/state/NavigationContext");
+const { useTrello } = await import("../../../src/tui/state/TrelloContext");
 const mockUseNavigation = useNavigation as jest.MockedFunction<typeof useNavigation>;
 const mockUseTrello = useTrello as jest.MockedFunction<typeof useTrello>;
 

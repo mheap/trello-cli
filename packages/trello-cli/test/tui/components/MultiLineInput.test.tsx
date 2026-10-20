@@ -1,4 +1,5 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
 import { MultiLineInput } from "../../../src/tui/components/MultiLineInput";
 
@@ -65,6 +66,8 @@ describe("MultiLineInput", () => {
       const inst = renderInput("Some text");
       await flushEffects();
       inst.stdin.write("\u001B");
+      // Ink buffers standalone Escape to distinguish it from escape sequences.
+      await new Promise((resolve) => setTimeout(resolve, 30));
       expect(onCancel).toHaveBeenCalled();
     });
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { View, InputMode, TuiConfig, DEFAULT_TUI_CONFIG } from "../types";
+import { View, InputMode, TuiConfig, DEFAULT_TUI_CONFIG } from "../types.js";
 
 interface NavigationState {
   view: View;

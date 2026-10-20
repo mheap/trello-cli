@@ -15,7 +15,7 @@
     "@changesets/cli": "^3.0.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.4.1",
-    "ink-testing-library": "2.1.0",
+    "ink-testing-library": "4.0.0",
     "jest": "^30.5.1",
     "jest-when": "^4.0.3",
     "ts-jest": "^29.4.12",

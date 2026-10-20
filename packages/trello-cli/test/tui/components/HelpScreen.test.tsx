@@ -1,13 +1,14 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
-import { HelpScreen } from "../../../src/tui/components/HelpScreen";
 import { createMockNavContext } from "../helpers";
 
-jest.mock("../../../src/tui/state/NavigationContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/NavigationContext", () => ({
   useNavigation: jest.fn(),
 }));
 
-import { useNavigation } from "../../../src/tui/state/NavigationContext";
+const { HelpScreen } = await import("../../../src/tui/components/HelpScreen");
+const { useNavigation } = await import("../../../src/tui/state/NavigationContext");
 const mockUseNavigation = useNavigation as jest.MockedFunction<typeof useNavigation>;
 
 // Helper to flush useEffect — React 17 scheduler uses MessageChannel/setTimeout
@@ -103,6 +104,8 @@ describe("HelpScreen", () => {
     const { stdin } = render(<HelpScreen onClose={onClose} />);
     await flushEffects();
     stdin.write("\u001B");
+    // Ink buffers standalone Escape to distinguish it from escape sequences.
+    await new Promise((resolve) => setTimeout(resolve, 30));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

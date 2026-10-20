@@ -1,14 +1,15 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { render } from "ink-testing-library";
-const { stripVTControlCharacters } = require("node:util");
-import { Footer } from "../../../src/tui/components/Footer";
+import { stripVTControlCharacters } from "node:util";
 import { createMockNavContext } from "../helpers";
 
-jest.mock("../../../src/tui/state/NavigationContext", () => ({
+jest.unstable_mockModule("../../../src/tui/state/NavigationContext", () => ({
   useNavigation: jest.fn(),
 }));
 
-import { useNavigation } from "../../../src/tui/state/NavigationContext";
+const { Footer } = await import("../../../src/tui/components/Footer");
+const { useNavigation } = await import("../../../src/tui/state/NavigationContext");
 const mockUseNavigation = useNavigation as jest.MockedFunction<typeof useNavigation>;
 
 describe("Footer", () => {

@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Text } from "ink";
-import { TrelloList, TrelloCard } from "../types";
-import { Card } from "./Card";
-import { useNavigation } from "../state/NavigationContext";
+import { TrelloList, TrelloCard } from "../types.js";
+import { Card } from "./Card.js";
+import { useNavigation } from "../state/NavigationContext.js";
 
 interface ListColumnProps {
   list: TrelloList;

@@ -9,6 +9,9 @@ const project = path.join(__dirname, '..', 'tsconfig.json')
 process.env.NODE_ENV = 'development'
 
 require('ts-node').register({project})
+// The interactive UI uses ESM, including Ink's asynchronous module graph.
+process.env.TS_NODE_PROJECT = project
+require('node:module').register('ts-node/esm', require('node:url').pathToFileURL(__filename))
 
 // Start the CLI
 execute({ development: true, dir: __dirname })
